@@ -1,0 +1,117 @@
+import React, { useRef, useEffect, useState, DragEvent } from 'react';
+import {ITable} from "../Class/Interfaces/ITable";
+import { RectangleTable } from '../Class/Tables/RectangleTable';
+import { CircleTable } from '../Class/Tables/CircleTable';
+
+const Canvas: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [items, setItems] = useState<ITable[]>([]);
+
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const context = canvas.getContext('2d');
+      if (context) {
+        
+        const drawItems = () => {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          items.forEach(item => {
+            item.draw(context);
+          });
+        };
+        drawItems();
+
+        const handleMouseDown = (e: MouseEvent) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const index = items.findIndex(item => item.isMouseInRange(x,y));
+          if (index !== -1) {
+            const item = items[index];
+            setIsDragging(true);
+            setDragIndex(index);
+            setDragOffset({ x: x - item.x, y: y - item.y });
+          }
+          setItems(prevItems => prevItems.map((item, i) => {
+            item.isHovered = item.isMouseInRange(x,y);
+            return item;
+          }));
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          let newItems = items;
+          if (isDragging && dragIndex !== null) {
+            newItems = items.map((item, i) => {
+              if(i === dragIndex){
+                item.x = x - dragOffset.x;
+                item.y = y - dragOffset.y;
+              }
+              return item;
+            });
+          }
+          setItems(prevItems => newItems.map((item, i) => {
+            item.isHovered = item.isMouseInRange(x,y);
+            return item;
+          }));
+          drawItems();
+        };
+
+        const handleMouseUp = () => {
+          setIsDragging(false);
+          setDragIndex(null);
+        };
+
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('mouseleave', handleMouseUp);
+
+        return () => {
+          canvas.removeEventListener('mousedown', handleMouseDown);
+          canvas.removeEventListener('mousemove', handleMouseMove);
+          canvas.removeEventListener('mouseup', handleMouseUp);
+          canvas.removeEventListener('mouseleave', handleMouseUp);
+        };
+      }
+    }
+  }, [items, isDragging, dragIndex, dragOffset]);
+
+  const handleDrop = (event: DragEvent<HTMLCanvasElement>) => {
+    event.preventDefault();
+    const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (rect) {
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      if(data.type === "rectangle"){
+        setItems([...items, new RectangleTable(x, y, 100, 100)]);
+      }else{
+        setItems([...items, new CircleTable(x,y,50)]);
+      }
+    }
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLCanvasElement>) => {
+    event.preventDefault();
+  };
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={600}
+      height={400}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      style={{ border: '1px solid black' }}
+    />
+  );
+};
+
+export default Canvas;

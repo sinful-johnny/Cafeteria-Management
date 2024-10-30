@@ -1,0 +1,25 @@
+import './App.css'
+
+import { Routes, Route } from "react-router-dom";
+
+import { Login } from './Pages/Auth/Login';
+import { CanvasPage } from './Pages/Canvas/CanvasPage';
+import DraggableCanvas from './Pages/Canvas/DraggableCanvas.tsx';
+import MenuCanvas from './Pages/Canvas/MenuCanvas';
+
+function App() {
+
+  return (
+    <>
+      <Routes>
+        <Route path="/login"
+          element={<Login/>}
+        ></Route>
+        <Route path='/' element={<MenuCanvas/>}></Route>
+        <Route path='/draggable' element={<DraggableCanvas/>}></Route>
+      </Routes>
+    </>
+  )
+}
+
+export default App

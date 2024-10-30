@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+
+.main--login{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login--form > h2 {
+    margin: 0;
+}
+
+.main--login .form-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login--form{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 360px;
+}
+
+#LoginHeader{
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 54.64px;
+}
+
+.Logo--small{
+    width: 157.5px;
+    height: 32px;
+    top: 65px;
+    left: 641px;
+    gap: 0px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.LoginForm--input{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 344px;
+    height: 66px;
+    gap: 6px;
+    padding: 8px;
+    margin-bottom: 25px;
+}
+
+.LoginForm--input > label{
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.005em;
+    text-align: left;
+
+}
+
+.LoginForm--input > input{
+    height: 40px;
+    padding: 8px 12px 8px 12px;
+    gap: 8px;
+    border-radius: 8px;
+    border-width: 0.5px 0.5px 0.5px 0.5px;
+    border-color: #CDD5DF;
+}
+
+.Form--ButtonContainer{
+    margin-top: 10px;
+    width: 344px;
+}
+
+.Button--Signin{
+    width: 100%;
+    height: 44px;
+    background-color: #5627FE;
+    border-radius: 8px;
+    color: white;
+    border-width: 0;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+a {
+    all: unset; 
+    cursor: pointer;
+    text-decoration: none;
+    color: #3498db;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+.HelperContainer > .HelperContainer--RememberLogin{
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+
+.HelperContainer > .HelperContainer--RememberLogin input {
+    margin-right: 7px; 
+}
+
+.HelperContainer > .HelperContainer--RememberLogin > label > input{
+    border-radius: 100px;
+}
+
+.HelperContainer > .HelperContainer--RememberLogin > label{
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.HelperContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 344px;
+
+}
+
+.HelperContainer > .HelperContainer--ForgotPassword a {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    color: #5627FE;
+}
+
+.login--form .AltSignInButton{
+    width: 344px;
+    height: 44px;
+    background-color: white;
+    border-radius: 8px;
+    color: black;
+    border-width: 0;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    border-width: 0.5px 0.5px 0.5px 0.5px;
+    border-color: #D0D5DD;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login--form .AltSignInButton > *{
+    margin-left: 10px;
+}
+
+.RegisterHint{
+    font-family: 'Manrope', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 30px;
+}
+
+.RegisterHint > h3 {
+    color: #575659;
+}
+
+.RegisterHint > h3 > a {
+    color: #5627FE;
+}

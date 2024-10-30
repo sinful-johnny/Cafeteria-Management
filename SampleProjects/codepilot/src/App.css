@@ -1,0 +1,9 @@
+body {
+  margin: 0 0 0 0;
+}
+
+.main--cloud{
+  position: absolute;
+  bottom: -20%;
+  width: 100%;
+}
