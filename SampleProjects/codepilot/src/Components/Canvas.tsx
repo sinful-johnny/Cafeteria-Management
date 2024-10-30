@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, DragEvent } from 'react';
 import {ITable} from "../Class/Interfaces/ITable";
 import { RectangleTable } from '../Class/Tables/RectangleTable';
 import { CircleTable } from '../Class/Tables/CircleTable';
+import { checkCollision } from './CollisionDetection';
 
 const Canvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,6 +56,14 @@ const Canvas: React.FC = () => {
               }
               return item;
             });
+            // Check for collisions and log them to the console
+            for (let i = 0; i < newItems.length; i++) {
+              for (let j = i + 1; j < newItems.length; j++) {
+                if (checkCollision(newItems[i], newItems[j])) {
+                  console.log(`Collision detected between item ${i} and item ${j}`);
+                }
+              }
+            }
           }
           setItems(prevItems => newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
