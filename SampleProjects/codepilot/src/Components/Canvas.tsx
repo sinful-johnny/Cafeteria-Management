@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, DragEvent } from 'react';
 import {ITable} from "../Class/Interfaces/ITable";
-import { RectangleTable } from '../Class/Tables/RectangleTable';
-import { CircleTable } from '../Class/Tables/CircleTable';
+import { TableFactory } from '../Class/Factories/TableFactory';
 import { checkCollision } from './CollisionDetection';
 
 const Canvas: React.FC = () => {
@@ -99,10 +98,11 @@ const Canvas: React.FC = () => {
     if (rect) {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      if(data.type === "rectangle"){
-        setItems([...items, new RectangleTable(x, y, 100, 100)]);
-      }else{
-        setItems([...items, new CircleTable(x,y,50)]);
+
+      try {
+        setItems([...items, TableFactory.createTable(data.type, x, y)]);
+      } catch (error) {
+        console.log(error);
       }
     }
   };
