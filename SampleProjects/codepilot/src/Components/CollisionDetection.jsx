@@ -49,3 +49,36 @@ export const isRectangleCollidingWithRectangle = (rect1, rect2) => {
     }
     return false;
   };
+
+  // Border Collision Detection
+  // Border Top
+  export const isCollidingWithBorderY = (table, canvasHeight) => {
+    if (table instanceof RectangleTable) {
+      return (
+        table.y < 0 ||
+        table.y + table.height > canvasHeight
+      );
+    } else if (table instanceof CircleTable) {
+      return (
+        table.y - table.radius < 0 ||
+          table.y + table.radius > canvasHeight
+        );
+    }
+    return false;
+  };
+
+  //Border sides
+  export const isCollidingWithBorderX = (table, canvasWidth) => {
+    if (table instanceof RectangleTable) {
+      return (
+        table.x < 0 ||
+        table.x + table.width > canvasWidth
+      );
+    } else if (table instanceof CircleTable) {
+      return (
+        table.x - table.radius < 0 ||
+          table.x + table.radius > canvasWidth
+        );
+    }
+    return false;
+  };

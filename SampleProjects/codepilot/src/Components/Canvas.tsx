@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState, DragEvent } from 'react';
 import {ITable} from "../Class/Interfaces/ITable";
 import { TableFactory } from '../Class/Factories/TableFactory';
-import { checkCollision } from './CollisionDetection';
+import { checkCollision, isCollidingWithBorderY, isCollidingWithBorderX } from './CollisionDetection';
+import { RectangleTable } from '../Class/Tables/RectangleTable';
+import { CircleTable } from '../Class/Tables/CircleTable';
 
 const Canvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,6 +12,7 @@ const Canvas: React.FC = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [CollidingWithObject, setCollideObject] = useState<boolean>(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -47,11 +50,28 @@ const Canvas: React.FC = () => {
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           let newItems = items;
+          let hasCollision = false;
           if (isDragging && dragIndex !== null) {
             newItems = items.map((item, i) => {
               if(i === dragIndex){
-                item.x = x - dragOffset.x;
-                item.y = y - dragOffset.y;
+                let newX = x - dragOffset.x;
+                let newY = y - dragOffset.y;
+                let tempItem;
+                if (item instanceof RectangleTable) {
+                  tempItem = TableFactory.createTable("rectangle", newX, newY);
+                } else if (item instanceof CircleTable) {
+                  tempItem = TableFactory.createTable("circle", newX, newY);
+                }
+                if (isCollidingWithBorderX(tempItem, canvas.width)) {
+                  null;
+                } else {
+                  item.x = newX;
+                }
+                if (isCollidingWithBorderY(tempItem, canvas.height)) {
+                  null;
+                } else {
+                  item.y = newY;
+                }
               }
               return item;
             });
@@ -59,11 +79,16 @@ const Canvas: React.FC = () => {
             for (let i = 0; i < newItems.length; i++) {
               for (let j = i + 1; j < newItems.length; j++) {
                 if (checkCollision(newItems[i], newItems[j])) {
+                  hasCollision = true;
                   console.log(`Collision detected between item ${i} and item ${j}`);
+                  break;
                 }
               }
+              if (hasCollision) break;
             }
           }
+          //setCollideBorder
+          setCollideObject(hasCollision)
           setItems(prevItems => newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
             return item;
