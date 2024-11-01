@@ -6,9 +6,6 @@ import "./Navbar.css";
 import SearchBar from "../../Components/Search/SearchInput";
 
 const Navbar = () => {
-  const classNameFunc = ({ isActive }) =>
-    isActive ? "admin-nav active-admin-nav" : "admin-nav";
-
   const [openIndexes, setOpenIndexes] = useState({});
   const [items,setItems] = useState([]);
 
@@ -23,8 +20,19 @@ const Navbar = () => {
     { id: 1, title: 'Table', content: [
       {shapeId: 1, name: "Square", shapeType: "rectangle", color: "blue", img: "/square.svg"},
       {shapeId: 2, name: "Circular", shapeType: "circle", color: "red", img: "/circle.svg"}
-    ]}
+    ]},
   ];
+
+  const menuData = [
+    {id: 1, title: 'Tea', content: [
+      {ID_FOOD: 1, name: "Honey Jasmine Green", img: "/tea1.svg"},
+      {ID_FOOD: 2, name: "Raspberry Snow", img: "/tea2.svg"}
+    ]},
+    {id: 2, title: 'Coffee', content: [
+      {ID_FOOD: 3, name: "Pure Coffee", img: "/coffee1.svg"},
+      {ID_FOOD: 4, name: "Iced Coffee with Milk", img: "/coffee2.svg"}
+    ]}
+  ]
 
   useEffect(() => {
     setItems(tablesData);
@@ -52,14 +60,10 @@ const Navbar = () => {
   const onSearch = (query) => {
     console.log("Search:", query)
   }
-  
-  return (
-    <div className="admin-navbar">
-      <div className="Search--Container">
-        <SearchBar onSearch={onSearch} />
-      </div>
 
-      {items.map((item, index) => (
+  const CollapsibleList = ({items}) => {
+    return (
+      items.map((item, index) => (
         <div key={item.id}>
           <div
             onClick={() => toggleItem(index)}
@@ -76,7 +80,17 @@ const Navbar = () => {
             </div>
           )}
         </div>
-      ))}
+      ))
+    )
+  }
+  
+  return (
+    <div className="admin-navbar">
+      <div className="Search--Container">
+        <SearchBar onSearch={onSearch} />
+      </div>
+
+      {<CollapsibleList items={items}/>} 
     </div>
   );
 };
