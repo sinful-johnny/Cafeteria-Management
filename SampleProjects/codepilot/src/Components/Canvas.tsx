@@ -32,7 +32,7 @@ const Canvas: React.FC = () => {
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
-          const index = items.findIndex(item => item.isMouseInRange(x,y));
+          const index = items.length - 1 - items.slice().reverse().findIndex(item => item.isMouseInRange(x,y));
           if (index !== -1) {
             const item = items[index];
             setIsDragging(true);
