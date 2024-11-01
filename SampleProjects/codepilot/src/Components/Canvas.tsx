@@ -125,7 +125,7 @@ const Canvas: React.FC = () => {
       const y = event.clientY - rect.top;
 
       try {
-        setItems([...items, TableFactory.createTable(data.type, x, y)]);
+        setItems([...items, TableFactory.createTable(data.shapeType, x, y)]);
       } catch (error) {
         console.log(error);
       }

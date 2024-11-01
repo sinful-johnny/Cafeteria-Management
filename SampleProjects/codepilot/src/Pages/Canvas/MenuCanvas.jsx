@@ -5,7 +5,6 @@ import Canvas  from '../../Components/Canvas.tsx';
 const MenuCanvas = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <Menu />
       <Canvas />
     </div>
   );
