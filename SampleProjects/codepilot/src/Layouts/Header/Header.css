@@ -1,25 +1,3 @@
-.admin-header {
-    padding: 0 40px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;border-bottom: 1px solid var(--Color-click, #A09A9A);
-    background: var(--Backgroud, #CED7D7);
-    height: 68px;
-    flex-shrink: 0;
-}
-
-.admin-logo {
-    width: 240px;
-    /* font-family: 'Baskerville'; */
-    /* font-style: italic; */
-    font-size: xxx-large;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-}
-
 .admin-head-logout-btn {
     margin-left: 20px;
     padding: 0 30px;
@@ -45,3 +23,87 @@
 .head-login-ico {
     margin-left: 10px;
 }
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+THIS FUCKING SUCKS
+I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS ADDED IN
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 20px;
+    height: 68px;
+    background-color: #F0E6D5;
+    font-family: 'Manrope';
+}
+  
+.logo-and-nav {
+    padding-top: 10px;
+    display: flex;
+    align-items: flex-start;
+}
+  
+.logo-image {
+    margin-left: -8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-right: 14px;
+    height: 44px
+}
+  
+.logo-text {
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+}
+  
+.logo-text h3 {
+    font-size: 24px;
+    color: #574840;
+    font-weight: bold;
+    margin: 0;
+}
+  
+.function-selection {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-top: -11px; /* Space between the heading and buttons */
+}
+  
+.nav-button {
+    background: none;
+    border: none;
+    margin-right: 15px;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 100;
+    font-size: 18px;
+    color: #4a3b2f;
+    transition: color 0.3s;
+}
+  
+.nav-button.selected {
+    color: #e6943e;
+}
+  
+.underline {
+    position: absolute;
+    bottom: 14px;
+    height: 2px;
+    width: 40px;
+    background-color: #e6943e;
+    transition: left 0.3s ease;
+}
+  
+.user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+  
