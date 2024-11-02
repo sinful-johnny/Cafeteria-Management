@@ -87,4 +87,24 @@
     flex-shrink: 0;
     border-bottom: 1px solid var(--Color-click, #A09A9A);
   }
+
+  .CollaspsibleList--container{
+    overflow: auto;
+  }
  
+  .CollaspsibleList--container::-webkit-scrollbar {
+    width: 0.2vw;
+  }
+  
+  .CollaspsibleList--container::-webkit-scrollbar-track {
+    background: #F0E6D5;
+  }
+  
+  .CollaspsibleList--container::-webkit-scrollbar-thumb {
+    background: #A09A9A;
+    border-radius: 20px;
+  }
+  
+  .CollaspsibleList--container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

@@ -104,12 +104,14 @@ const Canvas: React.FC = () => {
 
         canvas.addEventListener('mousedown', handleMouseDown);
         canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('dragover', handleMouseMove);
         canvas.addEventListener('mouseup', handleMouseUp);
         canvas.addEventListener('mouseleave', handleMouseUp);
 
         return () => {
           canvas.removeEventListener('mousedown', handleMouseDown);
           canvas.removeEventListener('mousemove', handleMouseMove);
+          canvas.removeEventListener('dragover', handleMouseMove);
           canvas.removeEventListener('mouseup', handleMouseUp);
           canvas.removeEventListener('mouseleave', handleMouseUp);
         };
@@ -151,7 +153,7 @@ const Canvas: React.FC = () => {
             setItems(prevItems => newItems.map((item, i) => {
               return item;
             }));
-            console.log(items);
+            //console.log(items);
           }
         }else{
           console.log("Not implemented!");
@@ -159,11 +161,6 @@ const Canvas: React.FC = () => {
       }catch(error){
         console.log("Error", error);
       }
-
-
-
-
-
     }
   };
 

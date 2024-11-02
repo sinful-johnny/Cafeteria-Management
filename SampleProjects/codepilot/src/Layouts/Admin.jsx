@@ -1,22 +1,17 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
 import Header from "./Header/Header";
 import Navbar from "./Navbar/Navbar";
 import "../App.css";
 
 const Admin = () => {
-  const bodyStyle = {
-    display: "flex",
-  };
-  const contentStyle = {
-    width: "75%",
-    padding: "20px",
-    backgroundColor: "white",
-  };
+  const [selectedPage, setSelectedPage] = useState("Table");
+
   return (
     <div className="Global--Container">
-      <Header />
+      <Header selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
       <div className="BodyStyle">
-        <Navbar />
+        <Navbar selectedPage={selectedPage}/>
         <div className="ContentStyle">
           <Outlet />
         </div>

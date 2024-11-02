@@ -7,9 +7,13 @@ import userImg from './Rectangle.png'
 
 import "./Header.css";
 
-const Header = () => {
+const Header = ({selectedPage, setSelectedPage}) => {
   const navigate = useNavigate();
-  const [selectedPage, setSelectedPage] = useState("Table");
+
+  useEffect(() => {
+    //console.log(selectedPage);
+  },[])
+  //const [selectedPage, setSelectedPage] = useState("Table");
   // const logOut = () => {
   //   localStorage.clear();
   //   navigate("/");
