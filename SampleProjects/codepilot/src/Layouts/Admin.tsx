@@ -5,11 +5,8 @@ import Navbar from "./Navbar/Navbar";
 import "../App.css";
 import PropertiesBar from "./PropertiesBar/PropertiesBar";
 import React from "react";
+import { ITable } from "../Class/Interfaces/ITable";
 
-// Assuming ITable is defined somewhere in your types file
-interface ITable {
-  // define the properties of ITable here
-}
 
 const Admin: React.FC = () => {
   const [selectedPage, setSelectedPage] = useState<string>("Table");
