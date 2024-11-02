@@ -4,6 +4,7 @@ import { TableFactory } from '../Class/Factories/TableFactory';
 import { checkCollision, isCollidingWithBorderY, isCollidingWithBorderX } from './CollisionDetection';
 import { RectangleTable } from '../Class/Tables/RectangleTable';
 import { CircleTable } from '../Class/Tables/CircleTable';
+import { Food } from '../Class/Food';
 
 const Canvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,11 +125,45 @@ const Canvas: React.FC = () => {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      try {
-        setItems([...items, TableFactory.createTable(data.shapeType, x, y)]);
-      } catch (error) {
-        console.log(error);
+      try{
+        if(data.objectType === "Table"){
+          try {
+            setItems([...items, TableFactory.createTable(data.shapeType, x, y)]);
+          } catch (error) {
+            console.log(error);
+          }
+        }else if(data.objectType === "Food"){
+          const index = items.length - 1 - items.slice().reverse().findIndex(item => item.isMouseInRange(x,y));
+  
+          if(index >= 0 && index < items.length){
+            //Table detected
+            //Add food to a table
+            var newItems = items.map((item,i) => {
+              if(i === index){
+                if(item.food === undefined){
+                  item.food = [];
+                }
+                item.food.push(new Food(data.name, 1, 1, "Available"));
+              }
+              return item;
+            });
+
+            setItems(prevItems => newItems.map((item, i) => {
+              return item;
+            }));
+            console.log(items);
+          }
+        }else{
+          console.log("Not implemented!");
+        }
+      }catch(error){
+        console.log("Error", error);
       }
+
+
+
+
+
     }
   };
 

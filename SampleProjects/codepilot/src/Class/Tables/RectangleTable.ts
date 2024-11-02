@@ -1,9 +1,12 @@
+import { Food } from "../Food";
 import { ITable } from "../Interfaces/ITable";
 
 export class RectangleTable implements ITable{
     x: number;
     y: number;
     isHovered: boolean;
+
+    food: Food[];
 
     width: number;
     height: number;
@@ -13,6 +16,7 @@ export class RectangleTable implements ITable{
         this.y = y;
         this.width = width;
         this.height = height;
+        this.food = [];
     }
 
     setIsHovered(value: boolean): void {

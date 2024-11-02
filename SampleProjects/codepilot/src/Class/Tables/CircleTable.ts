@@ -1,3 +1,4 @@
+import { Food } from "../Food";
 import { ITable } from "../Interfaces/ITable";
 
 export class CircleTable implements ITable{
@@ -5,13 +6,17 @@ export class CircleTable implements ITable{
     y: number;
     isHovered: boolean;
 
+    food: Food[];
+
     radius: number;
 
     constructor(x: number, y: number, radius: number){
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.food = [];
     }
+
     setIsHovered(value: boolean): void {
         this.isHovered = value;
         return;
