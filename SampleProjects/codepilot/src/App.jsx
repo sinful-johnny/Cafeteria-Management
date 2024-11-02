@@ -6,7 +6,7 @@ import { Login } from './Pages/Auth/Login';
 import { CanvasPage } from './Pages/Canvas/CanvasPage';
 import DraggableCanvas from './Pages/Canvas/DraggableCanvas.tsx';
 import MenuCanvas from './Pages/Canvas/MenuCanvas';
-import Admin from './Layouts/Admin.jsx';
+import Admin from './Layouts/Admin.tsx';
 import CollapsibleList from './Pages/Collapsible List/CollaspsibleList.jsx';
 
 function App() {

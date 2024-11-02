@@ -175,7 +175,7 @@ const Canvas: React.FC = () => {
       height={400}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      style={{ border: '1px solid black' }}
+      style={{ border: '1px solid black', maxHeight: "400px", maxWidth: "600px" }}
     />
   );
 };

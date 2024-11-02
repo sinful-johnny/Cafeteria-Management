@@ -1,9 +1,8 @@
-import { NavLink } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 import "./Navbar.css";
 import SearchBar from "../../Components/Search/SearchInput";
+import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList";
 
 const Navbar = ({selectedPage}) => {
   const [openIndexes, setOpenIndexes] = useState({});
@@ -14,13 +13,6 @@ const Navbar = ({selectedPage}) => {
 
   const [tables, setTables] = useState([]);
   const [orders, setOrders] = useState([]);
-
-  const toggleItem = (index) => {
-    setOpenIndexes((prev) => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
 
   const tablesData = [
     { id: 1, title: 'Table', content: [
@@ -77,50 +69,8 @@ const Navbar = ({selectedPage}) => {
     }
   },[selectedPage, rerender]);
 
-  const spawnListComponent = (content) => {
-    return content.map(shape => {
-      const handleDragStart = (event, data) => {
-        event.dataTransfer.setData('text/plain', JSON.stringify(data));
-      };
-
-      return (
-        <div className="collaspsible-listItem"
-          draggable
-          onDragStart={(event) => handleDragStart(event, shape)}
-          key={shape.name}
-        >
-          <img src={shape.img}/>
-          <span>{shape.name}</span>
-        </div>
-      );
-    });
-  }
-
   const onSearch = (query) => {
     console.log("Search:", query)
-  }
-
-  const CollapsibleList = ({items}) => {
-    return (
-      items.map((item, index) => (
-        <div key={item.id}>
-          <div
-            onClick={() => toggleItem(index)}
-            className="collapsible-header"
-          >
-            <span>
-              {openIndexes[index] ? <FaChevronUp /> : <FaChevronDown />}
-            </span>
-            <span>{item.title}</span>
-          </div>
-          {openIndexes[index] && (
-            <div>
-              {spawnListComponent(item.content)}
-            </div>
-          )}
-        </div>
-      ))
-    )
   }
   
   return (
@@ -130,7 +80,7 @@ const Navbar = ({selectedPage}) => {
       </div>
 
       <div className="CollaspsibleList--container">
-         <CollapsibleList items={items}/>
+         <CollapsibleList items={items} openIndexes={openIndexes} setOpenIndexes={setOpenIndexes}/>
       </div>
     </div>
   );

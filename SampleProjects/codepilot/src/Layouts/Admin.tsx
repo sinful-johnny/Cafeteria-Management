@@ -3,9 +3,17 @@ import { useState } from "react";
 import Header from "./Header/Header";
 import Navbar from "./Navbar/Navbar";
 import "../App.css";
+import PropertiesBar from "./PropertiesBar/PropertiesBar";
+import React from "react";
 
-const Admin = () => {
-  const [selectedPage, setSelectedPage] = useState("Table");
+// Assuming ITable is defined somewhere in your types file
+interface ITable {
+  // define the properties of ITable here
+}
+
+const Admin: React.FC = () => {
+  const [selectedPage, setSelectedPage] = useState<string>("Table");
+  const [items, setItems] = useState<ITable[]>([]);
 
   return (
     <div className="Global--Container">
@@ -15,6 +23,7 @@ const Admin = () => {
         <div className="ContentStyle">
           <Outlet />
         </div>
+        <PropertiesBar selectedPage={undefined} />
       </div>
     </div>
   );

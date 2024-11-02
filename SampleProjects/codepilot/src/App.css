@@ -21,7 +21,8 @@ body {
 }
 
 .ContentStyle{
-  width: 80%;
+  display: flex;
+  flex: 1;
   padding: 20px;
   color: white;
   overflow: auto;

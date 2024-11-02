@@ -39,6 +39,7 @@ I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS AD
     height: 68px;
     background-color: #F0E6D5;
     font-family: 'Manrope';
+    border-bottom: 1px solid var(--Color-click, #A09A9A);
 }
   
 .logo-and-nav {
