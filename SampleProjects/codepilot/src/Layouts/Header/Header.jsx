@@ -29,7 +29,7 @@ const Header = ({selectedPage, setSelectedPage}) => {
             <button
               className={`nav-button ${selectedPage === "Table" ? "selected" : ""}`}
               onClick={() => {
-                navigate("/admin/canvas");
+                //navigate("/admin/canvas");
                 setSelectedPage("Table");
               }}
             >
@@ -38,7 +38,7 @@ const Header = ({selectedPage, setSelectedPage}) => {
             <button
               className={`nav-button ${selectedPage === "Order" ? "selected" : ""}`}
               onClick={() => {
-                navigate("/admin/canvas");
+                //navigate("/admin/canvas");
                 setSelectedPage("Order");
               }}
             >

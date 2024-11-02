@@ -1,9 +1,13 @@
+
 import { Food } from "../Food";
 
 export interface ITable{
     x: number;
     y: number;
-    isHovered: boolean;
+    isHovered: Boolean;
+    tableId: number;
+    isSelected: Boolean;
+    color: String;
 
     food: Food[];
 

@@ -6,14 +6,22 @@ import { RectangleTable } from '../Class/Tables/RectangleTable';
 import { CircleTable } from '../Class/Tables/CircleTable';
 import { Food } from '../Class/Food';
 
-const Canvas: React.FC = () => {
+interface CanvasProps{
+  items: ITable[];
+  setItems: (items: ITable[]) => void;
+  selectedIndex: Number;
+  setSelectedIndex: (index: number) => void;
+}
+
+const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [items, setItems] = useState<ITable[]>([]);
+  //const [items, setItems] = useState<ITable[]>([]);
 
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [CollidingWithObject, setCollideObject] = useState<boolean>(false);
+  //const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,8 +35,8 @@ const Canvas: React.FC = () => {
             item.draw(context);
           });
         };
-        drawItems();
 
+        drawItems();
         const handleMouseDown = (e: MouseEvent) => {
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
@@ -39,11 +47,17 @@ const Canvas: React.FC = () => {
             setIsDragging(true);
             setDragIndex(index);
             setDragOffset({ x: x - item.x, y: y - item.y });
+            setSelectedIndex(index);
           }
-          setItems(prevItems => prevItems.map((item, i) => {
-            item.isHovered = item.isMouseInRange(x,y);
-            return item;
-          }));
+
+          setItems(items.map((item,i) => {
+             if(i === index) {
+              item.isSelected = true;
+             }else{
+              item.isSelected = false;
+             }
+             return item;
+          }))
         };
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -90,7 +104,7 @@ const Canvas: React.FC = () => {
           }
           //setCollideBorder
           setCollideObject(hasCollision)
-          setItems(prevItems => newItems.map((item, i) => {
+          setItems(newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
             return item;
           }));
@@ -150,10 +164,10 @@ const Canvas: React.FC = () => {
               return item;
             });
 
-            setItems(prevItems => newItems.map((item, i) => {
+            setItems(newItems.map((item, i) => {
               return item;
             }));
-            //console.log(items);
+            console.log(items);
           }
         }else{
           console.log("Not implemented!");

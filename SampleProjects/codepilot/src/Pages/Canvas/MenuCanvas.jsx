@@ -1,11 +1,10 @@
-import React from 'react';
-import Menu from '../../Components/Menu';
+import React, { useEffect, useState } from 'react';
 import Canvas  from '../../Components/Canvas.tsx';
 
-const MenuCanvas = () => {
+const MenuCanvas = ({items, setItems, selectedIndex, setSelectedIndex}) => {
   return (
     <div style={{ display: 'flex' }}>
-      <Canvas />
+      <Canvas items={items} setItems={setItems} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
     </div>
   );
 };
