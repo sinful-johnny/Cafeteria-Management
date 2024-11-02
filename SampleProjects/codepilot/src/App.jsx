@@ -21,7 +21,6 @@ function App() {
         <Route path='/draggable' element={<DraggableCanvas/>}></Route>
         <Route path='/admin' element={<Admin/>}>
           <Route path='/admin/canvas' element={<MenuCanvas/>} />
-          <Route path='/admin/list' element={<CollapsibleList/>}/>
         </Route>
       </Routes>
     </>

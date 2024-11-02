@@ -16,11 +16,30 @@ body {
 
 .BodyStyle{
   display: flex;
-  height: 90%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .ContentStyle{
   width: 80%;
   padding: 20px;
   color: white;
+  overflow: auto;
+}
+
+.ContentStyle::-webkit-scrollbar {
+  width: 0.2vw;
+}
+
+.ContentStyle::-webkit-scrollbar-track {
+  background: #e4e4e4;
+}
+
+.ContentStyle::-webkit-scrollbar-thumb {
+  background: #A09A9A;
+  border-radius: 20px;
+}
+
+.ContentStyle::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
