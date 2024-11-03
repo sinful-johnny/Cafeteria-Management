@@ -11,7 +11,7 @@ export interface ITable{
     //table status: "locked", "unlocked", "occupied"
     tableStatus: String;
 
-    food: Food[];
+    foods: Food[];
 
     draw(context): void;
     isMouseInRange(x: number, y: number) : boolean;

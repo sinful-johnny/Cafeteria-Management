@@ -10,18 +10,19 @@ export class RectangleTable implements ITable{
     color: String;
     tableStatus: String;
 
-    food: Food[];
+    foods: Food[];
 
     width: number;
     height: number;
 
-    constructor(x: number, y: number, width: number, height: number, tableStatus: String){
+    constructor(tableId: number, x: number, y: number, width: number, height: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.food = [];
+        this.foods = [];
         this.tableStatus = tableStatus;
+        this.tableId = tableId;
     }
     
     setIsHovered(value: boolean): void {

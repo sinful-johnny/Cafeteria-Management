@@ -30,7 +30,7 @@ const spawnListComponent = (content) => {
       };
 
     return (
-      items.map((item, index) => (
+      items.map((item, index) => ( item.content.length > 0 &&
         <div key={item.id}>
           <div
             onClick={() => toggleItem(index)}

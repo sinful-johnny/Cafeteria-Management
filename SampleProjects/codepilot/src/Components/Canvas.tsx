@@ -9,7 +9,7 @@ import { Food } from '../Class/Food';
 interface CanvasProps{
   items: ITable[];
   setItems: (items: ITable[]) => void;
-  selectedIndex: Number;
+  selectedIndex: Number | null;
   setSelectedIndex: (index: number) => void;
 }
 
@@ -21,7 +21,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [CollidingWithObject, setCollideObject] = useState<boolean>(false);
-  //const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -47,9 +46,11 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
             setIsDragging(true);
             setDragIndex(index);
             setDragOffset({ x: x - item.x, y: y - item.y });
-            setSelectedIndex(index);
           }
-
+          
+          //console.log("Index", index);
+          setSelectedIndex(index);
+          //console.log(selectedIndex)
           setItems(items.map((item,i) => {
              if(i === index) {
               item.isSelected = true;
@@ -73,9 +74,9 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                 let newY = y - dragOffset.y;
                 let tempItem;
                 if (item instanceof RectangleTable) {
-                  tempItem = TableFactory.createTable("rectangle", newX, newY);
+                  tempItem = TableFactory.createTable(items.length + 1,"rectangle", newX, newY);
                 } else if (item instanceof CircleTable) {
-                  tempItem = TableFactory.createTable("circle", newX, newY);
+                  tempItem = TableFactory.createTable(items.length + 1,"circle", newX, newY);
                 }
                 if (isCollidingWithBorderX(tempItem, canvas.width)) {
                   null;
@@ -144,7 +145,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       try{
         if(data.objectType === "Table"){
           try {
-            setItems([...items, TableFactory.createTable(data.shapeType, x, y)]);
+            setItems([...items, TableFactory.createTable(items.length + 1,data.shapeType, x, y)]);
           } catch (error) {
             console.log(error);
           }
@@ -156,10 +157,10 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
             //Add food to a table
             var newItems = items.map((item,i) => {
               if(i === index){
-                if(item.food === undefined){
-                  item.food = [];
+                if(item.foods === undefined){
+                  item.foods = [];
                 }
-                item.food.push(new Food(data.name, 1, 1, "Available"));
+                item.foods.push(new Food(data.ID_FOOD,data.name, 1, 1, "Available", data.img));
               }
               return item;
             });

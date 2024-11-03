@@ -10,16 +10,17 @@ export class CircleTable implements ITable{
     color: String;
     tableStatus: String;
 
-    food: Food[];
+    foods: Food[];
 
     radius: number;
 
-    constructor(x: number, y: number, radius: number, tableStatus: String){
+    constructor(tableId: number,x: number, y: number, radius: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.food = [];
+        this.foods = [];
         this.tableStatus = tableStatus;
+        this.tableId = tableId;
     }
 
     setIsHovered(value: boolean): void {

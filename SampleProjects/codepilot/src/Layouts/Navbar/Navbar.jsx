@@ -4,15 +4,12 @@ import "./Navbar.css";
 import SearchBar from "../../Components/Search/SearchInput";
 import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList";
 
-const Navbar = ({selectedPage}) => {
+const Navbar = ({selectedPage,tables,orders}) => {
   const [openIndexes, setOpenIndexes] = useState({});
   const [items,setItems] = useState([]);
 
   //this state is completely bullshit
   const [rerender, setRerender] = useState(true);
-
-  const [tables, setTables] = useState([]);
-  const [orders, setOrders] = useState([]);
 
   const tablesData = [
     { id: 1, title: 'Table', content: [
@@ -53,9 +50,6 @@ const Navbar = ({selectedPage}) => {
   ]
 
   useEffect(() => {
-    setTables(tablesData);
-    setOrders(ordersData);
-
     if(tables.length === 0 || orders.length === 0){
       setRerender(!rerender);
     }
