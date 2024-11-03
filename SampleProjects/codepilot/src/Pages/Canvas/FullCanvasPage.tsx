@@ -63,7 +63,16 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       
   },[selectedIndex]);
 
+  function clearTable(index){
+    setItems(items.map((item,i) => {
+      if(i === index){
+        //do some sorts of database operation then proceed
 
+        item.foods.length = 0;
+        return item
+      }else{return item}
+    }))
+  }
 
   return (
     <div className="Global--Container">
@@ -81,7 +90,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
         {(selectedIndex !== null && selectedIndex >= 0 && selectedIndex < items.length) ?
           <PropertiesBar 
           items={items} 
-          setItems={setItems} 
+          clearTable={clearTable} 
           selectedIndex={selectedIndex} 
           //selectedTable={selectedTable}
           //setSelectedTable={setSelectedTable}

@@ -25,17 +25,6 @@
     justify-content: center;
 }
 
-  .Search--Container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 68px;
-    padding: 20px 26px 20px 27px;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--Color-click, #A09A9A);
-  }
-
   .CollaspsibleList--container{
     overflow: auto;
   }
@@ -56,3 +45,41 @@
   .CollaspsibleList--container::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .ClearButton-Container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ClearButton {
+    color: #000;
+    /* Caption */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+
+    display: flex;
+    width: 130px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background: var(--Color-12, #BB9370);
+    border: 0px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+
+    margin-top: 10px;
+  }
+  
+  .ClearButton:hover {
+    background: #a67a55; /* Darker shade on hover */
+  }
+  
+  .ClearButton:active {
+    background: #915b42; /* Even darker shade on click */
+    transform: scale(0.98); /* Slightly shrink on click */
+  }
+  

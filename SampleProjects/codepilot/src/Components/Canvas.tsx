@@ -168,7 +168,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
             setItems(newItems.map((item, i) => {
               return item;
             }));
-            console.log(items);
           }
         }else{
           console.log("Not implemented!");

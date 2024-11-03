@@ -2,7 +2,7 @@ import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList"
 import "./PropertiesBar.css";
 import React, { useEffect, useState } from 'react';
 
-const PropertiesBar = ({items, setItems, selectedIndex, orders}) => {
+const PropertiesBar = ({items, clearTable , selectedIndex, orders}) => {
     const [openIndexes, setOpenIndexes] = useState({});
     const [selectedTable, setSelectedTable] = useState(items[selectedIndex]);
     const [ordersOnTable, setOrdersOnTable] = useState(orders.map((order) => {
@@ -41,6 +41,10 @@ const PropertiesBar = ({items, setItems, selectedIndex, orders}) => {
             <CollapsibleList items={ordersOnTable} openIndexes={openIndexes} setOpenIndexes={setOpenIndexes}/>
           }
         </div>
+        <div className="ClearButton-Container">
+          <button onClick={() => clearTable(selectedIndex)} className="ClearButton">Clear the table</button>
+        </div>
+        
       </div>
     );
   };
