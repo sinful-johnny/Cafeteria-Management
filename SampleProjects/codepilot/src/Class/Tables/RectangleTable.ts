@@ -8,22 +8,22 @@ export class RectangleTable implements ITable{
     tableId: number;
     isSelected: Boolean;
     color: String;
+    tableStatus: String;
 
     food: Food[];
 
     width: number;
     height: number;
 
-    constructor(x: number, y: number, width: number, height: number, color: String){
+    constructor(x: number, y: number, width: number, height: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.food = [];
-        this.color = color;
+        this.tableStatus = tableStatus;
     }
     
-
     setIsHovered(value: boolean): void {
         this.isHovered = value;
         return;
@@ -34,7 +34,16 @@ export class RectangleTable implements ITable{
     }
 
     draw(context): void {
-        context.fillStyle = this.color;
+        if(this.tableStatus === "unlocked"){
+            context.fillStyle = "#D9D9D9";
+        }else if(this.tableStatus === "locked"){
+            context.fillStyle = "#66DD56";
+        }else if(this.tableStatus === "occupied"){
+            context.fillStyle = "rgba(209, 150, 133, 0.69)";
+        }else{
+            throw Error("Not recognized behavior!");
+        }
+
         context.fillRect(this.x, this.y, this.width, this.height);
         if(this.isSelected){
             context.strokeStyle = "rgba(123, 166, 180, 1)";

@@ -8,6 +8,8 @@ export interface ITable{
     tableId: number;
     isSelected: Boolean;
     color: String;
+    //table status: "locked", "unlocked", "occupied"
+    tableStatus: String;
 
     food: Food[];
 

@@ -8,21 +8,19 @@ export class CircleTable implements ITable{
     tableId: number;
     isSelected: Boolean;
     color: String;
+    tableStatus: String;
 
     food: Food[];
 
     radius: number;
 
-    constructor(x: number, y: number, radius: number, color: String){
+    constructor(x: number, y: number, radius: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.food = [];
-        this.color = color;
+        this.tableStatus = tableStatus;
     }
-    
-    
-    
 
     setIsHovered(value: boolean): void {
         this.isHovered = value;
@@ -38,7 +36,17 @@ export class CircleTable implements ITable{
     draw(context): void {
         context.beginPath();
         context.arc(this.x, this.y,this.radius, 0, Math.PI * 2,false);
-        context.fillStyle = this.color;
+
+        if(this.tableStatus === "unlocked"){
+            context.fillStyle = "#D9D9D9";
+        }else if(this.tableStatus === "locked"){
+            context.fillStyle = "#66DD56";
+        }else if(this.tableStatus === "occupied"){
+            context.fillStyle = "rgba(209, 150, 133, 0.69)";
+        }else{
+            throw Error("Not recognized behavior!");
+        }
+
         context.fill();
         if(this.isSelected){
             context.beginPath();
