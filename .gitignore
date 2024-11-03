@@ -100,6 +100,8 @@ ScaffoldingReadMe.txt
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+#appsettings
+appsettings.json
 
 # Folder config file for VS Code
 .vscode/**
