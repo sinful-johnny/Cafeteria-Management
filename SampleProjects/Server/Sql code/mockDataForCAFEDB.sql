@@ -1,60 +1,68 @@
 USE cafeteriaDB
 GO
 
+-- SELECT*
+-- FROM CANVA
 --CANVA DATA
-INSERT INTO CANVA (ID_CANVA, WIDTH, HEIGHT) VALUES  
-('C001', 800.0, 600.0),  
-('C002', 1024.0, 768.0),  
-('C003', 1280.0, 720.0);
+INSERT INTO CANVA (ID_CANVA, WIDTH, HEIGHT, CREATED_AT, UPDATE_AT) VALUES  
+('C001', 800.0, 600.0, GETDATE(),GETDATE()),  
+('C002', 1024.0, 768.0, GETDATE(),GETDATE()),  
+('C003', 1280.0, 720.0, GETDATE(),GETDATE());
 
-
+-- SELECT*
+-- FROM ADMIN 
 --ADMIN DATA
-INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORD) VALUES  
-('A001', 'admin1@example.com', 'password1'),  
-('A002', 'admin2@example.com', 'password2'),  
-('A003', 'admin3@example.com', 'password3');
+INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT, CREATED_AT, UPDATE_AT) VALUES  
+('A001', 'admin1@example.com', 'password1', '0', GETDATE(),GETDATE()),  
+('A002', 'admin2@example.com', 'password2', '0', GETDATE(),GETDATE()),  
+('A003', 'admin3@example.com', 'password3', '0', GETDATE(),GETDATE());
 
 
+-- SELECT*
+-- FROM CANVA_ADMIN
 --CANVA_ADMIN DATA
-INSERT INTO CANVA_ADMIN (ID_CANVA, ID_ADMIN, LOGIN_STATUS) VALUES  
-('C001', 'A001', 'active'),  
-('C001', 'A002', 'inactive'),  
-('C002', 'A003', 'active');
+INSERT INTO CANVA_ADMIN (ID_CANVA, ID_ADMIN, LOGIN_STATUS, CREATED_AT, UPDATE_AT) VALUES  
+('C001', 'A001', 'active', GETDATE(),GETDATE()),  
+('C001', 'A002', 'inactive', GETDATE(),GETDATE()),  
+('C002', 'A003', 'active', GETDATE(),GETDATE());
 
 
---RECTANGLE_SHAPE DATA
-INSERT INTO SHAPE_TYPE (ID_SHAPE, WIDTH, HEIGHT, RADIUS, 
-MIDPOINT_X_COORDINATE, MIDPOINT_Y_COORDINATE, SHAPE_TYPENAME) VALUES  
-('S001', 100.0, 50.0, 0, 0, 0, 'Rectangle'),  
-('S002', 75.0, 75.0, 0, 0, 0, 'Rectangle'),  
-('S003', 60.0, 80.0, 0, 0, 0, 'Rectangle'),
-('S004', 0, 0, 100.0, 0, 0, 'Circle'),  
-('S005', 0, 0, 75.0, 0, 0, 'Circle'),  
-('S006', 0, 0, 60.0, 0, 0, 'Circle');
+-- SELECT*
+-- FROM SHAPE_TYPE
+--SHAPE_TYPE DATA
+INSERT INTO SHAPE_TYPE (ID_SHAPE, WIDTH, HEIGHT, RADIUS, SHAPE_TYPENAME, CREATED_AT, UPDATE_AT) VALUES  
+('S001', 100.0, 50.0, 0, 'Rectangle', GETDATE(),GETDATE()),  
+('S002', 75.0, 75.0, 0, 'Rectangle', GETDATE(),GETDATE()),  
+('S003', 60.0, 80.0, 0, 'Rectangle', GETDATE(),GETDATE()),
+('S004', 0, 0, 100.0, 'Circle', GETDATE(),GETDATE()),  
+('S005', 0, 0, 75.0, 'Circle', GETDATE(),GETDATE()),  
+('S006', 0, 0, 60.0, 'Circle', GETDATE(),GETDATE());
 
+-- SELECT *
+-- FROM CAFETERIA_TABLE 
 --CAFETERIA_TABLE DATA
-INSERT INTO CAFETERIA_TABLE (ID_TABLE, ID_SHAPE, ID_CANVA, ID_ADMIN, TABLE_STATUS) VALUES  
-('T001', 'S001', 'C001', 'A001', 'available'),  
-('T002', 'S002', 'C001', 'A002', 'occupied'),
-('T003', 'S002', 'C002', 'A003', 'occupied'),
-('T004', 'S004', 'C002', 'A003', 'available'),
-('T005', 'S006', 'C002', 'A003', 'occupied');
+INSERT INTO CAFETERIA_TABLE (ID_TABLE, X_COORDINATE, Y_COORDINATE, ID_SHAPE, ID_CANVA, ID_ADMIN, TABLE_STATUS, CREATED_AT, UPDATE_AT) VALUES  
+('T001', 0, 0, 'S001', 'C001', 'A001', 'available', GETDATE(),GETDATE()),  
+('T002', 0, 0, 'S002', 'C001', 'A002', 'occupied', GETDATE(),GETDATE()),
+('T003', 0, 0, 'S002', 'C002', 'A003', 'occupied', GETDATE(),GETDATE()),
+('T004', 0, 0, 'S004', 'C002', 'A003', 'available', GETDATE(),GETDATE()),
+('T005', 0, 0, 'S006', 'C002', 'A003', 'occupied', GETDATE(),GETDATE());
 
 
+-- SELECT*
+-- FROM FOOD_TYPE
 --FOOD_TYPE DATA
-INSERT INTO FOOD_TYPE (ID_FOOD, FOOD_NAME, AMOUNT_LEFT, PRICE, FOOD_TYPE_STATUS) VALUES  
-('F001', 'Burger', 20, 5.99, 'available'),  
-('F002', 'Pizza', 15, 8.99, 'available'),  
-('F003', 'Salad', 30, 4.99, 'available'),
-('F004', 'Coffee', 30, 5.99, 'available');
+INSERT INTO FOOD_TYPE (ID_FOOD, FOOD_NAME, FOOD_TYPENAME, AMOUNT_LEFT, PRICE, FOOD_TYPE_STATUS, CREATED_AT, UPDATE_AT) VALUES  
+('F001', 'Burger', 'Fast Food', 20, 5.99, 'available'),  
+('F002', 'Pizza', 'Fast Food', 15, 8.99, 'available'),  
+('F003', 'Salad', 'Healthy', 30, 4.99, 'available'),
+('F004', 'Coffee', 'Coffee', 30, 5.99, 'available');
 
+
+-- SELECT*
+-- FROM FOOD_TABLE
 --FOOD_TABLE DATA
-INSERT INTO FOOD_TABLE (ID_FOOD, ID_TABLE, AMOUNT_IN_TABLE) VALUES  
-('F001', 'T001', 5),  
-('F002', 'T002', 3),  
-('F004', 'T003', 10);
-
-INSERT INTO FOOD_TABLE (ID_FOOD, ID_TABLE, AMOUNT_IN_TABLE) VALUES  
-('F001', 'T002', 5),  
-('F004', 'T002', 3),  
-('F001', 'T003', 10);
+INSERT INTO FOOD_TABLE (ID_FOOD, ID_TABLE, AMOUNT_IN_TABLE, CREATED_AT, UPDATE_AT) VALUES  
+('F001', 'T001', 5, GETDATE(),GETDATE()),  
+('F002', 'T002', 3, GETDATE(),GETDATE()),  
+('F004', 'T003', 10, GETDATE(),GETDATE());

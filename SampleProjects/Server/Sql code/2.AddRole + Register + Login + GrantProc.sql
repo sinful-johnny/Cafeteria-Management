@@ -51,12 +51,12 @@ GO
 EXEC ADD_ROLE
 GO
 
-declare @ResponseMessage NVARCHAR(255);
+-- declare @ResponseMessage NVARCHAR(255);
 
-EXEC sp_ADMIN_REGISTER 'aHAHAHAHA@gmail.com', '123456', @ResponseMessage = @ResponseMessage output;
+-- EXEC sp_ADMIN_REGISTER 'aHAHAHAHA@gmail.com', '123456', @ResponseMessage = @ResponseMessage output;
 
-select @ResponseMessage;
-GO
+-- select @ResponseMessage;
+-- GO
 
 --ADMIN REGISTER
 CREATE OR ALTER PROC sp_ADMIN_REGISTER
@@ -80,8 +80,9 @@ BEGIN
     BEGIN
         DECLARE @LastID NVARCHAR(10);
         DECLARE @NumericPart INT;
-
         DECLARE @NewID NVARCHAR(10);
+
+        
         DECLARE @Salt VARBINARY(16);           -- To store the salt
         DECLARE @PasswordHash VARBINARY(64);   -- To store the hashed password
 
@@ -110,13 +111,13 @@ BEGIN
 
         -- Insert the new admin record with the generated ID and hashed password
         BEGIN TRY
-            INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT)
-            VALUES (@NewID, @Email, @PasswordHash, @Salt);
+            INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT, CREATED_AT, UPDATE_AT)
+            VALUES (@NewID, @Email, @PasswordHash, @Salt, GETDATE(), GETDATE());
 
             EXEC sp_addlogin @Email, @PASSWORD;
-            EXEC sp_adduser @Email;
+            EXEC sp_adduser @NewID;
 
-            EXEC sp_addrolemember 'ADMIN', @Email;
+            EXEC sp_addrolemember 'ADMIN', @NewID;
 
             SET @ResponseMessage = 'User registered successfully with ID ' + @NewID;
         END TRY
@@ -135,10 +136,10 @@ GO
 
 
 
-declare @ResponseMessage NVARCHAR(255);
+-- declare @ResponseMessage NVARCHAR(255);
 
-EXEC sp_ADMIN_LOGIN 'aHAHAHAHA@gmail.com', '123456', @ResponseMessage = @ResponseMessage output;
-select @ResponseMessage;
+-- EXEC sp_ADMIN_LOGIN 'aHAHAHAHA@gmail.com', '123456', @ResponseMessage = @ResponseMessage output;
+-- select @ResponseMessage;
 GO
 --ADMIN LOGIN
 CREATE OR ALTER PROCEDURE sp_ADMIN_LOGIN
