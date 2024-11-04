@@ -3,7 +3,7 @@ using api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Cafeteria_DB;
+using CafeteriaDB;
 
 namespace api.Data
 {

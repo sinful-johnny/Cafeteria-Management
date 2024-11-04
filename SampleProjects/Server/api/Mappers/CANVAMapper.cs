@@ -1,6 +1,6 @@
 ﻿
 using api.Dtos.CANVA;
-using Cafeteria_DB;
+using CafeteriaDB;
 
 namespace api.Mappers
 {

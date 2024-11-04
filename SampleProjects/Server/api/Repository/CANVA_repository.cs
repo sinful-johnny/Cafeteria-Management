@@ -2,7 +2,7 @@
 using api.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Cafeteria_DB;
+using CafeteriaDB;
 
 namespace EFTut.Repository
 {
@@ -14,14 +14,14 @@ namespace EFTut.Repository
             _context = context;
         }
 
-        public  async Task<List<CANVA>?> GetAllCanvaAsync()
+        public  async Task<List<CANVA>> GetAllCanvaAsync()
         {
             //var connection = _context.Database.GetDbConnection();
             var result = await _context.Canva.FromSqlRaw("EXEC DBO.SelectAllCanva").ToListAsync();
             return result;
         }
 
-        public async Task<CANVA?> CreateCanvaAsync(CANVA CanvaModel)
+        public async Task<CANVA> CreateCanvaAsync(CANVA CanvaModel)
         {
             var widthCanva = new SqlParameter("@width", CanvaModel.WIDTH);
             var heightCanva = new SqlParameter("@height", CanvaModel.HEIGHT);

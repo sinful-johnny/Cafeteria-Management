@@ -6,27 +6,31 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Cafeteria_DB
+namespace CafeteriaDB
 {
-    
-    public partial class ADMIN : IdentityUser
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class CAFETERIA_TABLE
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ADMIN()
+        public CAFETERIA_TABLE()
         {
-            this.CANVA_ADMIN = new HashSet<CANVA_ADMIN>();
+            this.FOOD_TABLE = new HashSet<FOOD_TABLE>();
         }
 
         [Key]
+        public string ID_TABLE { get; set; }
+        public string ID_SHAPE { get; set; }
+        public string ID_CANVA { get; set; }
         public string ID_ADMIN { get; set; }
-        public string EMAIL { get; set; }
-        public string PASSWORD { get; set; }
+        public string TABLE_STATUS { get; set; }
     
+        public virtual SHAPE_TYPE SHAPE_TYPE { get; set; }
+        public virtual CANVA_ADMIN CANVA_ADMIN { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CANVA_ADMIN> CANVA_ADMIN { get; set; }
+        public virtual ICollection<FOOD_TABLE> FOOD_TABLE { get; set; }
     }
 }

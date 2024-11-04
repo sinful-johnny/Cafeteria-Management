@@ -1,5 +1,8 @@
 ﻿using api.Dtos.Account;
+using api.Interfaces;
 using api.Models;
+using api.Repository;
+using CafeteriaDB;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +12,14 @@ namespace api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager;
+        //private readonly UserManager<AppUser> _userManager;
+        private readonly ITokenService _tokenService;
+        private readonly IAdminRepository _adminRepo;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(IAdminRepository adminRepo, ITokenService tokenService)
         {
-            _userManager = userManager;
+            _adminRepo = adminRepo;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -22,35 +28,36 @@ namespace api.Controllers
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var appUser = new AppUser
+                var admin = new ADMIN
                 {
-                    UserName = registerDto.Username,
-                    Email = registerDto.EmailAddress
+                    EMAIL = registerDto.EmailAddress
                 };
 
-                if (registerDto.Password == null) { 
+                if (registerDto.Password == null)
+                {
                     return BadRequest(ModelState);
                 }
 
-                var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-                if (createdUser.Succeeded) 
+                string result = await _adminRepo.RegisterAdminAsync(registerDto);
+                if (result.Contains("User registered successfully"))
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
-
-                    if (roleResult.Succeeded)
-                        return Ok("User created");
-                    else
-                        return StatusCode(500, roleResult.Errors);
+                    return Ok
+                            (
+                                new NewUserDto
+                                {
+                                    Email = admin.EMAIL,
+                                    Token = _tokenService.CreateToken(admin)
+                                }
+                            );
                 }
                 else
                 {
-                    return StatusCode(500, createdUser.Errors);
+                    return BadRequest(new { Message = result });
                 }
-
             }
             catch (Exception ex)
             {
