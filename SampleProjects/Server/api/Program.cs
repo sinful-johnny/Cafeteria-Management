@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EFTut.Repository;
+using api.Service;
+using api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,7 +79,8 @@ builder.Services.AddAuthentication(options =>
 
 //Hook Interfaces and Repository in
 builder.Services.AddScoped<ICanvaRepository, CANVA_repository>();
-
+builder.Services.AddScoped<IAdminRepository, ADMIN_repository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
