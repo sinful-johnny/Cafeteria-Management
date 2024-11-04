@@ -11,9 +11,10 @@ interface CanvasProps{
   setItems: (items: ITable[]) => void;
   selectedIndex: Number | null;
   setSelectedIndex: (index: number) => void;
+  isTableMenu: boolean;
 }
 
-const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex}) => {
+const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   //const [items, setItems] = useState<ITable[]>([]);
 
@@ -32,6 +33,21 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
           context.clearRect(0, 0, canvas.width, canvas.height);
           items.forEach(item => {
             item.draw(context);
+            const text = `Table ${item.tableId}: ${item.tableStatus}`;
+            context.font = "12px Arial";
+            context.fillStyle = "black";
+            const textWidth = context.measureText(text).width;
+            let centerX, centerY;
+            if (item instanceof RectangleTable) {
+                // Center for rectangle
+                centerX = item.x + (item.width / 2) - (textWidth / 2);
+                centerY = item.y + (item.height / 2) + 6;
+            } else if (item instanceof CircleTable) {
+                // Center for circle
+                centerX = item.x - (textWidth / 2); // Circle's center x, minus half the text width
+                centerY = item.y + 4; // Circle's center y, with a slight vertical offset
+            }
+            context.fillText(text, centerX, centerY);
           });
         };
 
@@ -62,11 +78,11 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
         };
 
         const handleMouseMove = (e: MouseEvent) => {
+          if (!isTableMenu) return;
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           let newItems = items;
-          let hasCollision = false;
           if (isDragging && dragIndex !== null) {
             newItems = items.map((item, i) => {
               if(i === dragIndex){
@@ -95,16 +111,14 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
             for (let i = 0; i < newItems.length; i++) {
               for (let j = i + 1; j < newItems.length; j++) {
                 if (checkCollision(newItems[i], newItems[j])) {
-                  hasCollision = true;
+                  setCollideObject(true);
                   console.log(`Collision detected between item ${i} and item ${j}`);
                   break;
                 }
               }
-              if (hasCollision) break;
+              if(i === newItems.length - 1) setCollideObject(false);
             }
           }
-          //setCollideBorder
-          setCollideObject(hasCollision)
           setItems(newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
             return item;
@@ -154,13 +168,15 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
   
           if(index >= 0 && index < items.length){
             //Table detected
-            //Add food to a table
+            //Add food to a locked table
             var newItems = items.map((item,i) => {
               if(i === index){
                 if(item.foods === undefined){
                   item.foods = [];
                 }
+                if (item.tableStatus === "unlocked") return item;
                 item.foods.push(new Food(data.ID_FOOD,data.name, 1, 1, "Available", data.img));
+                item.tableStatus = "occupied";
               }
               return item;
             });
@@ -182,7 +198,18 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
     event.preventDefault();
   };
 
+  const save = () => {
+    if (CollidingWithObject) return;
+    const lockedItems = items.map(item => {
+      item.tableStatus = "locked";
+      return item;
+    });
+    console.log("Current Canvas Items:", lockedItems);
+    setItems(lockedItems);
+  };
+
   return (
+    <div>
     <canvas
       ref={canvasRef}
       width={600}
@@ -191,6 +218,8 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       onDragOver={handleDragOver}
       style={{ border: '1px solid black', maxHeight: "400px", maxWidth: "600px" }}
     />
+    <button onClick={save}>Placeholder save button</button>
+    </div>
   );
 };
 

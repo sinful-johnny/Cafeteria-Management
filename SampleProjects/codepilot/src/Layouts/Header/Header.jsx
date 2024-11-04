@@ -7,7 +7,7 @@ import userImg from './Rectangle.png'
 
 import "./Header.css";
 
-const Header = ({selectedPage, setSelectedPage}) => {
+const Header = ({selectedPage, setSelectedPage, setIsTableMenu}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const Header = ({selectedPage, setSelectedPage}) => {
               onClick={() => {
                 //navigate("/admin/canvas");
                 setSelectedPage("Table");
+                setIsTableMenu(true);
               }}
             >
               Table
@@ -40,6 +41,7 @@ const Header = ({selectedPage, setSelectedPage}) => {
               onClick={() => {
                 //navigate("/admin/canvas");
                 setSelectedPage("Order");
+                setIsTableMenu(false);
               }}
             >
               Order

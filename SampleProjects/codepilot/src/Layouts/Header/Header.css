@@ -73,7 +73,7 @@ I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS AD
     display: flex;
     align-items: center;
     position: relative;
-    margin-top: -11px; /* Space between the heading and buttons */
+    margin-top: -11px;
 }
   
 .nav-button {

@@ -16,6 +16,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   const [selectedPage, setSelectedPage] = useState<string>("Table");
   const [items, setItems] = useState<ITable[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isTableMenu, setIsTableMenu] = useState(true);
   const [tables, setTables] = useState([
     { id: 1, title: 'Table', content: [
       {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", color: "blue", img: "/square.svg"},
@@ -67,8 +68,9 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
     setItems(items.map((item,i) => {
       if(i === index){
         //do some sorts of database operation then proceed
-
+        if (item.tableStatus === "unlocked") return item; 
         item.foods.length = 0;
+        item.tableStatus = "locked";
         return item
       }else{return item}
     }))
@@ -76,7 +78,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
 
   return (
     <div className="Global--Container">
-      <Header selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
+      <Header selectedPage={selectedPage} setSelectedPage={setSelectedPage} setIsTableMenu={setIsTableMenu}/>
       <div className="BodyStyle">
         <Navbar selectedPage={selectedPage} orders={orders} tables={tables}/>
         <div className="ContentStyle">
@@ -85,6 +87,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
           setItems={setItems} 
           selectedIndex={selectedIndex} 
           setSelectedIndex={setSelectedIndex}
+          isTableMenu={isTableMenu}
           />
         </div>
         {(selectedIndex !== null && selectedIndex >= 0 && selectedIndex < items.length) ?
