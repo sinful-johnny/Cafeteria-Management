@@ -7,13 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cafeteria_DB
+namespace CafeteriaDB
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class SelectIdCanva_Result
+    public partial class V_ADMIN_TABLE
     {
-        public Nullable<double> HEIGHT { get; set; }
-        public Nullable<double> WIDTH { get; set; }
+        public string ID_TABLE { get; set; }
+        public string ID_SHAPE { get; set; }
+        public string TABLE_STATUS { get; set; }
+        public Nullable<double> X_COORDINATE { get; set; }
+        public Nullable<double> Y_COORDINATE { get; set; }
     }
 }

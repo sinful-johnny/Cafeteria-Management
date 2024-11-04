@@ -10,17 +10,20 @@
 namespace CafeteriaDB
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class FOOD_TABLE
+    public partial class sp_ADMIN_LOAD_Result
     {
-        public string ID_FOOD { get; set; }
         public string ID_TABLE { get; set; }
+        public Nullable<double> X_COORDINATE { get; set; }
+        public Nullable<double> Y_COORDINATE { get; set; }
+        public string TABLE_STATUS { get; set; }
+        public string SHAPE_TYPENAME { get; set; }
+        public Nullable<double> HEIGHT { get; set; }
+        public Nullable<double> WIDTH { get; set; }
+        public Nullable<double> RADIUS { get; set; }
+        public string ID_FOOD { get; set; }
         public Nullable<int> AMOUNT_IN_TABLE { get; set; }
-        public Nullable<System.DateTime> CREATED_AT { get; set; }
-        public Nullable<System.DateTime> UPDATE_AT { get; set; }
-    
-        public virtual CAFETERIA_TABLE CAFETERIA_TABLE { get; set; }
-        public virtual FOOD_TYPE FOOD_TYPE { get; set; }
+        public string FOOD_NAME { get; set; }
+        public string FOOD_TYPENAME { get; set; }
     }
 }

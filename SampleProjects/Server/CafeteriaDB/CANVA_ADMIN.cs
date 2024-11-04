@@ -23,6 +23,8 @@ namespace CafeteriaDB
         public string ID_CANVA { get; set; }
         public string ID_ADMIN { get; set; }
         public string LOGIN_STATUS { get; set; }
+        public Nullable<System.DateTime> CREATED_AT { get; set; }
+        public Nullable<System.DateTime> UPDATE_AT { get; set; }
     
         public virtual ADMIN ADMIN { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

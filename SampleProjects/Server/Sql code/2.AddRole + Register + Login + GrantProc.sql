@@ -53,10 +53,24 @@ GO
 
 -- declare @ResponseMessage NVARCHAR(255);
 
--- EXEC sp_ADMIN_REGISTER 'aHAHAHAHA@gmail.com', '123456', @ResponseMessage = @ResponseMessage output;
+-- EXEC sp_ADMIN_REGISTER '1@gmail.com', '132424', @ResponseMessage = @ResponseMessage output;
 
 -- select @ResponseMessage;
 -- GO
+
+--drop user
+
+-- DECLARE @sql NVARCHAR(MAX) = N'';
+
+-- -- Generate DROP USER statements for each user
+-- SELECT @sql += 'DROP USER [' + name + '];' + CHAR(13)
+-- FROM sys.database_principals
+-- WHERE type_desc = 'SQL_USER' 
+--       AND principal_id > 4  -- Excludes system users like dbo, guest, etc.
+
+-- -- Execute the generated SQL
+-- EXEC sp_executesql @sql;
+-- go
 
 --ADMIN REGISTER
 CREATE OR ALTER PROC sp_ADMIN_REGISTER
@@ -111,18 +125,22 @@ BEGIN
 
         -- Insert the new admin record with the generated ID and hashed password
         BEGIN TRY
+
+            EXEC sp_addlogin @Email, @PASSWORD;
+            declare @cmd varchar(200);
+            set @cmd = ' 
+		                USE cafeteriaDB
+		                CREATE USER [' + @NewID + '] FOR LOGIN '+ '[' + @Email + ']';
+            EXEC (@cmd);
+
+            EXEC sp_addrolemember 'ADMIN', @NewID;
             INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT, CREATED_AT, UPDATE_AT)
             VALUES (@NewID, @Email, @PasswordHash, @Salt, GETDATE(), GETDATE());
 
-            EXEC sp_addlogin @Email, @PASSWORD;
-            EXEC sp_adduser @NewID;
-
-            EXEC sp_addrolemember 'ADMIN', @NewID;
-
             SET @ResponseMessage = 'User registered successfully with ID ' + @NewID;
+            return;
         END TRY
         BEGIN CATCH
-            DELETE FROM ADMIN WHERE ID_ADMIN = @NewID;
             SET @ResponseMessage = 'An error occurred during registration.';
         END CATCH
     END

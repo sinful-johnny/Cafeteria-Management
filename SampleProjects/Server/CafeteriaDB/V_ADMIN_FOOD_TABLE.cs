@@ -6,18 +6,18 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-namespace Cafeteria_DB
-{
 
-    public partial class FOOD_TABLE
+namespace CafeteriaDB
+{
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class V_ADMIN_FOOD_TABLE
     {
         public string ID_FOOD { get; set; }
-
         public string ID_TABLE { get; set; }
         public Nullable<int> AMOUNT_IN_TABLE { get; set; }
-    
-        public virtual CAFETERIA_TABLE CAFETERIA_TABLE { get; set; }
-        public virtual FOOD_TYPE FOOD_TYPE { get; set; }
+        public Nullable<System.DateTime> CREATED_AT { get; set; }
+        public Nullable<System.DateTime> UPDATE_AT { get; set; }
     }
 }

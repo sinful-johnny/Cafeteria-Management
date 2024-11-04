@@ -96,6 +96,18 @@
     <Compile Include="SHAPE_TYPE.cs">
       <DependentUpon>CafeteriaDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_ADMIN_LOAD_Result.cs">
+      <DependentUpon>CafeteriaDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ADMIN_FOOD_TABLE.cs">
+      <DependentUpon>CafeteriaDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ADMIN_INFOR.cs">
+      <DependentUpon>CafeteriaDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ADMIN_TABLE.cs">
+      <DependentUpon>CafeteriaDBModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="CafeteriaDBModel.edmx">
