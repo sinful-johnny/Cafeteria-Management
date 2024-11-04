@@ -48,8 +48,8 @@ BEGIN
     END
 
     -- Step 4: Insert the new record with the generated ID
-    INSERT INTO CANVA (ID_CANVA, WIDTH, HEIGHT)
-    VALUES (@NewID, @WIDTH, @HEIGHT);
+    INSERT INTO CANVA (ID_CANVA, WIDTH, HEIGHT, CREATED_AT, UPDATE_AT)
+    VALUES (@NewID, @WIDTH, @HEIGHT, GETDATE(), GETDATE());
 
     -- Return the new ID
     SELECT @NewID AS NewID;
