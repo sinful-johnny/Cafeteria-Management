@@ -21,7 +21,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [CollidingWithObject, setCollideObject] = useState<boolean>(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -107,17 +106,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
               }
               return item;
             });
-            // Check for collisions and log them to the console
-            for (let i = 0; i < newItems.length; i++) {
-              for (let j = i + 1; j < newItems.length; j++) {
-                if (checkCollision(newItems[i], newItems[j])) {
-                  setCollideObject(true);
-                  console.log(`Collision detected between item ${i} and item ${j}`);
-                  break;
-                }
-              }
-              if(i === newItems.length - 1) setCollideObject(false);
-            }
           }
           setItems(newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
@@ -199,7 +187,21 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
   };
 
   const save = () => {
-    if (CollidingWithObject) return;
+    let hasCollision = false;
+    for (let i = 0; i < items.length; i++) {
+      for (let j = i + 1; j < items.length; j++) {
+        if (checkCollision(items[i], items[j])) {
+          hasCollision = true;
+          console.log(`Collision detected between item ${i} and item ${j}`);
+          break;
+        }
+      }
+      if (hasCollision) break;
+    }
+    if (hasCollision) {
+      console.log("Cannot save due to collision.");
+      return;
+    }
     const lockedItems = items.map(item => {
       item.tableStatus = "locked";
       return item;
