@@ -7,7 +7,7 @@ import userImg from './Rectangle.png'
 
 import "./Header.css";
 
-const Header = ({selectedPage, setSelectedPage, setIsTableMenu}) => {
+const Header = ({selectedPage, setSelectedPage, setIsTableMenu, save, isSaved}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const Header = ({selectedPage, setSelectedPage, setIsTableMenu}) => {
                     Order
                 </button>
             </div>
-            <button>Saved</button>
+            {isSaved ? <button>Unsaved</button> : <p>Saved</p>}
             <div
                 className="underline"
                 style={{

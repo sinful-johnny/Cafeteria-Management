@@ -12,9 +12,12 @@ interface CanvasProps{
   selectedIndex: Number | null;
   setSelectedIndex: (index: number) => void;
   isTableMenu: boolean;
+  isSaved: boolean;
+  setSaved: (isSaved: boolean) => void;
+  canvasSize: number[];
 }
 
-const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu}) => {
+const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   //const [items, setItems] = useState<ITable[]>([]);
 
@@ -105,15 +108,16 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                   item.y = newY;
                 }
                 item.tableStatus = "unlocked";
+                setSaved(false);
               }
               return item;
             });
           }
+
           setItems(newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
             return item;
           }));
-          drawItems();
         };
 
         const handleMouseUp = () => {
@@ -182,6 +186,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
         console.log("Error", error);
       }
     }
+    setSaved(false);
   };
 
   const handleDragOver = (event: DragEvent<HTMLCanvasElement>) => {
@@ -192,8 +197,8 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
     <div>
     <canvas
       ref={canvasRef}
-      width={600}
-      height={400}
+      width={canvasSize[0]}
+      height={canvasSize[1]}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       style={{ border: '1px solid black', maxHeight: "400px", maxWidth: "600px" }}
