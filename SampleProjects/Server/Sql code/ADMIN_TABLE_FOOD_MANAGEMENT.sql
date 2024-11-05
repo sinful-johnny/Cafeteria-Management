@@ -32,7 +32,7 @@ BEGIN
         -- SELECT *
         -- FROM CAFETERIA_TABLE
         INSERT INTO CAFETERIA_TABLE (ID_TABLE, ID_SHAPE, ID_CANVA, ID_ADMIN, TABLE_STATUS, CREATED_AT, UPDATE_AT)
-        VALUES (@NewID, @ID_SHAPE, @ID_CANVA, CURRENT_USER, 'Empty', GETDATE(), GETDATE());
+        VALUES (@NewID, @ID_SHAPE, @ID_CANVA, CURRENT_USER, 'available', GETDATE(), GETDATE());
 
         SET @ResponseMessage = 'Table successfully created with ID ' + @NewID;
     END TRY
@@ -40,6 +40,46 @@ BEGIN
             SET @ResponseMessage = 'An error occurred during insertation.';
         END CATCH
 
+END
+GO
+
+-- SELECT *
+-- FROM CAFETERIA_TABLE
+-- GO
+
+-- declare @ResponseMessage NVARCHAR(255);
+-- EXEC sp_ADMIN_DELETETABLE 'T002', @ResponseMessage = @ResponseMessage output;
+
+-- select @ResponseMessage;
+-- GO
+
+CREATE OR ALTER PROC sp_ADMIN_DELETETABLE
+    @ID_TABLE VARCHAR(5),
+    @ResponseMessage NVARCHAR(255) OUTPUT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM CAFETERIA_TABLE WHERE ID_TABLE = @ID_TABLE
+                                                AND TABLE_STATUS = 'available')
+    BEGIN
+        DELETE FROM CAFETERIA_TABLE
+        WHERE ID_TABLE = @ID_TABLE
+        SET @ResponseMessage = 'Table deleted from CAFETERIA_TABLE.';
+    END
+    ELSE IF EXISTS (SELECT 1 FROM FOOD_TABLE WHERE ID_TABLE = @ID_TABLE)
+    BEGIN
+        -- Delete all references to the table from FOOD_TABLE
+        DELETE FROM FOOD_TABLE WHERE ID_TABLE = @ID_TABLE;
+
+        -- After deleting from FOOD_TABLE, delete the table from CAFETERIA_TABLE
+        DELETE FROM CAFETERIA_TABLE WHERE ID_TABLE = @ID_TABLE;
+        
+        SET @ResponseMessage = 'Table and associated food records deleted.';
+    END
+    ELSE
+    BEGIN
+        -- Table not found in CAFETERIA_TABLE or FOOD_TABLE
+        SET @ResponseMessage = 'No matching table found to delete.';
+    END
 END
 GO
 
@@ -51,7 +91,6 @@ CREATE OR ALTER PROC sp_ADMIN_UPDATETABLE
 	@ID_TABLE VARCHAR(5),
     @X_COORDINATE FLOAT,
     @Y_COORDINATE FLOAT,
-    @ID_ADMIN VARCHAR(5),
     @ResponseMessage NVARCHAR(255) OUTPUT
 AS
 BEGIN
@@ -215,5 +254,9 @@ GRANT EXECUTE ON OBJECT::sp_ADMIN_CLEAR_TABLEFOOD
 GO
 
 GRANT EXECUTE ON OBJECT::sp_ADMIN_LOAD
+    TO ADMIN; 
+GO
+
+GRANT EXECUTE ON OBJECT::sp_ADMIN_DELETETABLE
     TO ADMIN; 
 GO
