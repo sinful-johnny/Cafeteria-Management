@@ -197,11 +197,11 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
     <div>
     <canvas
       ref={canvasRef}
-      width={canvasSize[0]}
-      height={canvasSize[1]}
+      width={`${canvasSize[0]}px`}
+      height={`${canvasSize[1]}px`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      style={{ border: '1px solid black', maxHeight: "400px", maxWidth: "600px" }}
+      style={{ border: '1px solid black', maxHeight: `${canvasSize[1]}px`, maxWidth: `${canvasSize[0]}px` }}
     />
     </div>
   );

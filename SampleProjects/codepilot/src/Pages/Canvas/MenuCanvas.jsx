@@ -3,7 +3,7 @@ import Canvas  from '../../Components/Canvas.tsx';
 
 const MenuCanvas = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize}) => {
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: canvasSize[1], width: canvasSize[0] }}>
       <Canvas 
         items={items} 
         setItems={setItems} 

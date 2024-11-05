@@ -50,9 +50,7 @@ const Navbar = ({selectedPage,tables,orders}) => {
   ]
 
   useEffect(() => {
-    if(tables.length === 0 || orders.length === 0){
-      setRerender(!rerender);
-    }
+
 
     if(selectedPage === "Table"){
       setItems(tables);
