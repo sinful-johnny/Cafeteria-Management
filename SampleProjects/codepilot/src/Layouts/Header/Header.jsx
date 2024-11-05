@@ -26,32 +26,34 @@ const Header = ({selectedPage, setSelectedPage, setIsTableMenu}) => {
         <div className="logo-text">
           <h3>Morning coffee</h3>
           <div className="function-selection">
-            <button
-              className={`nav-button ${selectedPage === "Table" ? "selected" : ""}`}
-              onClick={() => {
-                //navigate("/admin/canvas");
-                setSelectedPage("Table");
-                setIsTableMenu(true);
-              }}
-            >
-              Table
-            </button>
-            <button
-              className={`nav-button ${selectedPage === "Order" ? "selected" : ""}`}
-              onClick={() => {
-                //navigate("/admin/canvas");
-                setSelectedPage("Order");
-                setIsTableMenu(false);
-              }}
-            >
-              Order
-            </button>
-            <p>Saved</p>
+            <div className="nav-buttons">
+                <button
+                    className={`nav-button ${selectedPage === "Table" ? "selected" : ""}`}
+                    onClick={() => {
+                        setSelectedPage("Table");
+                        setIsTableMenu(true);
+                    }}
+                >
+                    Table
+                </button>
+                <button
+                    className={`nav-button ${selectedPage === "Order" ? "selected" : ""}`}
+                    onClick={() => {
+                        setSelectedPage("Order");
+                        setIsTableMenu(false);
+                    }}
+                >
+                    Order
+                </button>
+            </div>
+            <button>Saved</button>
             <div
-              className="underline"
-              style={{ left: `${["Table", "Order"].indexOf(selectedPage) * 61}px` }}
+                className="underline"
+                style={{
+                    left: selectedPage === "Table" ? "0px" : "64px",
+                }}
             ></div>
-          </div>
+        </div>
         </div>
       </div>
       <img className="user-image" src={userImg} alt="Avatar" />
