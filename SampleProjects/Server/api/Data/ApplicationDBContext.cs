@@ -3,16 +3,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using CafeteriaDB;
+using Microsoft.Extensions.Configuration;
+using api.Dtos.Account;
 
 namespace api.Data
 {
     public class ApplicationDBContext : IdentityDbContext<AppUser>
     {
+        //private readonly string _connectionString;
         public ApplicationDBContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
         {
-
         }
+
+        //private string BuildConnectionString(string baseConnectionString, string userId, string password)
+        //{
+        //    return baseConnectionString
+        //        .Replace("{UserId}", userId)
+        //        .Replace("{Password}", password);
+        //}
+
+        // New constructor for SQL Authentication
+        //public ApplicationDBContext(LoginDto loginDto, IConfiguration configuration)
+        //{
+        //    // Build the connection string with SQL Authentication credentials
+        //    var baseConnectionString = configuration.GetConnectionString("LoginConnection");
+        //    _connectionString = BuildConnectionString(baseConnectionString, loginDto.EmailAddress, loginDto.Password);
+        //}
 
         public DbSet<CANVA> Canva { get; set; }
 
@@ -21,6 +38,14 @@ namespace api.Data
         public DbSet<SHAPE_TYPE> ShapeType { get; set; }
 
         public DbSet<CAFETERIA_TABLE> CafeteriaTable { get; set; }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured && !string.IsNullOrEmpty(_connectionString))
+        //    {
+        //        optionsBuilder.UseSqlServer(_connectionString);
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

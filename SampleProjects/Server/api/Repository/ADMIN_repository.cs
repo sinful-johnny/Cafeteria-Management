@@ -3,6 +3,7 @@ using api.Dtos.Account;
 using api.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace api.Repository
@@ -25,7 +26,9 @@ namespace api.Repository
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC sp_ADMIN_LOGIN @Email, @Password, @ResponseMessage OUTPUT",
                 new SqlParameter("@Email", loginDto.EmailAddress), 
-                new SqlParameter("@Password", loginDto.Password), responseMessage); 
+                new SqlParameter("@Password", loginDto.Password), responseMessage);
+
+            //using var sqlAuthContext = new ApplicationDBContext(loginDto, _configuration);
 
             return responseMessage.Value.ToString();
         }

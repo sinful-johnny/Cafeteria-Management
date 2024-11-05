@@ -137,7 +137,7 @@ BEGIN
             INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT, CREATED_AT, UPDATE_AT)
             VALUES (@NewID, @Email, @PasswordHash, @Salt, GETDATE(), GETDATE());
 
-            SET @ResponseMessage = 'User registered successfully with ID ' + @NewID;
+            SET @ResponseMessage = 'User registered successfully';
             return;
         END TRY
         BEGIN CATCH
