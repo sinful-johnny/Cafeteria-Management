@@ -85,6 +85,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
           if (isDragging && dragIndex !== null) {
             newItems = items.map((item, i) => {
               if(i === dragIndex){
+                if(item.tableStatus === "occupied") return item;
                 let newX = x - dragOffset.x;
                 let newY = y - dragOffset.y;
                 let tempItem;
@@ -103,6 +104,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                 } else {
                   item.y = newY;
                 }
+                item.tableStatus = "unlocked";
               }
               return item;
             });
@@ -186,30 +188,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
     event.preventDefault();
   };
 
-  const save = () => {
-    let hasCollision = false;
-    for (let i = 0; i < items.length; i++) {
-      for (let j = i + 1; j < items.length; j++) {
-        if (checkCollision(items[i], items[j])) {
-          hasCollision = true;
-          console.log(`Collision detected between item ${i} and item ${j}`);
-          break;
-        }
-      }
-      if (hasCollision) break;
-    }
-    if (hasCollision) {
-      console.log("Cannot save due to collision.");
-      return;
-    }
-    const lockedItems = items.map(item => {
-      item.tableStatus = "locked";
-      return item;
-    });
-    console.log("Current Canvas Items:", lockedItems);
-    setItems(lockedItems);
-  };
-
   return (
     <div>
     <canvas
@@ -220,7 +198,6 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       onDragOver={handleDragOver}
       style={{ border: '1px solid black', maxHeight: "400px", maxWidth: "600px" }}
     />
-    <button onClick={save}>Placeholder save button</button>
     </div>
   );
 };
