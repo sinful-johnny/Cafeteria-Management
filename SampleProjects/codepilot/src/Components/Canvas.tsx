@@ -15,9 +15,10 @@ interface CanvasProps{
   isSaved: boolean;
   setSaved: (isSaved: boolean) => void;
   canvasSize: number[];
+  drawItems: (canvas, context) => void;
 }
 
-const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize}) => {
+const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize, drawItems}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   //const [items, setItems] = useState<ITable[]>([]);
 
@@ -31,29 +32,30 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       const context = canvas.getContext('2d');
       if (context) {
         
-        const drawItems = () => {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          items.forEach(item => {
-            item.draw(context);
-            const text = `Table ${item.tableId}: ${item.tableStatus}`;
-            context.font = "12px Arial";
-            context.fillStyle = "black";
-            const textWidth = context.measureText(text).width;
-            let centerX, centerY;
-            if (item instanceof RectangleTable) {
-                // Center for rectangle
-                centerX = item.x + (item.width / 2) - (textWidth / 2);
-                centerY = item.y + (item.height / 2) + 6;
-            } else if (item instanceof CircleTable) {
-                // Center for circle
-                centerX = item.x - (textWidth / 2); // Circle's center x, minus half the text width
-                centerY = item.y + 4; // Circle's center y, with a slight vertical offset
-            }
-            context.fillText(text, centerX, centerY);
-          });
-        };
+        //const drawItems = () => {
+        //  context.clearRect(0, 0, canvas.width, canvas.height);
+        //  items.forEach(item => {
+        //    item.draw(context);
+        //    const text = `Table ${item.tableId}: ${item.tableStatus}`;
+        //    context.font = "12px Arial";
+        //    context.fillStyle = "black";
+        //    const textWidth = context.measureText(text).width;
+        //    let centerX, centerY;
+        //    if (item instanceof RectangleTable) {
+        //        // Center for rectangle
+        //        centerX = item.x + (item.width / 2) - (textWidth / 2);
+        //        centerY = item.y + (item.height / 2) + 6;
+        //    } else if (item instanceof CircleTable) {
+        //        // Center for circle
+        //        centerX = item.x - (textWidth / 2); // Circle's center x, minus half the text width
+        //        centerY = item.y + 4; // Circle's center y, with a slight vertical offset
+        //    }
+        //    context.fillText(text, centerX, centerY);
+        //  });
+        //};
 
-        drawItems();
+        drawItems(canvas,context);
+
         const handleMouseDown = (e: MouseEvent) => {
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
@@ -77,47 +79,51 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
              }
              return item;
           }))
+          drawItems(canvas,context);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-          if (!isTableMenu) return;
+          let newItems = items;
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
-          let newItems = items;
-          if (isDragging && dragIndex !== null) {
-            newItems = items.map((item, i) => {
-              if(i === dragIndex){
-                if(item.tableStatus === "occupied") return item;
-                let newX = x - dragOffset.x;
-                let newY = y - dragOffset.y;
-                let tempItem;
-                if (item instanceof RectangleTable) {
-                  tempItem = TableFactory.createTable(items.length + 1,"rectangle", newX, newY);
-                } else if (item instanceof CircleTable) {
-                  tempItem = TableFactory.createTable(items.length + 1,"circle", newX, newY);
+          if (isTableMenu){
+            if (isDragging && dragIndex !== null) {
+              newItems = items.map((item, i) => {
+                if(i === dragIndex){
+                  if(item.tableStatus === "occupied") return item;
+                  let newX = x - dragOffset.x;
+                  let newY = y - dragOffset.y;
+                  let tempItem;
+                  if (item instanceof RectangleTable) {
+                    tempItem = TableFactory.createTable(items.length + 1,"rectangle", newX, newY);
+                  } else if (item instanceof CircleTable) {
+                    tempItem = TableFactory.createTable(items.length + 1,"circle", newX, newY);
+                  }
+                  if (isCollidingWithBorderX(tempItem, canvas.width)) {
+                    null;
+                  } else {
+                    item.x = newX;
+                  }
+                  if (isCollidingWithBorderY(tempItem, canvas.height)) {
+                    null;
+                  } else {
+                    item.y = newY;
+                  }
+                  item.tableStatus = "unlocked";
+                  setSaved(false);
                 }
-                if (isCollidingWithBorderX(tempItem, canvas.width)) {
-                  null;
-                } else {
-                  item.x = newX;
-                }
-                if (isCollidingWithBorderY(tempItem, canvas.height)) {
-                  null;
-                } else {
-                  item.y = newY;
-                }
-                item.tableStatus = "unlocked";
-                setSaved(false);
-              }
-              return item;
-            });
+                return item;
+              });
+            }
           }
-
+        
           setItems(newItems.map((item, i) => {
             item.isHovered = item.isMouseInRange(x,y);
             return item;
           }));
+
+          drawItems(canvas,context);
         };
 
         const handleMouseUp = () => {

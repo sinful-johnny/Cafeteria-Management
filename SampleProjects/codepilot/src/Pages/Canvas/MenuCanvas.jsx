@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Canvas  from '../../Components/Canvas.tsx';
 
-const MenuCanvas = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize}) => {
+const MenuCanvas = ({items, setItems, selectedIndex, setSelectedIndex, isTableMenu, isSaved, setSaved, canvasSize, drawItems}) => {
   return (
     <div style={{ display: 'flex', height: canvasSize[1], width: canvasSize[0] }}>
       <Canvas 
@@ -13,6 +13,7 @@ const MenuCanvas = ({items, setItems, selectedIndex, setSelectedIndex, isTableMe
         isSaved={isSaved} 
         setSaved={setSaved}
         canvasSize={canvasSize}
+        drawItems={drawItems}
       />
     </div>
   );

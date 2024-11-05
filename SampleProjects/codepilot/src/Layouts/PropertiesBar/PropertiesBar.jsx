@@ -2,34 +2,37 @@ import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList"
 import "./PropertiesBar.css";
 import React, { useEffect, useState } from 'react';
 
-const PropertiesBar = ({items, clearTable , selectedIndex, orders}) => {
+const PropertiesBar = ({clearTable , selectedTable, ordersOnTable}) => {
     const [openIndexes, setOpenIndexes] = useState({});
-    const [selectedTable, setSelectedTable] = useState(items[selectedIndex]);
-    const [ordersOnTable, setOrdersOnTable] = useState(orders.map((order) => {
-      return {...order, content: []}
-    }));
+    //const [selectedTable, setSelectedTable] = useState(items[selectedIndex]);
+    //const [ordersOnTable, setOrdersOnTable] = useState(orders.map((order) => {
+    //  return {...order, content: []}
+    //}));
 
-    useEffect(() => {
-      setSelectedTable(items[selectedIndex]);
-      var newOrdersOnTable = orders.map((order) => {
-        var newOrder = {...order, content: []};
-        selectedTable.foods.map((food) => {
-          if(order.content.findIndex(x => x.name === food.foodName) !== -1){
-            newOrder.content.push({
-              id: food.foodId,
-              name: food.foodName,
-              img: food.imageURL
-            })
-          }
-        });
+    //useEffect(() => {
+    //  setSelectedTable(items[selectedIndex]);
+    //  var newOrdersOnTable = orders.map((order) => {
+    //    var newOrder = {...order, content: []};
+    //    selectedTable.foods.map((food) => {
+    //      if(order.content.findIndex(x => x.name === food.foodName) !== -1){
+    //        newOrder.content.push({
+    //          id: food.foodId,
+    //          name: food.foodName,
+    //          img: food.imageURL
+    //        })
+    //      }
+    //    });
+//
+    //    return newOrder;
+    //  });
+//
+    //  setOrdersOnTable(newOrdersOnTable);
+//
+    //  //console.log(ordersOnTable);
+    //  //console.log(newOrdersOnTable);
+    //}, [items]);
 
-        return newOrder;
-      });
-
-      setOrdersOnTable(newOrdersOnTable);
-
-      //console.log(newOrdersOnTable);
-    }, [selectedIndex, items]);
+    //console.log(ordersOnTable)
     
     return (
       <div className="admin-PropertiesBar">
@@ -37,7 +40,7 @@ const PropertiesBar = ({items, clearTable , selectedIndex, orders}) => {
           <h4>Table {selectedTable.tableId}</h4>
         </div>
         <div className="CollaspsibleList--container">
-          {ordersOnTable && 
+          {(ordersOnTable) && 
             <CollapsibleList items={ordersOnTable} openIndexes={openIndexes} setOpenIndexes={setOpenIndexes}/>
           }
         </div>

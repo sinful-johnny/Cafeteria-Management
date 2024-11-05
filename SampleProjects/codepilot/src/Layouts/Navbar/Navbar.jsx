@@ -50,8 +50,6 @@ const Navbar = ({selectedPage,tables,orders}) => {
   ]
 
   useEffect(() => {
-
-
     if(selectedPage === "Table"){
       setItems(tables);
     }else if(selectedPage === "Order"){

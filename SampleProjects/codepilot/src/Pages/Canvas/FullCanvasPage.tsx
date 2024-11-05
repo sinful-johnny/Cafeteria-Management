@@ -7,7 +7,9 @@ import Navbar from "../../Layouts/Navbar/Navbar";
 import PropertiesBar from "../../Layouts/PropertiesBar/PropertiesBar";
 import MenuCanvas from "./MenuCanvas";
 import { checkCollision, isCollidingWithBorderX, isCollidingWithBorderY } from "../../Components/CollisionDetection";
-import axios from "axios";
+import axios from "axios"
+import { RectangleTable } from "../../Class/Tables/RectangleTable";
+import { CircleTable } from "../../Class/Tables/CircleTable";
 
 interface FullCanvasPageProps{
     items: ITable[];
@@ -22,11 +24,11 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   const [canvasSize, setCanvasSize] = useState([600, 400]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isTableMenu, setIsTableMenu] = useState(true);
-  const [tables, setTables] = useState<any[]>([
-    //{ id: 1, title: 'Table', content: [
-    //  {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", img: "/square.svg"},
-    //  {shapeId: 2, name: "Circular", objectType: "Table", shapeType: "circle", img: "/circle.svg"}
-    //]},
+  const [tables, setTables] = useState([
+    { id: 1, title: 'Table', content: [
+      {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", color: "blue", img: "/square.svg"},
+      {shapeId: 2, name: "Circular", objectType: "Table", shapeType: "circle", color: "red", img: "/circle.svg"}
+    ]},
     //{id: 2, title: 'Tea', content: [
     //  {ID_FOOD: 1, objectType: "Food", name: "Honey Jasmine Green", img: "/tea1.svg"},
     //  {ID_FOOD: 2, objectType: "Food", name: "Raspberry Snow", img: "/tea2.svg"}
@@ -60,6 +62,9 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   ]);
 
   const [selectedTable, setSelectedTable] = useState<ITable | null>(null);
+
+  //const [RightSideBar, setRightSideBar] = useState()
+  const [ordersOnTable, setOrdersOnTable] = useState<any>([])
 
   useEffect(() => {
     axios.get("http://localhost:5030/api/ShapeType")
@@ -133,16 +138,37 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
           .catch(error => {
             console.log("Error",error);
           });
-
-
-
-    //console.log(tables);
+    
+    console.log("Data loaded!");
   },[])
 
   useEffect(() => {
+    if(selectedIndex !== null && selectedIndex >= 0 && selectedIndex < items.length){
+      setSelectedTable(items[selectedIndex]);
+      var table = items[selectedIndex];
+      var newOrdersOnTable = orders.map((order) => {
+        var newOrder = {...order, content: []};
+        var content: any[] = []
+        if(table){
+          table.foods.map((food) => {
+            if(order.content.findIndex(x => x.name === food.foodName) !== -1){
+              content.push({
+                id: food.foodId,
+                name: food.foodName,
+                img: food.imageURL
+              })
+            }
+          });
+          return {...newOrder, content: content}
+        }
+      });
+
+      setOrdersOnTable(newOrdersOnTable);
+    }
+
     if(selectedIndex !== null){
       setSelectedTable(items[selectedIndex]);
-      console.log(items[selectedIndex]);
+      //console.log(items[selectedIndex]);
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -152,10 +178,13 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
+
+    //console.log(selectedIndex);
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  },[selectedIndex]);
+  },[selectedIndex, items]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -232,6 +261,28 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
     setItems(lockedItems);
   };
 
+  const drawItems = (canvas,context) => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    items.forEach(item => {
+      item.draw(context);
+      const text = `Table ${item.tableId}: ${item.tableStatus}`;
+      context.font = "12px Arial";
+      context.fillStyle = "black";
+      const textWidth = context.measureText(text).width;
+      let centerX, centerY;
+      if (item instanceof RectangleTable) {
+          // Center for rectangle
+          centerX = item.x + (item.width / 2) - (textWidth / 2);
+          centerY = item.y + (item.height / 2) + 6;
+      } else if (item instanceof CircleTable) {
+          // Center for circle
+          centerX = item.x - (textWidth / 2); // Circle's center x, minus half the text width
+          centerY = item.y + 4; // Circle's center y, with a slight vertical offset
+      }
+      context.fillText(text, centerX, centerY);
+    });
+  };
+
   return (
     <div className="Global--Container">
       <Header selectedPage={selectedPage} setSelectedPage={setSelectedPage} setIsTableMenu={setIsTableMenu} save={save} isSaved={isSaved}/>
@@ -247,16 +298,15 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
           isSaved={isSaved}
           setSaved={setSaved}
           canvasSize={canvasSize}
+          drawItems={drawItems}
           />
         </div>
         {(selectedIndex !== null && selectedIndex >= 0 && selectedIndex < items.length) ?
           <PropertiesBar 
-          items={items} 
           clearTable={clearTable} 
-          selectedIndex={selectedIndex} 
-          //selectedTable={selectedTable}
+          selectedTable={items[selectedIndex]}
           //setSelectedTable={setSelectedTable}
-          orders={orders} 
+          ordersOnTable={ordersOnTable}
           /> : <></>
         }
         
