@@ -1,6 +1,8 @@
 USE cafeteriaDB
 GO
 
+
+
 -- SELECT*
 -- FROM CANVA
 --CANVA DATA
@@ -13,9 +15,9 @@ INSERT INTO CANVA (ID_CANVA, WIDTH, HEIGHT, CREATED_AT, UPDATE_AT) VALUES
 -- FROM ADMIN 
 --ADMIN DATA
 INSERT INTO ADMIN (ID_ADMIN, EMAIL, PASSWORDHASH, SALT, CREATED_AT, UPDATE_AT) VALUES  
-('A001', 'admin1@example.com', 'password1', '0', GETDATE(),GETDATE()),  
-('A002', 'admin2@example.com', 'password2', '0', GETDATE(),GETDATE()),  
-('A003', 'admin3@example.com', 'password3', '0', GETDATE(),GETDATE());
+('A001', 'admin1@example.com', CONVERT(VARBINARY(64), 'password1'), CONVERT(VARBINARY(16), '0'), GETDATE(),GETDATE()),  
+('A002', 'admin2@example.com', CONVERT(VARBINARY(64), 'password2'), CONVERT(VARBINARY(16), '0'), GETDATE(),GETDATE()),  
+('A003', 'admin3@example.com', CONVERT(VARBINARY(64), 'password3'), CONVERT(VARBINARY(16), '0'), GETDATE(),GETDATE());
 
 
 -- SELECT*
@@ -53,10 +55,10 @@ INSERT INTO CAFETERIA_TABLE (ID_TABLE, X_COORDINATE, Y_COORDINATE, ID_SHAPE, ID_
 -- FROM FOOD_TYPE
 --FOOD_TYPE DATA
 INSERT INTO FOOD_TYPE (ID_FOOD, FOOD_NAME, FOOD_TYPENAME, AMOUNT_LEFT, PRICE, FOOD_TYPE_STATUS, CREATED_AT, UPDATE_AT) VALUES  
-('F001', 'Burger', 'Fast Food', 20, 5.99, 'available'),  
-('F002', 'Pizza', 'Fast Food', 15, 8.99, 'available'),  
-('F003', 'Salad', 'Healthy', 30, 4.99, 'available'),
-('F004', 'Coffee', 'Coffee', 30, 5.99, 'available');
+('F001', 'Burger', 'Fast Food', 20, 5.99, 'available', GETDATE(),GETDATE()),  
+('F002', 'Pizza', 'Fast Food', 15, 8.99, 'available', GETDATE(),GETDATE()),  
+('F003', 'Salad', 'Healthy', 30, 4.99, 'available', GETDATE(),GETDATE()),
+('F004', 'Coffee', 'Coffee', 30, 5.99, 'available', GETDATE(),GETDATE());
 
 
 -- SELECT*
@@ -64,5 +66,7 @@ INSERT INTO FOOD_TYPE (ID_FOOD, FOOD_NAME, FOOD_TYPENAME, AMOUNT_LEFT, PRICE, FO
 --FOOD_TABLE DATA
 INSERT INTO FOOD_TABLE (ID_FOOD, ID_TABLE, AMOUNT_IN_TABLE, CREATED_AT, UPDATE_AT) VALUES  
 ('F001', 'T001', 5, GETDATE(),GETDATE()),  
-('F002', 'T002', 3, GETDATE(),GETDATE()),  
+('F002', 'T002', 3, GETDATE(),GETDATE()),
+('F001', 'T002', 3, GETDATE(),GETDATE()),
+('F001', 'T003', 3, GETDATE(),GETDATE()),
 ('F004', 'T003', 10, GETDATE(),GETDATE());
