@@ -34,7 +34,7 @@ const PropertiesBar = ({items, clearTable , selectedIndex, orders}) => {
     return (
       <div className="admin-PropertiesBar">
         <div className="Title">
-          <h4>Orders on Table {selectedTable.tableId}</h4>
+          <h4>Table {selectedTable.tableId}</h4>
         </div>
         <div className="CollaspsibleList--container">
           {ordersOnTable && 

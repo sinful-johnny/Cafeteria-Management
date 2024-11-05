@@ -96,12 +96,32 @@ I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS AD
     color: inherit;
     font-size: inherit;
 }
-
   
 .nav-button.selected {
     color: #e6943e;
 }
-  
+
+.save-button-Unsaved {
+    font-size: 18px;
+    font-weight: 50;
+    color: #4a3b2f;
+    outline: 2px solid #D19685;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: rgba(209, 150, 133, 0.69);
+}
+
+.save-button-Saved {
+    font-size: 18px;
+    font-weight: 50;
+    color: #4a3b2f;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    background-color: transparent;
+}
+
 .underline {
     position: absolute;
     bottom: 10px;

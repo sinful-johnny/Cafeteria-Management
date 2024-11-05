@@ -100,7 +100,8 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
         setItems(newItems);
         setSelectedIndex(null); // Clear selection after deletion
     }
-};
+    setSaved(false);
+  };
 
   function clearTable(index){
     setItems(items.map((item,i) => {

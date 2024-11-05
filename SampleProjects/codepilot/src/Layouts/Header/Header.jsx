@@ -46,7 +46,17 @@ const Header = ({selectedPage, setSelectedPage, setIsTableMenu, save, isSaved}) 
                     Order
                 </button>
             </div>
-            {isSaved ? <button>Unsaved</button> : <p>Saved</p>}
+            {/* Save Button */}
+            <button
+                  className={`save-button-${isSaved ? "Saved" : "Unsaved"}`}
+                  onClick={() => {
+                    if (!isSaved) {
+                      save();
+                    }
+                  }}
+                >
+                  {isSaved ? "Saved" : "Unsaved"}
+                </button>
             <div
                 className="underline"
                 style={{
