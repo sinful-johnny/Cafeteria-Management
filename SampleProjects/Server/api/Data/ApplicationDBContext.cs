@@ -24,13 +24,23 @@ namespace api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<FOOD_TABLE>()
             .HasKey(ct => new { ct.ID_FOOD, ct.ID_TABLE }); // Composite key for FOOD_TABLE
 
             modelBuilder.Entity<CANVA_ADMIN>()
                 .HasKey(ca => new { ca.ID_CANVA, ca.ID_ADMIN }); // Composite key for CANVA_ADMIN
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<FOOD_TABLE>()
+                .HasOne(u => u.FOOD_TYPE)
+                .WithMany(u => u.FOOD_TABLE)
+                .HasForeignKey(p => p.ID_FOOD);
+
+            modelBuilder.Entity<FOOD_TABLE>()
+                .HasOne(u => u.CAFETERIA_TABLE)
+                .WithMany(u => u.FOOD_TABLE)
+                .HasForeignKey(p => p.ID_TABLE);
 
             //Privileges
             //Stocks.FromSqlRaw

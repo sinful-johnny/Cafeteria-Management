@@ -22,6 +22,37 @@ namespace api.Controllers
             _tokenService = tokenService;
         }
 
+        [HttpPost("login")]
+
+        public async Task<IActionResult> Login (LoginDto loginDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var admin = new ADMIN
+            {
+                EMAIL = loginDto.EmailAddress
+            };
+
+            if (loginDto.Password == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string result = await _adminRepo.LoginAdminAsync(loginDto);
+
+            if (result.Contains("Invalid email or password.") || result.Contains("Invalid email or password.") )
+                    return Unauthorized("Username not found or password incorrect");
+
+            return Ok(
+                new NewUserDto
+                {
+                    Email = admin.EMAIL,
+                    Token = _tokenService.CreateToken(admin)
+                }
+            );
+        }
+
         [HttpPost("register")]
 
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
