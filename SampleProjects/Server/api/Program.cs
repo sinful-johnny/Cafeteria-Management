@@ -109,6 +109,8 @@ builder.Services.AddAuthentication(options =>
 //Hook Interfaces and Repository in
 builder.Services.AddScoped<ICanvaRepository, CANVA_repository>();
 builder.Services.AddScoped<IAdminRepository, ADMIN_repository>();
+builder.Services.AddScoped<IFOOD_TYPE_Repository, FOOD_TYPE_Repository>();
+builder.Services.AddScoped<ISHAPE_TYPE_Repository, SHAPE_TYPE_Repository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

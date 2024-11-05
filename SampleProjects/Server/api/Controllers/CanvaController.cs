@@ -1,6 +1,7 @@
 ﻿using api.Data;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFTut.Controllers
@@ -18,6 +19,7 @@ namespace EFTut.Controllers
         }
 
         [HttpGet]
+        [Authorize]
 
         public async Task<IActionResult> GetAllCanva()
         {
