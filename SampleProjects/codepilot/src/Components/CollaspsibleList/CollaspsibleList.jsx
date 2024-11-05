@@ -11,7 +11,7 @@ const spawnListComponent = (content) => {
         <div className="collaspsible-listItem"
           draggable
           onDragStart={(event) => handleDragStart(event, shape)}
-          key={shape.name}
+          key={shape.shapeId !== undefined ? shape.shapeId : shape.ID_FOOD}
         >
           <img src={shape.img}/>
           <span>{shape.name}</span>
@@ -30,7 +30,7 @@ const spawnListComponent = (content) => {
       };
 
     return (
-      items.map((item, index) => ( item.content.length > 0 &&
+      items.map((item, index) => ( item.content && item.content.length > 0 &&
         <div key={item.id}>
           <div
             onClick={() => toggleItem(index)}

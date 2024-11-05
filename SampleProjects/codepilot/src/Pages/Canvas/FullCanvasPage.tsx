@@ -7,6 +7,7 @@ import Navbar from "../../Layouts/Navbar/Navbar";
 import PropertiesBar from "../../Layouts/PropertiesBar/PropertiesBar";
 import MenuCanvas from "./MenuCanvas";
 import { checkCollision, isCollidingWithBorderX, isCollidingWithBorderY } from "../../Components/CollisionDetection";
+import axios from "axios";
 
 interface FullCanvasPageProps{
     items: ITable[];
@@ -21,11 +22,11 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   const [canvasSize, setCanvasSize] = useState([600, 400]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isTableMenu, setIsTableMenu] = useState(true);
-  const [tables, setTables] = useState([
-    { id: 1, title: 'Table', content: [
-      {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", color: "blue", img: "/square.svg"},
-      {shapeId: 2, name: "Circular", objectType: "Table", shapeType: "circle", color: "red", img: "/circle.svg"}
-    ]},
+  const [tables, setTables] = useState<any[]>([
+    //{ id: 1, title: 'Table', content: [
+    //  {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", img: "/square.svg"},
+    //  {shapeId: 2, name: "Circular", objectType: "Table", shapeType: "circle", img: "/circle.svg"}
+    //]},
     //{id: 2, title: 'Tea', content: [
     //  {ID_FOOD: 1, objectType: "Food", name: "Honey Jasmine Green", img: "/tea1.svg"},
     //  {ID_FOOD: 2, objectType: "Food", name: "Raspberry Snow", img: "/tea2.svg"}
@@ -59,6 +60,84 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   ]);
 
   const [selectedTable, setSelectedTable] = useState<ITable | null>(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:5030/api/ShapeType")
+    .then(response => {
+      var data = response.data;
+      var tablesData : {id: number, 
+        title: string, 
+        content: any[]} = {
+        id: 1, 
+        title: 'Table', 
+        content: []
+      }
+
+      var content: any[] = [];
+      data.map(object => {
+        content.push( {
+          shapeId: object.iD_SHAPE,
+          name: object.shapE_TYPENAME,
+          objectType: "Table",
+          shapeType: object.shapE_TYPENAME === "Rectangle" ? "rectangle" : "circle",
+          img: object.shapE_TYPENAME === "Rectangle" ? "/square.svg" : "/circle.svg",
+          width: object.width,
+          height: object.height,
+          radius: object.radius
+        });
+      });
+
+      tablesData = {...tablesData, content: content}
+
+      setTables(prevTables => {
+        prevTables.length = 0;
+        prevTables.push(tablesData)
+        return prevTables;
+      });
+    })
+    .catch(error => {
+      console.log("Error",error);
+    });
+
+    axios.get("http://localhost:5030/api/FoodType")
+          .then(response => {
+            //console.log(response.data);
+            var data = response.data;
+            var categories = data.map(object => object.fooD_TYPENAME).filter((object, index, self) => index === self.findIndex((t) => t === object));
+            var orderData = categories.map((category, i) => {
+              var order = {
+                id: i, 
+                title: category,
+                content: [],
+              }
+
+              var content: any[] = []
+              data.map(object => {
+                if(object.fooD_TYPENAME === category){
+                  content.push(
+                    {
+                      ID_FOOD: object.iD_FOOD, 
+                      objectType: "Food", 
+                      name: object.fooD_NAME, 
+                      img: "/coffee2.svg"
+                    }
+                  );
+                }
+              })
+              
+              return {...order, content: content};
+            })
+            //console.log(orderData);
+            setOrders(orderData);
+          })
+          .catch(error => {
+            console.log("Error",error);
+          });
+
+
+
+    //console.log(tables);
+  },[])
 
   useEffect(() => {
     if(selectedIndex !== null){
