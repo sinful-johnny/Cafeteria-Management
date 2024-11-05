@@ -75,18 +75,28 @@ I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS AD
     position: relative;
     margin-top: -11px;
 }
-  
-.nav-button {
-    background: none;
-    border: none;
-    margin-right: 15px;
-    padding: 0;
-    cursor: pointer;
-    font-weight: 100;
+
+.nav-buttons {
+    display: flex;
+    position: relative;
     font-size: 18px;
+    margin-left: -10px;
+    margin-right: 10px;
     color: #4a3b2f;
     transition: color 0.3s;
+    font-weight: 100;
 }
+
+.nav-button {
+    position: relative;
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-size: inherit;
+}
+
   
 .nav-button.selected {
     color: #e6943e;
@@ -94,8 +104,8 @@ I FUCKING SUCKS AT CSS AND THIS SHIT WILL BREAK THE MOMENT ANOTHER ELEMENT IS AD
   
 .underline {
     position: absolute;
-    bottom: 14px;
-    height: 2px;
+    bottom: 10px;
+    height: 1px;
     width: 40px;
     background-color: #e6943e;
     transition: left 0.3s ease;

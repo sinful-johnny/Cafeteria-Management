@@ -6,6 +6,7 @@ import Header from "../../Layouts/Header/Header";
 import Navbar from "../../Layouts/Navbar/Navbar";
 import PropertiesBar from "../../Layouts/PropertiesBar/PropertiesBar";
 import MenuCanvas from "./MenuCanvas";
+import { checkCollision } from "../../Components/CollisionDetection";
 
 interface FullCanvasPageProps{
     items: ITable[];
@@ -15,6 +16,7 @@ interface FullCanvasPageProps{
 const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   const [selectedPage, setSelectedPage] = useState<string>("Table");
   const [items, setItems] = useState<ITable[]>([]);
+  const [isSaved, setSaved] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isTableMenu, setIsTableMenu] = useState(true);
   const [tables, setTables] = useState([
@@ -61,8 +63,31 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       setSelectedTable(items[selectedIndex]);
       console.log(items[selectedIndex]);
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      //delete table
+      if (event.key === 'Delete') {
+          deleteSelectedTable();
+      //save keyboard shortcut
+      } else if (event.key === 's' && event.ctrlKey) {
+        event.preventDefault(); // Prevent default "Save Page" behavior
+        save();
+      }
+    };
+  window.addEventListener('keydown', handleKeyDown);
+  return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+  };
       
   },[selectedIndex]);
+  
+  const deleteSelectedTable = () => {
+    if (selectedIndex !== null) {
+        const newItems = items.filter((_, index) => index !== selectedIndex);
+        setItems(newItems);
+        setSelectedIndex(null); // Clear selection after deletion
+    }
+};
 
   function clearTable(index){
     setItems(items.map((item,i) => {
@@ -75,6 +100,35 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       }else{return item}
     }))
   }
+
+  const save = () => {
+    let hasCollision = false;
+    for (let i = 0; i < items.length; i++) {
+      for (let j = i + 1; j < items.length; j++) {
+        if (checkCollision(items[i], items[j])) {
+          hasCollision = true;
+          console.log(`Collision detected between item ${i} and item ${j}`);
+          break;
+        }
+      }
+      if (hasCollision) break;
+    }
+    if (hasCollision) {
+      console.log("Cannot save due to collision.");
+      return;
+    }
+    const lockedItems = items.map(item => {
+      if(item.tableStatus === "occupied"){
+        null;
+      }
+      else{
+      item.tableStatus = "locked";
+      }
+      return item;
+    });
+    console.log("Current Canvas Items:", lockedItems);
+    setItems(lockedItems);
+  };
 
   return (
     <div className="Global--Container">
