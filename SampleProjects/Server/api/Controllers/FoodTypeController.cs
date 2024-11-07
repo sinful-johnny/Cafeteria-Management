@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.Interfaces;
+using api.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,9 +25,10 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var FoodTypes = await _foodTypeRepo.getAllFoodType();
+            var FoodTypeModels = await _foodTypeRepo.getAllFoodTypeAsync();
+            var FoodTypeDtos = FoodTypeModels.Select(f => f.ToFoodsDto());
 
-            return Ok(FoodTypes);
+            return Ok(FoodTypeDtos);
         }
     }
 }

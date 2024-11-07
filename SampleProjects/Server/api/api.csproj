@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cafeteria_DB\Cafeteria_DB.csproj" />
+    <ProjectReference Include="..\cafeteriaDBLocalHost\cafeteriaDBLocalHost.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Cafeteria_DB;
+using cafeteriaDBLocalHost;
 using Microsoft.Extensions.Configuration;
 using api.Dtos.Account;
 
@@ -39,6 +39,10 @@ namespace api.Data
 
         public DbSet<CAFETERIA_TABLE> CafeteriaTable { get; set; }
 
+        public DbSet<V_ADMIN_TABLEInCANVA> V_TableInCanva { get; set; }
+
+        public DbSet<V_ADMIN_FOODsOnTABLE> V_FoodsOnTable { get; set; }
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    if (!optionsBuilder.IsConfigured && !string.IsNullOrEmpty(_connectionString))
@@ -50,6 +54,12 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<V_ADMIN_TABLEInCANVA>()
+            .HasKey(v => new { v.ID_TABLE }); // Composite key for V_ADMIN_TABLEInCANVA
+
+            modelBuilder.Entity<V_ADMIN_FOODsOnTABLE>()
+            .HasKey(v => new { v.ID_FOOD, v.ID_TABLE }); // Composite key for V_FoodsOnTable
 
             modelBuilder.Entity<FOOD_TABLE>()
             .HasKey(ct => new { ct.ID_FOOD, ct.ID_TABLE }); // Composite key for FOOD_TABLE

@@ -11,8 +11,7 @@ namespace Cafeteria_DB
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class CAFETERIA_TABLE
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,8 +19,7 @@ namespace Cafeteria_DB
         {
             this.FOOD_TABLE = new HashSet<FOOD_TABLE>();
         }
-
-        [Key]
+    
         public string ID_TABLE { get; set; }
         public Nullable<double> X_COORDINATE { get; set; }
         public Nullable<double> Y_COORDINATE { get; set; }

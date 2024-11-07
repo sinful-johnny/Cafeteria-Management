@@ -1,9 +1,6 @@
 ﻿using api.Dtos.Account;
 using api.Interfaces;
-using api.Models;
-using api.Repository;
-using Cafeteria_DB;
-using Microsoft.AspNetCore.Identity;
+using cafeteriaDBLocalHost;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers

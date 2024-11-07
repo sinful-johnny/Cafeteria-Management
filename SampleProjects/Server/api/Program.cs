@@ -84,39 +84,10 @@ builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
-
-
-
-
-
-
-// Add InteractiveBrowserCredential to your services (only for local development)
-builder.Services.AddSingleton<TokenCredential>(new InteractiveBrowserCredential());
-
 //DbContext services
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-
-// Configure the ApplicationDBContext with AAD authentication using access tokens
-builder.Services.AddDbContext<ApplicationDBContext>((serviceProvider, options) =>
-{
-    // Get the connection string from appsettings.json
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-    // Get the InteractiveBrowserCredential from the DI container
-    var credential = serviceProvider.GetRequiredService<TokenCredential>();
-
-    // Configure SQL connection to use access token
-    options.UseSqlServer(new SqlConnection(connectionString)
-    {
-        AccessToken = credential.GetToken(
-            new TokenRequestContext(new[] { "https://database.windows.net/.default" }),
-            CancellationToken.None // Add this argument to satisfy the method requirement
-        ).Token
-    });
 });
 
 
@@ -166,8 +137,9 @@ builder.Services.AddAuthentication(options =>
 //Hook Interfaces and Repository in
 builder.Services.AddScoped<ICanvaRepository, CANVA_repository>();
 builder.Services.AddScoped<IAdminRepository, ADMIN_repository>();
-builder.Services.AddScoped<IFOOD_TYPE_Repository, FOOD_TYPE_Repository>();
-builder.Services.AddScoped<ISHAPE_TYPE_Repository, SHAPE_TYPE_Repository>();
+builder.Services.AddScoped<IFOOD_TYPE_Repository, FOOD_repository>();
+builder.Services.AddScoped<ISHAPE_TYPE_Repository, SHAPE_TYPE_repository>();
+builder.Services.AddScoped<ITABLE_FOOD_Repository, TABLE_FOODs_repository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

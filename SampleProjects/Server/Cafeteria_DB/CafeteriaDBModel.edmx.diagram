@@ -22,6 +22,7 @@
         <AssociationConnector Association="cafeteria_DBModel.FK__FOOD_TABL__ID_TA__72C60C4A" ManuallyRouted="false" />
         <AssociationConnector Association="cafeteria_DBModel.FK__CANVA_ADM__ID_CA__66603565" ManuallyRouted="false" />
         <AssociationConnector Association="cafeteria_DBModel.FK__FOOD_TABL__ID_FO__71D1E811" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.V_ADMIN_TABLE_FOODs" Width="1.5" PointX="9.875" PointY="7.625" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
