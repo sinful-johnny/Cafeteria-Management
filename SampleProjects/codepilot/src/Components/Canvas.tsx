@@ -5,6 +5,7 @@ import { checkCollision, isCollidingWithBorderY, isCollidingWithBorderX } from '
 import { RectangleTable } from '../Class/Tables/RectangleTable';
 import { CircleTable } from '../Class/Tables/CircleTable';
 import { Food } from '../Class/Food';
+import { FoodOnTable } from '../Class/FoodOnTable';
 
 interface CanvasProps{
   items: ITable[];
@@ -175,8 +176,16 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                   item.foods = [];
                 }
                 if (item.tableStatus === "unlocked") return item;
-                item.foods.push(new Food(data.ID_FOOD,data.name, 1, 1, "Available", data.img));
+
+                const foodIndex = item.foods.findIndex(x => x.food.foodId === data.ID_FOOD);
+                if(foodIndex !== -1){
+                  item.foods[foodIndex].amount += 1;
+                }else{
+                  item.foods.push(new FoodOnTable(new Food(data.ID_FOOD,data.name, 1, 1, "Available", data.img), 1));
+                }
+                
                 item.tableStatus = "occupied";
+                console.log(item);
               }
               return item;
             });

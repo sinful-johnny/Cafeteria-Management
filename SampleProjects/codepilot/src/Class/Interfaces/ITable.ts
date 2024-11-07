@@ -1,5 +1,4 @@
-
-import { Food } from "../Food";
+import { FoodOnTable } from "../FoodOnTable";
 
 export interface ITable{
     x: number;
@@ -11,7 +10,7 @@ export interface ITable{
     //tableStatus: "locked", "unlocked", "occupied"
     tableStatus: String;
 
-    foods: Food[];
+    foods: FoodOnTable[];
 
     draw(context): void;
     isMouseInRange(x: number, y: number) : boolean;

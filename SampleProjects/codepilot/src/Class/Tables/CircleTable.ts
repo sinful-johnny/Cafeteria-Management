@@ -1,4 +1,5 @@
 import { Food } from "../Food";
+import { FoodOnTable } from "../FoodOnTable";
 import { ITable } from "../Interfaces/ITable";
 
 export class CircleTable implements ITable{
@@ -10,7 +11,7 @@ export class CircleTable implements ITable{
     color: String;
     tableStatus: String;
 
-    foods: Food[];
+    foods: FoodOnTable[];
 
     radius: number;
 

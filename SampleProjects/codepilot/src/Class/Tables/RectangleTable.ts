@@ -1,4 +1,5 @@
 import { Food } from "../Food";
+import { FoodOnTable } from "../FoodOnTable";
 import { ITable } from "../Interfaces/ITable";
 
 export class RectangleTable implements ITable{
@@ -10,7 +11,7 @@ export class RectangleTable implements ITable{
     color: String;
     tableStatus: String;
 
-    foods: Food[];
+    foods: FoodOnTable[];
 
     width: number;
     height: number;

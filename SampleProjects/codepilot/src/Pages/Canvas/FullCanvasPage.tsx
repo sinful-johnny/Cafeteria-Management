@@ -147,11 +147,11 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
         var content: any[] = []
         if(table){
           table.foods.map((food) => {
-            if(order.content.findIndex(x => x.name === food.foodName) !== -1){
+            if(order.content.findIndex(x => x.name === food.food.foodName) !== -1){
               content.push({
-                id: food.foodId,
-                name: food.foodName,
-                img: food.imageURL
+                id: food.food.foodId,
+                name: food.food.foodName,
+                img: food.food.imageURL
               })
             }
           });
