@@ -97,9 +97,9 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                   let newY = y - dragOffset.y;
                   let tempItem;
                   if (item instanceof RectangleTable) {
-                    tempItem = TableFactory.createTable(items.length + 1,"rectangle", newX, newY);
+                    tempItem = TableFactory.createTable(items.length + 1, item.shapeId,"rectangle", newX, newY, item.width, item.height, 0);
                   } else if (item instanceof CircleTable) {
-                    tempItem = TableFactory.createTable(items.length + 1,"circle", newX, newY);
+                    tempItem = TableFactory.createTable(items.length + 1, item.shapeId,"circle", newX, newY, 0, 0, item.radius);
                   }
                   if (isCollidingWithBorderX(tempItem, canvas.width)) {
                     null;
@@ -160,7 +160,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       try{
         if(data.objectType === "Table"){
           try {
-            setItems([...items, TableFactory.createTable(items.length + 1,data.shapeType, x, y)]);
+            setItems([...items, TableFactory.createTable(items.length + 1, data.shapeId,data.shapeType, x, y,data.width ? data.width : 0,data.height ? data.height : 0, data.radius ? data.radius : 0 )]);
           } catch (error) {
             console.log(error);
           }
@@ -185,7 +185,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
                 }
                 
                 item.tableStatus = "occupied";
-                console.log(item);
+                //console.log(item);
               }
               return item;
             });

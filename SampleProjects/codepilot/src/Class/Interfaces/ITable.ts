@@ -9,6 +9,7 @@ export interface ITable{
     color: String;
     //tableStatus: "locked", "unlocked", "occupied"
     tableStatus: String;
+    shapeId: String;
 
     foods: FoodOnTable[];
 

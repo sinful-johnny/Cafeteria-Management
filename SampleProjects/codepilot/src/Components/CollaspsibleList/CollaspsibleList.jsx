@@ -23,31 +23,35 @@ const spawnListComponent = (content) => {
   const CollapsibleList = ({items, openIndexes, setOpenIndexes}) => {
 
     const toggleItem = (index) => {
-        setOpenIndexes((prev) => ({
-          ...prev,
-          [index]: !prev[index]
-        }));
-      };
+      setOpenIndexes((prev) => ({
+        ...prev,
+        [index]: !prev[index]
+      }));
+      console.log(openIndexes)  
+    };
 
     return (
-      items.map((item, index) => ( item.content && item.content.length > 0 &&
-        <div key={item.id}>
-          <div
-            onClick={() => toggleItem(index)}
-            className="collapsible-header"
-          >
-            <span>
-              {openIndexes[index] ? <FaChevronUp /> : <FaChevronDown />}
-            </span>
-            <span>{item.title}</span>
-          </div>
-          {openIndexes[index] && (
-            <div>
-              {spawnListComponent(item.content)}
+      items.map((item, index) => {
+
+        return ( item.content && item.content.length > 0 &&
+          <div key={item.id}>
+            <div
+              onClick={() => toggleItem(index)}
+              className="collapsible-header"
+            >
+              <span>
+                {openIndexes[index] ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+              <span>{item.title}</span>
             </div>
-          )}
-        </div>
-      ))
+            {openIndexes[index] && (
+              <div>
+                {spawnListComponent(item.content)}
+              </div>
+            )}
+          </div>
+        )
+      })
     )
   }
 

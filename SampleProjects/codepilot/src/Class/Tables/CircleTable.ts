@@ -10,18 +10,20 @@ export class CircleTable implements ITable{
     isSelected: Boolean;
     color: String;
     tableStatus: String;
+    shapeId: String;
 
     foods: FoodOnTable[];
 
     radius: number;
 
-    constructor(tableId: number,x: number, y: number, radius: number, tableStatus: String){
+    constructor(tableId: number, shapeId: String,x: number, y: number, radius: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.foods = [];
         this.tableStatus = tableStatus;
         this.tableId = tableId;
+        this.shapeId = shapeId;
     }
 
     setIsHovered(value: boolean): void {

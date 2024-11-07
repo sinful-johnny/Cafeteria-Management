@@ -1,0 +1,92 @@
+[
+    {
+        "x": 183,
+        "y": 132,
+        "radius": 75,
+        "foods": [
+            {
+                "food": {
+                    "foodId": "F001",
+                    "foodName": "Burger",
+                    "amount_left": 1,
+                    "price": 1,
+                    "foodTypeStatus": "Available",
+                    "imageURL": "/coffee2.svg"
+                },
+                "amount": 1
+            },
+            {
+                "food": {
+                    "foodId": "F004",
+                    "foodName": "Coffee",
+                    "amount_left": 1,
+                    "price": 1,
+                    "foodTypeStatus": "Available",
+                    "imageURL": "/coffee2.svg"
+                },
+                "amount": 1
+            }
+        ],
+        "tableStatus": "occupied",
+        "tableId": 1,
+        "shapeId": "S005",
+        "isSelected": false,
+        "isHovered": false
+    },
+    {
+        "x": 376,
+        "y": 124,
+        "width": 100,
+        "height": 50,
+        "foods": [
+            {
+                "food": {
+                    "foodId": "F002",
+                    "foodName": "Pizza",
+                    "amount_left": 1,
+                    "price": 1,
+                    "foodTypeStatus": "Available",
+                    "imageURL": "/coffee2.svg"
+                },
+                "amount": 1
+            },
+            {
+                "food": {
+                    "foodId": "F003",
+                    "foodName": "Salad",
+                    "amount_left": 1,
+                    "price": 1,
+                    "foodTypeStatus": "Available",
+                    "imageURL": "/coffee2.svg"
+                },
+                "amount": 1
+            }
+        ],
+        "tableStatus": "occupied",
+        "tableId": 2,
+        "isHovered": false,
+        "isSelected": false
+    },
+    {
+        "x": 282,
+        "y": 228.4000015258789,
+        "width": 75,
+        "height": 75,
+        "foods": [],
+        "tableStatus": "locked",
+        "tableId": 3,
+        "isHovered": false,
+        "isSelected": false
+    },
+    {
+        "x": 142,
+        "y": 304.79999923706055,
+        "radius": 60,
+        "foods": [],
+        "tableStatus": "locked",
+        "tableId": 4,
+        "shapeId": "S006",
+        "isHovered": false,
+        "isSelected": true
+    }
+]

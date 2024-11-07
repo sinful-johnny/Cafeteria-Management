@@ -4,12 +4,12 @@ import { CircleTable } from '../Tables/CircleTable';
 
 
 export class TableFactory {
-    static createTable(id: number,type: string, x: number, y: number): ITable {
+    static createTable(id: number, shapeId: String,type: string, x: number, y: number, width: number, height: number, radius: number): ITable {
       switch (type) {
         case 'rectangle':
-          return new RectangleTable(id,x, y, 100, 100, "unlocked");
+          return new RectangleTable(id, shapeId,x, y, width, height, "unlocked");
         case 'circle':
-          return new CircleTable(id,x, y, 50, "unlocked");
+          return new CircleTable(id, shapeId,x, y, radius, "unlocked");
         default:
           throw new Error('Unknown table type');
       }

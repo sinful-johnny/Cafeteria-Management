@@ -10,13 +10,14 @@ export class RectangleTable implements ITable{
     isSelected: Boolean;
     color: String;
     tableStatus: String;
+    shapeId: String;
 
     foods: FoodOnTable[];
 
     width: number;
     height: number;
 
-    constructor(tableId: number, x: number, y: number, width: number, height: number, tableStatus: String){
+    constructor(tableId: number, shapeId: String, x: number, y: number, width: number, height: number, tableStatus: String){
         this.x = x;
         this.y = y;
         this.width = width;
