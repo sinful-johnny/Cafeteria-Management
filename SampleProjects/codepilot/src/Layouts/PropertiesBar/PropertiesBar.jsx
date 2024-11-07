@@ -1,4 +1,4 @@
-import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList";
+import CollapsibleListPenis from "../../Components/CollaspsiblePenis/CollaspsibleListPenis";
 import "./PropertiesBar.css";
 import React, { useEffect, useState } from 'react';
 
@@ -41,7 +41,7 @@ const PropertiesBar = ({clearTable , selectedIndex, selectedTable, ordersOnTable
         </div>
         <div className="CollaspsibleList--container">
           {(ordersOnTable) && 
-            <CollapsibleList items={ordersOnTable} openIndexes={openIndexes} setOpenIndexes={setOpenIndexes}/>
+            <CollapsibleListPenis items={ordersOnTable} openIndexes={openIndexes} setOpenIndexes={setOpenIndexes}/>
           }
         </div>
         <div className="ClearButton-Container">

@@ -151,7 +151,8 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
               content.push({
                 id: food.food.foodId,
                 name: food.food.foodName,
-                img: food.food.imageURL
+                img: food.food.imageURL,
+                amount: food.amount
               })
             }
           });
