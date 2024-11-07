@@ -1,4 +1,4 @@
-use cafeteriaDB
+use cafeteria_DB
 GO
 
 -- Take all Canva

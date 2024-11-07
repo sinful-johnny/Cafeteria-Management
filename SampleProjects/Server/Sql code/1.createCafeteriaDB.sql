@@ -1,10 +1,10 @@
 -- Create the database  
-CREATE DATABASE cafeteriaDB
-GO
+-- CREATE DATABASE cafeteria_DB
+-- GO
 --DROP DATABASE cafeteriaDB;
 
 -- Use the created database  
-USE cafeteriaDB
+USE cafeteria_DB
 GO
 --USE MASTER;
 

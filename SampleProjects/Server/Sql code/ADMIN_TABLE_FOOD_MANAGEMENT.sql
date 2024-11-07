@@ -1,4 +1,4 @@
-USE cafeteriaDB
+USE cafeteria_DB
 GO
 
 CREATE OR ALTER PROC sp_ADMIN_INSERTTABLE

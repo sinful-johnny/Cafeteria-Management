@@ -1,5 +1,5 @@
 ﻿using api.Models;
-using CafeteriaDB;
+using Cafeteria_DB;
 
 namespace api.Interfaces
 {

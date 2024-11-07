@@ -1,4 +1,4 @@
-use cafeteriaDB
+use cafeteria_DB
 go
 
 create or alter view V_ADMIN_INFOR

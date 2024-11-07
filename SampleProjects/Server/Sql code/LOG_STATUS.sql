@@ -1,4 +1,4 @@
-USE cafeteriaDB
+USE cafeteria_DB
 GO
 
 -- Check if Canva_Admin exist

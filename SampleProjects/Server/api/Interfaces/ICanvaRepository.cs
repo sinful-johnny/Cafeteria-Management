@@ -1,4 +1,4 @@
-﻿using CafeteriaDB;
+﻿using Cafeteria_DB;
 using System.Data;
 
 namespace api.Interfaces

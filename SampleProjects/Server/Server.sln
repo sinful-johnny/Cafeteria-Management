@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeteriaDB", "CafeteriaDB\CafeteriaDB.csproj", "{F534F7E9-273E-4832-8A13-44DDD4475DFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cafeteria_DB", "Cafeteria_DB\Cafeteria_DB.csproj", "{91819DA5-F9A3-4319-9B76-C1A0EF3D7F70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F534F7E9-273E-4832-8A13-44DDD4475DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F534F7E9-273E-4832-8A13-44DDD4475DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F534F7E9-273E-4832-8A13-44DDD4475DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91819DA5-F9A3-4319-9B76-C1A0EF3D7F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91819DA5-F9A3-4319-9B76-C1A0EF3D7F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91819DA5-F9A3-4319-9B76-C1A0EF3D7F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91819DA5-F9A3-4319-9B76-C1A0EF3D7F70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

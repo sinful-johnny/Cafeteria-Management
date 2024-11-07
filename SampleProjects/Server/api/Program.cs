@@ -11,6 +11,9 @@ using EFTut.Repository;
 using api.Service;
 using api.Repository;
 using Microsoft.OpenApi.Models;
+using Azure.Core;
+using Azure.Identity;
+using Microsoft.Data.SqlClient;
 
 void ConfigureServices(IServiceCollection services) { 
     services.AddCors(options => { 
@@ -82,10 +85,38 @@ builder.Services.AddControllers().AddNewtonsoftJson(options => {
 });
 
 
+
+
+
+
+
+// Add InteractiveBrowserCredential to your services (only for local development)
+builder.Services.AddSingleton<TokenCredential>(new InteractiveBrowserCredential());
+
 //DbContext services
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+// Configure the ApplicationDBContext with AAD authentication using access tokens
+builder.Services.AddDbContext<ApplicationDBContext>((serviceProvider, options) =>
+{
+    // Get the connection string from appsettings.json
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    // Get the InteractiveBrowserCredential from the DI container
+    var credential = serviceProvider.GetRequiredService<TokenCredential>();
+
+    // Configure SQL connection to use access token
+    options.UseSqlServer(new SqlConnection(connectionString)
+    {
+        AccessToken = credential.GetToken(
+            new TokenRequestContext(new[] { "https://database.windows.net/.default" }),
+            CancellationToken.None // Add this argument to satisfy the method requirement
+        ).Token
+    });
 });
 
 

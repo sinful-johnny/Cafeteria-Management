@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using CafeteriaDB;
+using Cafeteria_DB;
 using Microsoft.Extensions.Configuration;
 using api.Dtos.Account;
 
