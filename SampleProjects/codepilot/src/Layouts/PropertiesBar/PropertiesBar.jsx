@@ -2,7 +2,7 @@ import CollapsibleList from "../../Components/CollaspsibleList/CollaspsibleList"
 import "./PropertiesBar.css";
 import React, { useEffect, useState } from 'react';
 
-const PropertiesBar = ({clearTable , selectedTable, ordersOnTable}) => {
+const PropertiesBar = ({clearTable , selectedIndex, selectedTable, ordersOnTable}) => {
     const [openIndexes, setOpenIndexes] = useState({});
     //const [selectedTable, setSelectedTable] = useState(items[selectedIndex]);
     //const [ordersOnTable, setOrdersOnTable] = useState(orders.map((order) => {

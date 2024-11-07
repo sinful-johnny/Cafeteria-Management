@@ -61,9 +61,6 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
     ]}
   ]);
 
-  const [selectedTable, setSelectedTable] = useState<ITable | null>(null);
-
-  //const [RightSideBar, setRightSideBar] = useState()
   const [ordersOnTable, setOrdersOnTable] = useState<any>([])
 
   useEffect(() => {
@@ -144,7 +141,6 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
 
   useEffect(() => {
     if(selectedIndex !== null && selectedIndex >= 0 && selectedIndex < items.length){
-      setSelectedTable(items[selectedIndex]);
       var table = items[selectedIndex];
       var newOrdersOnTable = orders.map((order) => {
         var newOrder = {...order, content: []};
@@ -164,11 +160,6 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       });
 
       setOrdersOnTable(newOrdersOnTable);
-    }
-
-    if(selectedIndex !== null){
-      setSelectedTable(items[selectedIndex]);
-      //console.log(items[selectedIndex]);
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -305,6 +296,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
           <PropertiesBar 
           clearTable={clearTable} 
           selectedTable={items[selectedIndex]}
+          selectedIndex={selectedIndex}
           //setSelectedTable={setSelectedTable}
           ordersOnTable={ordersOnTable}
           /> : <></>
