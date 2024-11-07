@@ -57,6 +57,21 @@ namespace api.Data
             modelBuilder.Entity<CANVA_ADMIN>()
                 .HasKey(ca => new { ca.ID_CANVA, ca.ID_ADMIN }); // Composite key for CANVA_ADMIN
 
+            modelBuilder.Entity<ADMIN>()
+                .HasKey(a => new { a.ID_ADMIN }); // Composite key for ADMIN
+
+            modelBuilder.Entity<CAFETERIA_TABLE>()
+                .HasKey(ct => new { ct.ID_TABLE }); // Composite key for CAFETERIA_TABLE
+
+            modelBuilder.Entity<CANVA>()
+                .HasKey(c => new { c.ID_CANVA }); // Composite key for CANVA
+
+            modelBuilder.Entity<FOOD_TYPE>()
+            .HasKey(f => new { f.ID_FOOD }); // Composite key for FOOD_TYPE
+
+            modelBuilder.Entity<SHAPE_TYPE>()
+            .HasKey(s => new { s.ID_SHAPE }); // Composite key for SHAPE_TYPE
+
             modelBuilder.Entity<FOOD_TABLE>()
                 .HasOne(u => u.FOOD_TYPE)
                 .WithMany(u => u.FOOD_TABLE)
