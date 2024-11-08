@@ -7,23 +7,30 @@ namespace api.Mappers
 {
     public static class TABLE_FOODsMapper
     {
-        public static TABLE_FOODsDto ToTablesInCanvaDto(this V_ADMIN_TABLEInCANVA TablesInCanvaModel, List<FOODsOnTABLE> FoodsOnTable)
+        public static TABLE_FOODsDto ToTablesInCanvaDto(this V_ADMIN_TABLEInCANVA TablesInCanvaModel, List<FOODwithAmount> FoodsOnTable)
         {
             return new TABLE_FOODsDto
             {
-                X_COORDINATE = TablesInCanvaModel.X_COORDINATE,
-                Y_COORDINATE = TablesInCanvaModel.Y_COORDINATE,
-                SHAPE_TYPENAME = TablesInCanvaModel.SHAPE_TYPENAME,
-                WIDTH = TablesInCanvaModel.WIDTH,
-                HEIGHT = TablesInCanvaModel.HEIGHT,
-                RADIUS = TablesInCanvaModel.RADIUS,
-                FOODS = FoodsOnTable.ToList(),
-                TABLE_STATUS = TablesInCanvaModel.TABLE_STATUS,
-                ID_TABLE = TablesInCanvaModel.ID_TABLE,
+                x = TablesInCanvaModel.X_COORDINATE,
+                y = TablesInCanvaModel.Y_COORDINATE,
+                width = TablesInCanvaModel.WIDTH,
+                height = TablesInCanvaModel.HEIGHT,
+                radius = TablesInCanvaModel.RADIUS,
+                foods = FoodsOnTable.ToList(),
+                tableStatus = TablesInCanvaModel.TABLE_STATUS,
+                tableId = TablesInCanvaModel.ID_TABLE,
+                shapeId = TablesInCanvaModel.ID_SHAPE,
                 ID_CANVA = TablesInCanvaModel.ID_CANVA,
             };
         }
 
-        //public static CAFETERTIA_TABLE FromCreatedTableToTable(this CreateTABLEDto )
+        public static CAFETERIA_TABLE FromCreatedTableToTable(this CreateTABLEDto createTableDto)
+        {
+            return new CAFETERIA_TABLE
+            {
+                ID_CANVA = createTableDto.ID_CANVA,
+                ID_SHAPE = createTableDto.ID_SHAPE
+            };
+        }
     }
 }

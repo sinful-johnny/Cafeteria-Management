@@ -17,7 +17,6 @@ namespace cafeteriaDBLocalHost
         public string ID_FOOD { get; set; }
         public string ID_TABLE { get; set; }
         public string FOOD_NAME { get; set; }
-        public string FOOD_TYPENAME { get; set; }
         public Nullable<int> AMOUNT_LEFT { get; set; }
         public Nullable<decimal> PRICE { get; set; }
         public string FOOD_TYPE_STATUS { get; set; }

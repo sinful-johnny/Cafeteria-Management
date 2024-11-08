@@ -21,17 +21,50 @@ namespace api.Repository
             var resultFoods = await _context.V_FoodsOnTable
                 .FromSqlRaw($"EXEC DBO.sp_ADMIN_FOODsOnTABLE")
                 .ToListAsync();
+
             return (resultTables, resultFoods);
         }
-        //public async Task<string> SaveCreatedTableAsync(string idCanvas, string idShape)
-        //{
-        //    var resultTables = await _context.V_TableInCanva
-        //        .FromSqlRaw("EXEC DBO.sp_ADMIN_TABLEInCANVA @ID_CANVA={0}", idCanvas)
-        //        .ToListAsync();
-        //    var resultFoods = await _context.V_FoodsOnTable
-        //        .FromSqlRaw($"EXEC DBO.sp_ADMIN_FOODsOnTABLE")
-        //        .ToListAsync();
-        //    return (resultTables, resultFoods);
-        //}
+        public async Task<List<TABLE_FOODsDto>> SaveCreatedTableAsync(List<TABLE_FOODsDto> TablesInCanvaDto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var TableInCanvaDto in TablesInCanvaDto)
+                {
+                    await _context.Database.ExecuteSqlRawAsync(
+                    """
+                    "EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
+                            @X_COORDINATE = {0}, @Y_COORDINATE = {1}, @TABLE_STATUS = {2}, 
+                            @ID_TABLE = {3}, @ID_SHAPE = {4}, @ID_CANVA = {5}
+                    """,
+                    TableInCanvaDto.x ?? 0,
+                    TableInCanvaDto.y ?? 0,
+                    TableInCanvaDto.tableStatus,
+                    TableInCanvaDto.tableId,
+                    TableInCanvaDto.shapeId,
+                    TableInCanvaDto.ID_CANVA);
+
+                    foreach (var food in TableInCanvaDto.foods)
+                    {
+                        _ = await _context.Database.ExecuteSqlRawAsync(
+                        """
+                        "EXEC DBO.sp_ADMIN_SAVE_FOODonTABLE
+                                @ID_TABLE = {0}, @ID_FOOD = {1}, 
+                                @AMOUNT_IN_TABLE = {2}
+                        """,
+                        TableInCanvaDto.tableId,
+                        food.food.foodId,
+                        food.amount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while saving tables and food items.", ex);
+            }
+
+            return TablesInCanvaDto;
+        }
     }
 }

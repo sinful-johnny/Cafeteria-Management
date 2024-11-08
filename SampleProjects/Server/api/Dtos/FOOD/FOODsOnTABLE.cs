@@ -1,15 +1,19 @@
 ﻿namespace api.Dtos.FOOD
 {
-    public class FOODsOnTABLE
+    public class FOODOnTABLE
     {
-        public string ID_FOOD { get; set; } = string.Empty;
+        public string foodId { get; set; } = string.Empty;
         public string ID_TABLE {  get; set; } = string.Empty;
-        public string FOOD_NAME { get; set; } = string.Empty;
-        public string FOOD_TYPENAME { get; set; } = string.Empty;
-        public int? AMOUNT_LEFT { get; set; } = 0;
-        public decimal? PRICE { get; set; } = 0;
-        public string FOOD_TYPE_STATUS { get; set; } = string.Empty;
-        public string IMAGE_LINK { get; set; } = string.Empty;
-        public int? AMOUNT_IN_TABLE { get; set; } = 0;
+        public string foodName { get; set; } = string.Empty;
+        public int? amount_left { get; set; } = 0;
+        public decimal? price { get; set; } = 0;
+        public string foodTypeStatus { get; set; } = string.Empty;
+        public string imageURL { get; set; } = string.Empty;
+    }
+
+    public class FOODwithAmount
+    {
+        public FOODOnTABLE food { get; set; } = new FOODOnTABLE();
+        public int? amount { get; set; } = 0;
     }
 }

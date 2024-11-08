@@ -20,19 +20,23 @@ namespace api.Mappers
             };
         }
 
-        public static FOODsOnTABLE ToFoodsOnTableDto(this V_ADMIN_FOODsOnTABLE FoodsOnTableModel)
+        public static FOODwithAmount ToFoodsOnTableDto(this V_ADMIN_FOODsOnTABLE FoodsOnTableModel)
         {
-            return new FOODsOnTABLE
+            var Food = new FOODOnTABLE
             {
-                ID_FOOD = FoodsOnTableModel.ID_FOOD,
+                foodId = FoodsOnTableModel.ID_FOOD,
                 ID_TABLE = FoodsOnTableModel.ID_TABLE,
-                FOOD_NAME = FoodsOnTableModel.FOOD_NAME,
-                FOOD_TYPENAME = FoodsOnTableModel.FOOD_TYPENAME,
-                AMOUNT_LEFT = FoodsOnTableModel.AMOUNT_LEFT,
-                PRICE = FoodsOnTableModel.PRICE,
-                FOOD_TYPE_STATUS = FoodsOnTableModel.FOOD_TYPE_STATUS,
-                IMAGE_LINK = FoodsOnTableModel.IMAGE_LINK,
-                AMOUNT_IN_TABLE = FoodsOnTableModel.AMOUNT_IN_TABLE
+                foodName = FoodsOnTableModel.FOOD_NAME,
+                amount_left = FoodsOnTableModel.AMOUNT_LEFT,
+                price = FoodsOnTableModel.PRICE,
+                foodTypeStatus = FoodsOnTableModel.FOOD_TYPE_STATUS,
+                imageURL = FoodsOnTableModel.IMAGE_LINK
+            };
+
+            return new FOODwithAmount
+            {
+                food = Food,
+                amount = FoodsOnTableModel.AMOUNT_IN_TABLE
             };
         }
     }

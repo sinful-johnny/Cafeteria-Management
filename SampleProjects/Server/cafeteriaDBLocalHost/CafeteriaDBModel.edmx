@@ -100,7 +100,6 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_FOODsOnTABLE' does not hav
           <Property Name="ID_FOOD" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="ID_TABLE" Type="varchar" MaxLength="5" />
           <Property Name="FOOD_NAME" Type="varchar" MaxLength="255" />
-          <Property Name="FOOD_TYPENAME" Type="varchar" MaxLength="255" />
           <Property Name="AMOUNT_LEFT" Type="int" />
           <Property Name="PRICE" Type="decimal" Precision="10" Scale="2" />
           <Property Name="FOOD_TYPE_STATUS" Type="varchar" MaxLength="50" />
@@ -112,6 +111,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
         <EntityType Name="V_ADMIN_TABLEInCANVA">
           <Key>
             <PropertyRef Name="ID_TABLE" />
+            <PropertyRef Name="ID_SHAPE" />
           </Key>
           <Property Name="X_COORDINATE" Type="float" />
           <Property Name="Y_COORDINATE" Type="float" />
@@ -120,7 +120,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
           <Property Name="RADIUS" Type="float" />
           <Property Name="TABLE_STATUS" Type="varchar" MaxLength="50" />
           <Property Name="ID_TABLE" Type="varchar" MaxLength="5" Nullable="false" />
-          <Property Name="SHAPE_TYPENAME" Type="varchar" MaxLength="50" />
+          <Property Name="ID_SHAPE" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="ID_CANVA" Type="varchar" MaxLength="5" />
         </EntityType>
         <Association Name="FK__CAFETERIA__ID_SH__412EB0B6">
@@ -218,7 +218,6 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
     [V_ADMIN_FOODsOnTABLE].[ID_FOOD] AS [ID_FOOD], 
     [V_ADMIN_FOODsOnTABLE].[ID_TABLE] AS [ID_TABLE], 
     [V_ADMIN_FOODsOnTABLE].[FOOD_NAME] AS [FOOD_NAME], 
-    [V_ADMIN_FOODsOnTABLE].[FOOD_TYPENAME] AS [FOOD_TYPENAME], 
     [V_ADMIN_FOODsOnTABLE].[AMOUNT_LEFT] AS [AMOUNT_LEFT], 
     [V_ADMIN_FOODsOnTABLE].[PRICE] AS [PRICE], 
     [V_ADMIN_FOODsOnTABLE].[FOOD_TYPE_STATUS] AS [FOOD_TYPE_STATUS], 
@@ -235,7 +234,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
     [V_ADMIN_TABLEInCANVA].[RADIUS] AS [RADIUS], 
     [V_ADMIN_TABLEInCANVA].[TABLE_STATUS] AS [TABLE_STATUS], 
     [V_ADMIN_TABLEInCANVA].[ID_TABLE] AS [ID_TABLE], 
-    [V_ADMIN_TABLEInCANVA].[SHAPE_TYPENAME] AS [SHAPE_TYPENAME], 
+    [V_ADMIN_TABLEInCANVA].[ID_SHAPE] AS [ID_SHAPE], 
     [V_ADMIN_TABLEInCANVA].[ID_CANVA] AS [ID_CANVA]
     FROM [dbo].[V_ADMIN_TABLEInCANVA] AS [V_ADMIN_TABLEInCANVA]</DefiningQuery>
           </EntitySet>
@@ -372,7 +371,6 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
           <Property Name="ID_FOOD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FOOD_NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="FOOD_TYPENAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="AMOUNT_LEFT" Type="Int32" />
           <Property Name="PRICE" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="FOOD_TYPE_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -382,6 +380,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
         <EntityType Name="V_ADMIN_TABLEInCANVA">
           <Key>
             <PropertyRef Name="ID_TABLE" />
+            <PropertyRef Name="ID_SHAPE" />
           </Key>
           <Property Name="X_COORDINATE" Type="Double" />
           <Property Name="Y_COORDINATE" Type="Double" />
@@ -390,7 +389,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
           <Property Name="RADIUS" Type="Double" />
           <Property Name="TABLE_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="SHAPE_TYPENAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID_SHAPE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ID_CANVA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__CANVA_ADM__ID_AD__3C69FB99">
@@ -467,7 +466,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="cafeteriaDBEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="cafeteriaDBEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ADMINs" EntityType="Self.ADMIN" />
           <EntitySet Name="CAFETERIA_TABLE" EntityType="Self.CAFETERIA_TABLE" />
           <EntitySet Name="CANVAs" EntityType="Self.CANVA" />
@@ -507,7 +506,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="cafeteriaDBModelStoreContainer" CdmEntityContainer="cafeteriaDBEntities">
+        <EntityContainerMapping StorageEntityContainer="cafeteriaDBModelStoreContainer" CdmEntityContainer="cafeteriaDBEntities1">
           <EntitySetMapping Name="ADMINs">
             <EntityTypeMapping TypeName="cafeteriaDBModel.ADMIN">
               <MappingFragment StoreEntitySet="ADMIN">
@@ -604,7 +603,6 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
                 <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
                 <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
                 <ScalarProperty Name="FOOD_NAME" ColumnName="FOOD_NAME" />
-                <ScalarProperty Name="FOOD_TYPENAME" ColumnName="FOOD_TYPENAME" />
                 <ScalarProperty Name="AMOUNT_LEFT" ColumnName="AMOUNT_LEFT" />
                 <ScalarProperty Name="PRICE" ColumnName="PRICE" />
                 <ScalarProperty Name="FOOD_TYPE_STATUS" ColumnName="FOOD_TYPE_STATUS" />
@@ -623,7 +621,7 @@ warning 6002: The table/view 'cafeteriaDB.dbo.V_ADMIN_TABLEInCANVA' does not hav
                 <ScalarProperty Name="RADIUS" ColumnName="RADIUS" />
                 <ScalarProperty Name="TABLE_STATUS" ColumnName="TABLE_STATUS" />
                 <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
-                <ScalarProperty Name="SHAPE_TYPENAME" ColumnName="SHAPE_TYPENAME" />
+                <ScalarProperty Name="ID_SHAPE" ColumnName="ID_SHAPE" />
                 <ScalarProperty Name="ID_CANVA" ColumnName="ID_CANVA" />
               </MappingFragment>
             </EntityTypeMapping>
