@@ -2,7 +2,7 @@ USE cafeteria_DB
 GO
 
 -- Check if Canva_Admin exist
-CREATE PROCEDURE CheckCanva_AdminExists
+CREATE or alter PROCEDURE CheckCanva_AdminExists
     @ID_CANVA VARCHAR(5),
     @ID_ADMIN VARCHAR(5)
 AS
@@ -30,7 +30,8 @@ BEGIN
     IF NOT EXISTS ( SELECT 1 
                     FROM CANVA_ADMIN 
                     WHERE ID_CANVA = @ID_CANVA
-                        AND ID_ADMIN = CURRENT_USER)
+                        AND ID_ADMIN = CURRENT_USER
+                        OR CURRENT_USER = 'dbo')
     BEGIN
 
         INSERT INTO CANVA_ADMIN (ID_CANVA, ID_ADMIN, LOGIN_STATUS, CREATED_AT, UPDATE_AT) VALUES 

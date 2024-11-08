@@ -24,8 +24,6 @@ namespace Cafeteria_DB
         public Nullable<double> WIDTH { get; set; }
         public Nullable<double> HEIGHT { get; set; }
         public Nullable<double> RADIUS { get; set; }
-        public Nullable<double> MIDPOINT_X_COORDINATE { get; set; }
-        public Nullable<double> MIDPOINT_Y_COORDINATE { get; set; }
         public string SHAPE_TYPENAME { get; set; }
         public Nullable<System.DateTime> CREATED_AT { get; set; }
         public Nullable<System.DateTime> UPDATE_AT { get; set; }

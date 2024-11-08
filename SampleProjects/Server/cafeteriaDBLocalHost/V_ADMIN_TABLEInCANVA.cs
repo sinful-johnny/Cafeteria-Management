@@ -21,7 +21,7 @@ namespace cafeteriaDBLocalHost
         public Nullable<double> RADIUS { get; set; }
         public string TABLE_STATUS { get; set; }
         public string ID_TABLE { get; set; }
-        public string SHAPE_TYPENAME { get; set; }
+        public string ID_SHAPE { get; set; }
         public string ID_CANVA { get; set; }
     }
 }

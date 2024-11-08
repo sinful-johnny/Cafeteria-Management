@@ -6,15 +6,15 @@ namespace api.Dtos.FOOD_TABLE
 {
     public class TABLE_FOODsDto
     {
-        public double? X_COORDINATE { get; set; } = 0;
-        public double? Y_COORDINATE { get; set; } = 0;
-        public string SHAPE_TYPENAME { get; set; } = string.Empty;
-        public double? WIDTH { get; set; } = 0;
-        public double? HEIGHT { get; set; } = 0;
-        public double? RADIUS { get; set; } = 0;
-        public List<FOODsOnTABLE> FOODS { get; set; } = new List<FOODsOnTABLE>();
-        public string TABLE_STATUS { get; set; } = string.Empty;
-        public string ID_TABLE { get; set; } = string.Empty;
+        public double? x { get; set; } = 0;
+        public double? y { get; set; } = 0;
+        public double? width { get; set; } = 0;
+        public double? height { get; set; } = 0;
+        public double? radius { get; set; } = 0;
+        public List<FOODwithAmount> foods { get; set; } = new List<FOODwithAmount>();
+        public string tableStatus { get; set; } = string.Empty;
+        public string tableId { get; set; } = string.Empty;
+        public string shapeId { get; set; } = string.Empty;
         public string ID_CANVA { get; set; } = string.Empty;
     }
 }

@@ -13,10 +13,10 @@ namespace cafeteriaDBLocalHost
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class cafeteriaDBEntities : DbContext
+    public partial class cafeteriaDBEntities1 : DbContext
     {
-        public cafeteriaDBEntities()
-            : base("name=cafeteriaDBEntities")
+        public cafeteriaDBEntities1()
+            : base("name=cafeteriaDBEntities1")
         {
         }
     
