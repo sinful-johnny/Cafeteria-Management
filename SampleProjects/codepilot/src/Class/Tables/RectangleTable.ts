@@ -25,6 +25,7 @@ export class RectangleTable implements ITable{
         this.foods = [];
         this.tableStatus = tableStatus;
         this.tableId = tableId;
+        this.shapeId = shapeId;
     }
     
     setIsHovered(value: boolean): void {
