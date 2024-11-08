@@ -16,11 +16,14 @@ namespace api.Controllers
             this._tablefoodRepo = tablefoodRepo;
         }
 
-        [HttpGet("{idCanva}")]
-        public async Task<IActionResult> GetAllShapeType([FromRoute]string idCanva)
+        [HttpGet]
+        public async Task<IActionResult> GetAllShapeType()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            string idCanva = "Easter Egg";
+
             var ShapeTypeModels = await _tablefoodRepo.getAllTableFoodAsync(idCanva);
 
             //var TablesInCanvaDto = ShapeTypeModels.Item1.Select(stm => stm.ToTablesInCanvaDto()).ToList();

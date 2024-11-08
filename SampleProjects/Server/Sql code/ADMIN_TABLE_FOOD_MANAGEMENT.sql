@@ -268,8 +268,6 @@ CREATE OR ALTER PROC sp_ADMIN_SAVE_TABLEinCANVA
     @ID_CANVA VARCHAR(5)
 AS
 BEGIN
-    TRUNCATE TABLE FOOD_TABLE;
-    DELETE FROM CAFETERIA_TABLE;
 
     set @ID_CANVA = 'C001'
 
@@ -284,12 +282,18 @@ BEGIN
 END
 GO
 
-EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
-        0, 0, 'he', '1', 'S002', ''
-go
+-- EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
+--         0, 0, 'he', '1', 'S002', ''
+-- go
 
--- select *
--- from CANVA_ADMIN
+-- EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
+--         0, 0, 'he', '2', 'S002', ''
+-- go
+
+-- EXEC DBO.sp_ADMIN_SAVE_FOODonTABLE
+--         '1', 'F003', 5
+-- go
+
 
 CREATE OR ALTER PROC sp_ADMIN_SAVE_FOODonTABLE
     @ID_TABLE VARCHAR(5),
