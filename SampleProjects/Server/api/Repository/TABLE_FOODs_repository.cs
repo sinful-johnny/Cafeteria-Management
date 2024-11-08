@@ -33,7 +33,7 @@ namespace api.Repository
                 {
                     await _context.Database.ExecuteSqlRawAsync(
                     """
-                    "EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
+                    EXEC DBO.sp_ADMIN_SAVE_TABLEinCANVA
                             @X_COORDINATE = {0}, @Y_COORDINATE = {1}, @TABLE_STATUS = {2}, 
                             @ID_TABLE = {3}, @ID_SHAPE = {4}, @ID_CANVA = {5}
                     """,
@@ -48,7 +48,7 @@ namespace api.Repository
                     {
                         _ = await _context.Database.ExecuteSqlRawAsync(
                         """
-                        "EXEC DBO.sp_ADMIN_SAVE_FOODonTABLE
+                        EXEC DBO.sp_ADMIN_SAVE_FOODonTABLE
                                 @ID_TABLE = {0}, @ID_FOOD = {1}, 
                                 @AMOUNT_IN_TABLE = {2}
                         """,
