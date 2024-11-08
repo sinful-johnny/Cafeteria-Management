@@ -10,6 +10,9 @@ import { checkCollision, isCollidingWithBorderX, isCollidingWithBorderY } from "
 import axios from "axios"
 import { RectangleTable } from "../../Class/Tables/RectangleTable";
 import { CircleTable } from "../../Class/Tables/CircleTable";
+import { TableFactory } from "../../Class/Factories/TableFactory";
+import { FoodOnTable } from "../../Class/FoodOnTable";
+import { Food } from "../../Class/Food";
 
 interface FullCanvasPageProps{
     items: ITable[];
@@ -62,81 +65,120 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
   ]);
 
   const [ordersOnTable, setOrdersOnTable] = useState<any>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5030/api/ShapeType")
-    .then(response => {
-      var data = response.data;
-      var tablesData : {id: number, 
-        title: string, 
-        content: any[]} = {
-        id: 1, 
-        title: 'Table', 
-        content: []
-      }
+    console.log(isLoading);
+    if(isLoading === false){
+      setIsLoading(prev => !prev);
 
-      var content: any[] = [];
-      data.map(object => {
-        content.push( {
-          shapeId: object.iD_SHAPE,
-          name: object.shapE_TYPENAME,
-          objectType: "Table",
-          shapeType: object.shapE_TYPENAME === "Rectangle" ? "rectangle" : "circle",
-          img: object.shapE_TYPENAME === "Rectangle" ? "/square.svg" : "/circle.svg",
-          width: object.width,
-          height: object.height,
-          radius: object.radius
-        });
-      });
-
-      tablesData = {...tablesData, content: content}
-
-      setTables(prevTables => {
-        prevTables.length = 0;
-        prevTables.push(tablesData)
-        return prevTables;
-      });
-    })
-    .catch(error => {
-      console.log("Error",error);
-    });
-
-    axios.get("http://localhost:5030/api/FoodType")
-          .then(response => {
-            //console.log(response.data);
-            var data = response.data;
-            var categories = data.map(object => object.fooD_TYPENAME).filter((object, index, self) => index === self.findIndex((t) => t === object));
-            var orderData = categories.map((category, i) => {
-              var order = {
-                id: i, 
-                title: category,
-                content: [],
-              }
-
-              var content: any[] = []
-              data.map(object => {
-                if(object.fooD_TYPENAME === category){
-                  content.push(
-                    {
-                      ID_FOOD: object.iD_FOOD, 
-                      objectType: "Food", 
-                      name: object.fooD_NAME, 
-                      img: "/coffee2.svg"
-                    }
-                  );
-                }
-              })
-              
-              return {...order, content: content};
-            })
-            //console.log(orderData);
-            setOrders(orderData);
-          })
-          .catch(error => {
-            console.log("Error",error);
+      console.log("Loading table types.");
+      axios.get("http://localhost:5030/api/ShapeType")
+      .then(response => {
+        var data = response.data;
+        var tablesData : {id: number, 
+          title: string, 
+          content: any[]} = {
+          id: 1, 
+          title: 'Table', 
+          content: []
+        }
+  
+        var content: any[] = [];
+        data.map(object => {
+          content.push( {
+            shapeId: object.iD_SHAPE,
+            name: object.shapE_TYPENAME,
+            objectType: "Table",
+            shapeType: object.shapE_TYPENAME === "Rectangle" ? "rectangle" : "circle",
+            img: object.shapE_TYPENAME === "Rectangle" ? "/square.svg" : "/circle.svg",
+            width: object.width,
+            height: object.height,
+            radius: object.radius
           });
-    
-    console.log("Data loaded!");
+        });
+  
+        tablesData = {...tablesData, content: content}
+  
+        setTables(prevTables => {
+          prevTables.length = 0;
+          prevTables.push(tablesData)
+          return prevTables;
+        });
+  
+        console.log("Table types loaded!", tables);
+  
+        console.log("Loading menu.");
+        axios.get("http://localhost:5030/api/FoodType")
+            .then(response => {
+              //console.log(response.data);
+              var data = response.data;
+              var categories = data.map(object => object.fooD_TYPENAME).filter((object, index, self) => index === self.findIndex((t) => t === object));
+              var orderData = categories.map((category, i) => {
+                var order = {
+                  id: i, 
+                  title: category,
+                  content: [],
+                }
+  
+                var content: any[] = []
+                data.map(object => {
+                  if(object.fooD_TYPENAME === category){
+                    content.push(
+                      {
+                        ID_FOOD: object.iD_FOOD, 
+                        objectType: "Food", 
+                        name: object.fooD_NAME, 
+                        img: object.IMAGE_LINK,
+                      }
+                    );
+                  }
+                })
+                
+                return {...order, content: content};
+              })
+              //console.log(orderData);
+              setOrders(orderData);
+              console.log("Menu loaded!", orderData);
+  
+              console.log("Loading canvas.");
+              axios.get("http://localhost:5030/api/TableFoods")
+              .then(response => {
+                var data = response.data;
+                var loadedTables: ITable[] = data.map(table => {
+                  const shapePrototypeIndex = tables[0].content.findIndex(x => x.shapeId === table.shapeId);
+                  const shapeType: string = tables[0].content[shapePrototypeIndex].shapeType;
+                  var newTable: ITable = TableFactory.createTable(table.tableId, table.shapeId, shapeType, table.x, table.y,table.width,table.height,table.radius);
+                  newTable.tableStatus = table.tableStatus;
+  
+                  const foodsOnTable = table.foods.map(food => {
+                    var foodOnTable: FoodOnTable = new FoodOnTable(new Food(food.food.foodId, food.food.foodName,food.food.amount_left, food.food.price, food.food.foodTypeStatus,food.food.imageURL), food.amount);
+                    return foodOnTable;
+                  });
+                
+                  newTable.foods = foodsOnTable;
+                
+                  return newTable;
+                });
+              
+                console.log("Canvas loaded!",loadedTables);
+                setItems(loadedTables);
+
+              }).catch(error => {
+                console.log("Error",error);
+              });
+            })
+            .catch(error => {
+              console.log("Error",error);
+            });
+  
+  
+      })
+      .catch(error => {
+        console.log("Error",error);
+      });
+    }
+    //console.log("Data loaded!",tables, orders);
   },[])
 
   useEffect(() => {
@@ -248,8 +290,17 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       }
       return item;
     });
+
+    console.log("Saving data!");
+    axios.post("http://localhost:5030/api/TableFoods", lockedItems).then(() => {
+      console.log("Data saved!");
+      setSaved(true);
+    }).catch(error => {
+      console.log("Error saving data",error);
+    });
+
     console.log("Current Canvas Items:", lockedItems);
-    setSaved(true);
+
     setItems(lockedItems);
   };
 

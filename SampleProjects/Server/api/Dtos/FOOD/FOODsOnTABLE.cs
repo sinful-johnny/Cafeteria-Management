@@ -8,7 +8,7 @@
         public int? amount_left { get; set; } = 0;
         public decimal? price { get; set; } = 0;
         public string foodTypeStatus { get; set; } = string.Empty;
-        public string imageURL { get; set; } = string.Empty;
+        public string? imageURL { get; set; } = null;
     }
 
     public class FOODwithAmount

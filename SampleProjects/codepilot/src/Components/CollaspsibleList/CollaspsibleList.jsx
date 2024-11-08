@@ -27,7 +27,6 @@ const spawnListComponent = (content) => {
         ...prev,
         [index]: !prev[index]
       }));
-      console.log(openIndexes)  
     };
 
     return (
