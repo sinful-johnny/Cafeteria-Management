@@ -86,27 +86,6 @@ export function Login(){
                         )}
                     </Formik>
 
-                    <button className="AltSignInButton">
-                        <img src="/google_logo.svg" />
-                        <label>
-                            Sign in with Google
-                        </label>
-                    </button>
-
-                    <button className="AltSignInButton">
-                        <img src="/facebook_logo.svg" />
-                        <label>
-                            Sign in with Google
-                        </label>
-                    </button>
-
-                    <button className="AltSignInButton">
-                        <img src="/apple_logo.svg" />
-                        <label>
-                            Sign in with Apple
-                        </label>
-                    </button>
-
                     <div className="RegisterHint">
                         <h3>New to codepilot? <a>Create an account</a></h3>
                     </div>

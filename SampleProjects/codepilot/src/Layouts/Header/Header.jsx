@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import React, {useRef,useEffect,useState} from "react";
 import logo from './Logo.png';
 import userImg from './Rectangle.png'
+import logoutSymbol from './Logout.png'
 
 import "./Header.css";
 
 const Header = ({selectedPage, setSelectedPage, setIsTableMenu, save, isSaved}) => {
   const navigate = useNavigate();
+  const [isDropdown, setDropdown] = useState(false);
 
   useEffect(() => {
     //console.log(selectedPage);
@@ -66,7 +68,20 @@ const Header = ({selectedPage, setSelectedPage, setIsTableMenu, save, isSaved}) 
         </div>
         </div>
       </div>
-      <img className="user-image" src={userImg} alt="Avatar" />
+      <button 
+        className="user-toggle-menu"
+        onClick = {() => setDropdown((prev) => !prev)}   
+      >
+        <img className="user-image" src={userImg} alt="Avatar" />
+      </button>
+      <div className={`dropdown-menu ${isDropdown ? "dropdown-visible" : ""}`}>
+        <ul>
+          <li>
+            <img src={logoutSymbol} alt="logout symbol"/>
+            <button className="logout" onClick={() => navigate("/login")}> Logout </button>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
