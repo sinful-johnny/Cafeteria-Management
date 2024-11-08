@@ -1,4 +1,7 @@
-use cafeteria_DB
+-- use cafeteria_DB
+-- go
+
+use cafeteriaDB
 go
 
 CREATE OR ALTER PROCEDURE GetAllFoodType

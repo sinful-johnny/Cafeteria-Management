@@ -19,9 +19,19 @@ namespace api.Repository
                 .FromSqlRaw("EXEC DBO.sp_ADMIN_TABLEInCANVA @ID_CANVA={0}", idCanvas)
                 .ToListAsync();
             var resultFoods = await _context.V_FoodsOnTable
-                .FromSqlInterpolated($"EXEC DBO.sp_ADMIN_FOODsOnTABLE")
+                .FromSqlRaw($"EXEC DBO.sp_ADMIN_FOODsOnTABLE")
                 .ToListAsync();
             return (resultTables, resultFoods);
         }
+        //public async Task<string> SaveCreatedTableAsync(string idCanvas, string idShape)
+        //{
+        //    var resultTables = await _context.V_TableInCanva
+        //        .FromSqlRaw("EXEC DBO.sp_ADMIN_TABLEInCANVA @ID_CANVA={0}", idCanvas)
+        //        .ToListAsync();
+        //    var resultFoods = await _context.V_FoodsOnTable
+        //        .FromSqlRaw($"EXEC DBO.sp_ADMIN_FOODsOnTABLE")
+        //        .ToListAsync();
+        //    return (resultTables, resultFoods);
+        //}
     }
 }

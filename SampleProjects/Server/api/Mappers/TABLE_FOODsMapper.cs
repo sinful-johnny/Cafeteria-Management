@@ -1,6 +1,7 @@
 ﻿using api.Dtos.FOOD;
 using api.Dtos.FOOD_TABLE;
 using cafeteriaDBLocalHost;
+using System.Runtime.CompilerServices;
 
 namespace api.Mappers
 {
@@ -22,5 +23,7 @@ namespace api.Mappers
                 ID_CANVA = TablesInCanvaModel.ID_CANVA,
             };
         }
+
+        //public static CAFETERTIA_TABLE FromCreatedTableToTable(this CreateTABLEDto )
     }
 }
