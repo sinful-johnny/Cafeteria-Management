@@ -24,23 +24,48 @@ export function Login(){
     onSubmit = (values) => {
     }
 
+    //THIS DOES NOT WORK WITH ERROR MESSAGE AND I HAVE NO IDEA WHY
+    function FloatingLabelInput({ label, name, type = "text" }) {
+        const [isFocused, setIsFocused] = useState(false);
+    
+        const handleFocus = () => setIsFocused(true);
+        const handleBlur = (event) => {
+            setIsFocused(event.target.value !== ""); // Remain focused if there's content
+        };
+    
+        return (
+            <div className="LoginForm--input">
+                <Field
+                    type={type}
+                    id={name}
+                    name={name}
+                    placeholder=" " // Empty placeholder for CSS floating effect
+                    className={`input-field ${isFocused ? "focused" : ""}`}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    required
+                />
+                <ErrorMessage name={name} component="div" className="error" />
+                <label className={`floating-label ${isFocused ? "focused" : ""}`}>
+                    {label}
+                </label>
+            </div>
+        );
+    } 
+
     return (
         <>
             <div className='main--login'>
+                <h2 className="login-text">Your shift has started; log in and give it your best!</h2>
+
                 <svg className='main--cloud' width="100%" height="100%" viewBox="0 0 1440 406" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="36" cy="85" r="85" fill="#E9E4FE"/>
-                  <circle cx="1414" cy="85" r="85" fill="#E9E4FE"/>
-                  <circle cx="35.5" cy="424.5" r="268.5" fill="#E9E4FE"/>
-                  <circle cx="662" cy="382" r="90" fill="#E9E4FE"/>
-                  <circle cx="441.5" cy="487.5" r="175.5" fill="#E9E4FE"/>
-                  <circle cx="803" cy="433" r="90" fill="#E9E4FE"/>
-                  <circle cx="1372.5" cy="348.5" r="199.5" fill="#E9E4FE"/>
-                  <circle cx="1052" cy="472" r="182" fill="#E9E4FE"/>
+                  <circle cx="521" cy="70" r="160" fill="#BB9370" opacity={0.56}/>
+                  <circle cx="400" cy="200" r="50" fill="#BB9370" opacity={0.56}/>
+                  <circle cx="300" cy="-70" r="40" fill="#BB9370" opacity={0.56}/>
                 </svg>
 
                 <div className="login--form">
-                    <img className="Logo--small" src='/logo.svg'></img>
-                    <h2 id="LoginHeader">Login</h2>
+                    <h1 id="LoginHeader">Welcome!</h1>
 
                     <Formik
                       initialValues={initialValues}
@@ -50,45 +75,24 @@ export function Login(){
                     >
                       {({ isSubmitting }) => (
                           <Form className="form-container">
-                            <div className="LoginForm--input">
-                              <label htmlFor="name">Name</label>
-                              <Field type="text" id="name" name="name" className="input-field" />
-                              <ErrorMessage name="name" component="div" />
-                            </div>
-
-                            <div className="LoginForm--input">
-                              <label htmlFor="password">Password:</label>
-                              <Field type="password" id="password" name="password" />
-                              <ErrorMessage name="password" component="div" />
-                            </div>
-
-                            <div className="HelperContainer">
-                                <div className="HelperContainer--RememberLogin">
-                                    <label>
-                                      <input
-                                        type="checkbox"
-                                        checked={() => {}}
-                                        onChange={() => {}}
-                                      />
-                                      Remember Login
-                                    </label>
-                                </div>
-
-                                <div className="HelperContainer--ForgotPassword">
-                                    <a href="/">Forgot password?</a>
-                                </div>
-                            </div>
+                            <FloatingLabelInput
+                                label="Email"
+                                name="name"
+                                type="text"
+                            />
+                            
+                            <FloatingLabelInput
+                                label="Password"
+                                name="password"
+                                type="password"
+                            />
 
                             <div className="Form--ButtonContainer">
-                              <button type="submit" disabled={isSubmitting} className="submit-button Button--Signin">Sign In</button>
+                              <button type="submit" disabled={isSubmitting} className="submit-button Button--Signin">Login</button>
                             </div>
                           </Form>
                         )}
                     </Formik>
-
-                    <div className="RegisterHint">
-                        <h3>New to codepilot? <a>Create an account</a></h3>
-                    </div>
                 </div>
             </div>
         </>
