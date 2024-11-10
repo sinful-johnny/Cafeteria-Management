@@ -71,26 +71,6 @@
     background-color: #FFFFFF;
 }
 
-/* Floating label styles */
-/* .floating-label {
-    position: absolute;
-    top: 19px;
-    left: 12px;
-    font-size: 16px;
-    color: #787373;
-    pointer-events: none;
-    transition: 0.2s ease all;
-}
-
-.input-field:focus + .floating-label,
-.input-field:not(:placeholder-shown) + .floating-label {
-    top: 0px;
-    left: 7px;
-    font-size: 12px;
-    color: #C5BDBD;
-    padding: 0 4px;
-} */
-
 /* Floating label styling */
 .floating-label {
     position: absolute;
