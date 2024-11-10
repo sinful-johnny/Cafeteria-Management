@@ -1,4 +1,4 @@
-USE cafeteria_DB
+USE cafeteriaDB
 GO
 
 EXEC sp_addrole 'ADMIN'
@@ -51,13 +51,6 @@ GO
 EXEC ADD_ROLE
 GO
 
--- declare @ResponseMessage NVARCHAR(255);
-
--- EXEC sp_ADMIN_REGISTER '1@gmail.com', '132424', @ResponseMessage = @ResponseMessage output;
-
--- select @ResponseMessage;
--- GO
-
 --drop user
 
 -- DECLARE @sql NVARCHAR(MAX) = N'';
@@ -73,6 +66,27 @@ GO
 -- go
 
 --ADMIN REGISTER
+
+-- Verify that the stored procedure does not already exist.
+IF OBJECT_ID('usp_GetErrorInfo', 'P') IS NOT NULL
+    DROP PROCEDURE usp_GetErrorInfo;
+GO
+
+-- Create procedure to retrieve error information.
+CREATE OR ALTER PROC usp_GetErrorInfo
+@ResponseMess varchar(255) output
+AS
+SELECT ERROR_NUMBER() AS ErrorNumber,
+    ERROR_SEVERITY() AS ErrorSeverity,
+    ERROR_STATE() AS ErrorState,
+    ERROR_PROCEDURE() AS ErrorProcedure,
+    ERROR_LINE() AS ErrorLine,
+    ERROR_MESSAGE() AS ErrorMessage;
+
+    SET @ResponseMess = ERROR_MESSAGE();
+GO
+
+
 CREATE OR ALTER PROC sp_ADMIN_REGISTER
 	@Email VARCHAR(255),  
     @PASSWORD VARCHAR(255),
@@ -129,7 +143,7 @@ BEGIN
             EXEC sp_addlogin @Email, @PASSWORD;
             declare @cmd varchar(200);
             set @cmd = ' 
-		                USE cafeteriaDB
+		                USE cafeteriaDBf
 		                CREATE USER [' + @NewID + '] FOR LOGIN '+ '[' + @Email + ']';
             EXEC (@cmd);
 
@@ -141,7 +155,13 @@ BEGIN
             return;
         END TRY
         BEGIN CATCH
-            SET @ResponseMessage = 'An error occurred during registration.';
+
+            declare @ResponseMess nvarchar(255);
+
+            EXECUTE usp_GetErrorInfo @ResponseMess = @ResponseMess output;
+
+            SET @ResponseMessage = @ResponseMess;
+
         END CATCH
     END
     ELSE
@@ -150,6 +170,13 @@ BEGIN
         RETURN;
     END
 END
+GO
+
+declare @ResponseMessage NVARCHAR(255);
+
+EXEC sp_ADMIN_REGISTER '1143243@gmail.com', '132424', @ResponseMessage = @ResponseMessage output;
+
+select @ResponseMessage;
 GO
 
 
