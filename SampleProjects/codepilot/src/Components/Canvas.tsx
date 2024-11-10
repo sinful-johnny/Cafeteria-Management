@@ -153,6 +153,20 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
     event.preventDefault();
     const data = JSON.parse(event.dataTransfer.getData('text/plain'));
     const rect = canvasRef.current?.getBoundingClientRect();
+
+    const generateTableId = (items) => {
+      if(items.length === 0) {
+        return 1;
+      }
+      const listId = items.map(item => {
+        return Number(item.tableId);
+      })
+      //console.log(listId)
+      const res =  Math.max(...listId);
+
+      return res + 1;
+    }
+
     if (rect) {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -160,7 +174,7 @@ const Canvas: React.FC<CanvasProps> = ({items, setItems, selectedIndex, setSelec
       try{
         if(data.objectType === "Table"){
           try {
-            setItems([...items, TableFactory.createTable(items.length + 1, data.shapeId,data.shapeType, x, y,data.width ? data.width : 0,data.height ? data.height : 0, data.radius ? data.radius : 0 )]);
+            setItems([...items, TableFactory.createTable(generateTableId(items), data.shapeId,data.shapeType, x, y,data.width ? data.width : 0,data.height ? data.height : 0, data.radius ? data.radius : 0 )]);
           } catch (error) {
             console.log(error);
           }

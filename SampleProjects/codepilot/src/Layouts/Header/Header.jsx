@@ -78,7 +78,7 @@ const Header = ({selectedPage, setSelectedPage, setIsTableMenu, save, isSaved}) 
         <ul>
           <li>
             <img src={logoutSymbol} alt="logout symbol"/>
-            <button className="logout" onClick={() => navigate("/login")}> Logout </button>
+            <button className="logout" onClick={() => navigate("/")}> Logout </button>
           </li>
         </ul>
       </div>

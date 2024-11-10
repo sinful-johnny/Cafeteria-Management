@@ -11,12 +11,10 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/login"
+        <Route path="/"
           element={<Login/>}
         ></Route>
-        <Route path='/' element={<FullCanvasPage/>}></Route>
-        <Route path='/admin' element={<Admin/>}>
-        </Route>
+        <Route path='/canvas' element={<FullCanvasPage/>}></Route>
       </Routes>
     </>
   )

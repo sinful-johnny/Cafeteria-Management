@@ -1,13 +1,16 @@
 import React, {useState} from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from "react-router-dom";
 
 //import { ReactComponent as logoSVG } from '../../../public/logo.svg';
 import "./Login.css";
+import axios from "axios";
 
 export function Login(){
     let validationSchema;
     let onSubmit;
+    let navigate = useNavigate();
 
     const [initialValues, setInitialValues] = useState({
         name: "" ,
@@ -22,6 +25,20 @@ export function Login(){
     });
 
     onSubmit = (values) => {
+        console.log(values);
+        axios.post("https://localhost:7233/api/account/login", {emailAddress: values.name, password: values.password})
+        .then(response => {
+            //var sampleAuthToken = "dsjaodsa";
+            sessionStorage.setItem("authToken", response.data.token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            console.log(response.data);
+            navigate("/canvas");
+        }).catch(error => {
+            console.log("Log in error",error);
+            if(error.response.status === 401){
+                console.log("Username not found or password incorrect");
+            }
+        })
     }
 
     //THIS DOES NOT WORK WITH ERROR MESSAGE AND I HAVE NO IDEA WHY

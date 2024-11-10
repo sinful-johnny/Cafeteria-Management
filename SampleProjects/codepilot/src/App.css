@@ -29,7 +29,7 @@ body {
 }
 
 .ContentStyle::-webkit-scrollbar {
-  width: 0.2vw;
+  width: 0.4vw;
 }
 
 .ContentStyle::-webkit-scrollbar-track {
