@@ -28,7 +28,6 @@ export function Login(){
         console.log(values);
         axios.post("https://localhost:7233/api/account/login", {emailAddress: values.name, password: values.password})
         .then(response => {
-            //var sampleAuthToken = "dsjaodsa";
             sessionStorage.setItem("authToken", response.data.token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
             console.log(response.data);

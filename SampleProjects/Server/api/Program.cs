@@ -14,27 +14,14 @@ using Microsoft.OpenApi.Models;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Data.SqlClient;
-
-void ConfigureServices(IServiceCollection services) { 
-    services.AddCors(options => { 
-        options.AddPolicy("AllowSpecificOrigins", 
-            builder => builder.WithOrigins("http://localhost:3000")
-            .AllowAnyMethod()
-            .AllowAnyHeader()); 
-    }); 
-
-    services.AddControllers(); 
-}
-void Configure(IApplicationBuilder app, IWebHostEnvironment env) { 
-    app.UseRouting(); 
-    app.UseCors("AllowSpecificOrigins"); 
-    app.UseAuthorization(); 
-    app.UseEndpoints(
-        endpoints => { endpoints.MapControllers();
-    }); 
-}
+using Microsoft.AspNetCore.HttpLogging;
+using api.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddHttpLogging(options => {
+//    options.LoggingFields = HttpLoggingFields.All; // Log all fields
+//});
 
 builder.Services.AddCors(options => { 
     options.AddPolicy("AllowSpecificOrigins", 
@@ -150,6 +137,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//app.UseHttpLogging();
+app.UseMiddleware<CustomLoggingMiddleware>();
 
 app.UseRouting(); 
 app.UseCors("AllowSpecificOrigins");

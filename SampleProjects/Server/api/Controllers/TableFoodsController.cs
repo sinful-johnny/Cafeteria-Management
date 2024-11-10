@@ -1,6 +1,7 @@
 ﻿using api.Dtos.FOOD_TABLE;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -17,6 +18,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllShapeType()
         {
             if (!ModelState.IsValid)
@@ -43,6 +45,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SaveCreatedTable([FromBody] List<TABLE_FOODsDto> TablesInCanvaDto)
         {
             if (!ModelState.IsValid)

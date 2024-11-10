@@ -1,6 +1,7 @@
 ﻿using api.Data;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -16,6 +17,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllShapeType() {
             var ShapeTypeModels = await _shapeTypeRepo.GetAllShapeTypeAsync();
             var ShapeTypeDtos = ShapeTypeModels.Select(f => f.ToShapeDto());

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React,{ useEffect, useState } from "react";
 import "../../App.css";
 import { ITable } from "../../Class/Interfaces/ITable";
@@ -20,6 +20,8 @@ interface FullCanvasPageProps{
 }
 
 const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
+  let navigate = useNavigate();
+
   const [selectedPage, setSelectedPage] = useState<string>("Table");
   const [items, setItems] = useState<ITable[]>([]);
   const [isSaved, setSaved] = useState(true);
@@ -32,26 +34,6 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       {shapeId: 1, name: "Square", objectType: "Table", shapeType: "rectangle", color: "blue", img: "/square.svg"},
       {shapeId: 2, name: "Circular", objectType: "Table", shapeType: "circle", color: "red", img: "/circle.svg"}
     ]},
-    //{id: 2, title: 'Tea', content: [
-    //  {ID_FOOD: 1, objectType: "Food", name: "Honey Jasmine Green", img: "/tea1.svg"},
-    //  {ID_FOOD: 2, objectType: "Food", name: "Raspberry Snow", img: "/tea2.svg"}
-    //]},
-    //{id: 3, title: 'Coffee', content: [
-    //  {ID_FOOD: 3, objectType: "Food", name: "Pure Coffee", img: "/coffee1.svg"},
-    //  {ID_FOOD: 4, objectType: "Food", name: "Iced Coffee with Milk", img: "/coffee2.svg"}
-    //]},
-    //{id: 4, title: 'Coffee', content: [
-    //  {ID_FOOD: 3, objectType: "Food", name: "Pure Coffee", img: "/coffee1.svg"},
-    //  {ID_FOOD: 4, objectType: "Food", name: "Iced Coffee with Milk", img: "/coffee2.svg"}
-    //]},
-    //{id: 5, title: 'Coffee', content: [
-    //  {ID_FOOD: 3, objectType: "Food", name: "Pure Coffee", img: "/coffee1.svg"},
-    //  {ID_FOOD: 4, objectType: "Food", name: "Iced Coffee with Milk", img: "/coffee2.svg"}
-    //]},
-    //{id: 6, title: 'Coffee', content: [
-    //  {ID_FOOD: 3, objectType: "Food", name: "Pure Coffee", img: "/coffee1.svg"},
-    //  {ID_FOOD: 4, objectType: "Food", name: "Iced Coffee with Milk", img: "/coffee2.svg"}
-    //]}
   ]);
   const [orders, setOrders] = useState([
     {id: 1, title: 'Tea', content: [
@@ -73,7 +55,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
       setIsLoading(prev => !prev);
 
       console.log("Loading table types.");
-      axios.get("http://localhost:5030/api/ShapeType")
+      axios.get("https://localhost:7233/api/ShapeType")
       .then(response => {
         var data = response.data;
         var tablesData : {id: number, 
@@ -109,7 +91,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
         console.log("Table types loaded!", tables);
   
         console.log("Loading menu.");
-        axios.get("http://localhost:5030/api/FoodType")
+        axios.get("https://localhost:7233/api/FoodType")
             .then(response => {
               //console.log(response.data);
               var data = response.data;
@@ -142,7 +124,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
               console.log("Menu loaded!", orderData);
   
               console.log("Loading canvas.");
-              axios.get("http://localhost:5030/api/TableFoods")
+              axios.get("https://localhost:7233/api/TableFoods")
               .then(response => {
                 var data = response.data;
                 var loadedTables: ITable[] = data.map(table => {
@@ -166,16 +148,25 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
 
               }).catch(error => {
                 console.log("Error",error);
+                if(error.response.status === 401){
+                  navigate("/");
+                }
               });
             })
             .catch(error => {
               console.log("Error",error);
+              if(error.response.status === 401){
+                navigate("/");
+              }
             });
   
   
       })
       .catch(error => {
         console.log("Error",error);
+        if(error.response.status === 401){
+          navigate("/");
+        }
       });
     }
     //console.log("Data loaded!",tables, orders);
@@ -292,11 +283,14 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
     });
 
     console.log("Saving data!");
-    axios.post("http://localhost:5030/api/TableFoods", lockedItems).then(() => {
+    axios.post("https://localhost:7233/api/TableFoods", lockedItems).then(() => {
       console.log("Data saved!");
       setSaved(true);
     }).catch(error => {
       console.log("Error saving data",error);
+      if(error.response.status === 401){
+        navigate("/");
+      }
     });
 
     console.log("Current Canvas Items:", lockedItems);
