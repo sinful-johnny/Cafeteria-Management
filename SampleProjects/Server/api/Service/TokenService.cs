@@ -13,17 +13,29 @@ namespace api.Service
     {
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config) 
+        private readonly IUserService _userService;
+        public TokenService(IConfiguration config, IUserService userService) 
         {
             this._config = config;
             this._key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+            this._userService = userService;
         }
-        public string CreateToken(ADMIN admin)
+        public async Task<string> CreateToken(ADMIN admin)
         {
+
+            var roles = await _userService.GetUserRolesAsync(admin);
+
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, admin.EMAIL)
+                new Claim(JwtRegisteredClaimNames.Email, admin.EMAIL),
+                //new Claim(JwtRegisteredClaimNames.NameId, admin.ID_ADMIN)
             };
+
+            foreach (var role in roles)
+            {
+                if (!role.Contains("NoRoles"))
+                    claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+            }
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

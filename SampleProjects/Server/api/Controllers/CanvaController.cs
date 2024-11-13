@@ -19,7 +19,7 @@ namespace EFTut.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
 
         public async Task<IActionResult> GetAllCanva()
         {

@@ -5,6 +5,6 @@ namespace api.Interfaces
 {
     public interface ITokenService
     {
-        public string CreateToken(ADMIN admin);
+        public Task<string> CreateToken(ADMIN admin);
     }
 }

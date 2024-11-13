@@ -1,6 +1,55 @@
 USE cafeteriaDB
 GO
 
+CREATE OR ALTER PROC Take_GetUserByEmail
+@userEmail varchar(50)
+AS
+BEGIN
+    SELECT ID_ADMIN, EMAIL
+    FROM ADMIN
+    WHERE EMAIL = @userEmail
+END
+GO
+
+-- EXEC Take_GetUserByEmail 'admin1@example.com'
+-- GO
+
+-- SELECT * FROM sys.server_principals WHERE type = 'R';
+
+-- ALTER SERVER ROLE ADMIN DROP MEMBER A052;
+-- go
+
+-- select *
+-- from admin a
+-- WHERE a.EMAIL = 'user456789@example.com'
+-- go
+
+-- select *
+-- from ADMIN
+-- where ID_ADMIN = 'A052'
+
+CREATE OR ALTER PROC Take_UserRoles
+@userEmail varchar(50)
+AS
+BEGIN
+    SELECT
+    dp2.name AS RoleName
+    FROM ADMIN ad,
+        sys.database_role_members drm
+    JOIN 
+        sys.database_principals dp ON drm.member_principal_id = dp.principal_id
+    JOIN 
+        sys.database_principals dp2 ON drm.role_principal_id = dp2.principal_id
+    WHERE dp.name = ad.ID_ADMIN
+        and ad.EMAIL = @userEmail
+END
+GO
+
+--EXEC Take_UserRoles 'admin1@example.com'
+
+-- EXEC sp_addrole 'USER'
+-- GO
+
 EXEC sp_addrole 'ADMIN'
 GO
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using cafeteriaDBLocalHost;
 using Microsoft.Extensions.Configuration;
 using api.Dtos.Account;
+using api.Dtos.USER;
 
 namespace api.Data
 {
@@ -31,6 +32,9 @@ namespace api.Data
         //    _connectionString = BuildConnectionString(baseConnectionString, loginDto.EmailAddress, loginDto.Password);
         //}
 
+        public DbSet<UserRole> userRoles { get; set; }
+        public DbSet<ADMIN> Admin {  get; set; }
+
         public DbSet<CANVA> Canva { get; set; }
 
         public DbSet<FOOD_TYPE> FoodType { get; set; }
@@ -55,14 +59,17 @@ namespace api.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<UserRole>()
+                .HasNoKey();
+
             modelBuilder.Entity<V_ADMIN_TABLEInCANVA>()
-            .HasKey(v => new { v.ID_TABLE }); // Composite key for V_ADMIN_TABLEInCANVA
+                .HasKey(v => new { v.ID_TABLE }); // Composite key for V_ADMIN_TABLEInCANVA
 
             modelBuilder.Entity<V_ADMIN_FOODsOnTABLE>()
-            .HasKey(v => new { v.ID_FOOD, v.ID_TABLE }); // Composite key for V_FoodsOnTable
+                .HasKey(v => new { v.ID_FOOD, v.ID_TABLE }); // Composite key for V_FoodsOnTable
 
             modelBuilder.Entity<FOOD_TABLE>()
-            .HasKey(ct => new { ct.ID_FOOD, ct.ID_TABLE }); // Composite key for FOOD_TABLE
+                .HasKey(ct => new { ct.ID_FOOD, ct.ID_TABLE }); // Composite key for FOOD_TABLE
 
             modelBuilder.Entity<CANVA_ADMIN>()
                 .HasKey(ca => new { ca.ID_CANVA, ca.ID_ADMIN }); // Composite key for CANVA_ADMIN
@@ -77,10 +84,10 @@ namespace api.Data
                 .HasKey(c => new { c.ID_CANVA }); // Composite key for CANVA
 
             modelBuilder.Entity<FOOD_TYPE>()
-            .HasKey(f => new { f.ID_FOOD }); // Composite key for FOOD_TYPE
+                .HasKey(f => new { f.ID_FOOD }); // Composite key for FOOD_TYPE
 
             modelBuilder.Entity<SHAPE_TYPE>()
-            .HasKey(s => new { s.ID_SHAPE }); // Composite key for SHAPE_TYPE
+                .HasKey(s => new { s.ID_SHAPE }); // Composite key for SHAPE_TYPE
 
             modelBuilder.Entity<FOOD_TABLE>()
                 .HasOne(u => u.FOOD_TYPE)
@@ -94,24 +101,23 @@ namespace api.Data
 
             //Privileges
             //Stocks.FromSqlRaw
-            base.OnModelCreating(modelBuilder);
 
-            List<IdentityRole> roles = new List<IdentityRole>
-            {
-                new IdentityRole
-                {
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
-                },
+            //List<IdentityRole> roles = new List<IdentityRole>
+            //{
+            //    new IdentityRole
+            //    {
+            //        Name = "Admin",
+            //        NormalizedName = "ADMIN"
+            //    },
 
-                new IdentityRole
-                {
-                    Name = "User",
-                    NormalizedName = "USER"
-                }
-            };
+            //    new IdentityRole
+            //    {
+            //        Name = "User",
+            //        NormalizedName = "USER"
+            //    }
+            //};
 
-            modelBuilder.Entity<IdentityRole>().HasData(roles); //Add data into roles
+            //modelBuilder.Entity<IdentityRole>().HasData(roles); //Add data into roles
         }
     }
 }

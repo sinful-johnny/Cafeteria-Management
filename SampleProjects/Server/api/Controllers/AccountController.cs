@@ -12,11 +12,14 @@ namespace api.Controllers
         //private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly IAdminRepository _adminRepo;
+        private readonly IUserService _userService;
 
-        public AccountController(IAdminRepository adminRepo, ITokenService tokenService)
+        public AccountController(IAdminRepository adminRepo, 
+            ITokenService tokenService, IUserService userService)
         {
             _adminRepo = adminRepo;
             _tokenService = tokenService;
+            _userService = userService;
         }
 
         [HttpPost("login")]
@@ -45,7 +48,7 @@ namespace api.Controllers
                 new NewUserDto
                 {
                     Email = admin.EMAIL,
-                    Token = _tokenService.CreateToken(admin)
+                    Token = await _tokenService.CreateToken(admin)
                 }
             );
         }
@@ -78,7 +81,7 @@ namespace api.Controllers
                                 new NewUserDto
                                 {
                                     Email = admin.EMAIL,
-                                    Token = _tokenService.CreateToken(admin)
+                                    Token = await _tokenService.CreateToken(admin)
                                 }
                             );
                 }

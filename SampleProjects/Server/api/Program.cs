@@ -96,8 +96,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => //extend the role
 //Add Schema
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme =
-    options.DefaultChallengeScheme =
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultForbidScheme =
     options.DefaultScheme =
     options.DefaultSignInScheme =
@@ -120,6 +120,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("USER"));
+});
+
 
 //Hook Interfaces and Repository in
 builder.Services.AddScoped<ICanvaRepository, CANVA_repository>();
@@ -128,6 +134,7 @@ builder.Services.AddScoped<IFOOD_TYPE_Repository, FOOD_repository>();
 builder.Services.AddScoped<ISHAPE_TYPE_Repository, SHAPE_TYPE_repository>();
 builder.Services.AddScoped<ITABLE_FOOD_Repository, TABLE_FOODs_repository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
