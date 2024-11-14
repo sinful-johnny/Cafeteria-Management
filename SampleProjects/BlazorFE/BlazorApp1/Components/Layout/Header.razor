@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Components
+
+@code {
+    private string selectedPage = "Table";
+    private bool isTableMenu = true;
+    private bool isSaved = false;
+    private bool isDropdown = false;
+
+    private void SetSelectedPage(string page)
+    {
+        selectedPage = page;
+        isTableMenu = page == "Table";
+    }
+
+    private void Save()
+    {
+        if (!isSaved)
+        {
+            // Save logic here
+            isSaved = true;
+        }
+    }
+
+    private void ToggleDropdown()
+    {
+        isDropdown = !isDropdown;
+    }
+
+    private void Logout()
+    {
+        // Navigate to home page
+        //NavigationManager.NavigateTo("/");
+    }
+}
+
+<div class="header">
+    <div class="logo-and-nav">
+        <img src="./public/Logo.png" class="logo-image" alt="LOGO" />
+        <div class="logo-text">
+            <h3>Morning coffee</h3>
+            <div class="function-selection">
+                <div class="nav-buttons">
+                    <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
+                            @onclick=@(() => SetSelectedPage(" Table"))>
+                        Table
+                    </button>
+                    <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
+                            @onclick=@(() => SetSelectedPage(" Order"))>
+                        Order
+                    </button>
+                </div>
+                <button class="save-button-@(isSaved ? "Saved" : "Unsaved")"
+                        @onclick="Save">
+                    @(isSaved ? "Saved" : "Unsaved")
+                </button>
+                <div class="underline"
+                     style="left: @(selectedPage == "Table" ? "0px" : "64px")"></div>
+            </div>
+        </div>
+    </div>
+    <button class="user-toggle-menu" @onclick="ToggleDropdown">
+        <img class="user-image" src="./public/Rectangle.png" alt="Avatar" />
+    </button>
+    <div class="dropdown-menu @(isDropdown ? "dropdown-visible" : "")">
+        <ul>
+            <li>
+                <img src="./public/Logout.png" alt="logout symbol" />
+                <button class="logout" @onclick="Logout">Logout</button>
+            </li>
+        </ul>
+    </div>
+</div>
+

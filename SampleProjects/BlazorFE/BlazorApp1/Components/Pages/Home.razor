@@ -1,0 +1,36 @@
+﻿@page "/"
+@using BlazorApp1.Components.Layout;
+@using BlazorApp1.Class.Services;
+@using BlazorApp1.Class;
+@rendermode InteractiveServer
+@inject TableListItemsService tableListItemsService;
+
+<PageTitle>Home</PageTitle>
+
+<div class="Global--Container">
+	<Header/>
+	<div class="BodyStyle">
+		<Navbar />
+	</div>
+</div>
+
+@code{
+	protected override Task OnInitializedAsync()
+	{
+		List<ITable> tables = new List<ITable>()
+		{
+			new RectangleTable(-1,"S001",-1,-1,100,100,"unlocked","./public/square.svg", "Rectangle"),
+			new CircleTable(-1,"S002", -1, -1, 100, "unlocked", "./public/circle.svg", "Circle")
+		};
+		tableListItemsService.setItems(
+        new List<TableListItem>([
+            new TableListItem{
+					Id = 1,
+					Title = "Table",
+					Content = tables
+				},
+			])
+		);
+		return base.OnInitializedAsync();
+	}
+}

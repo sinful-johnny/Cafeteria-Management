@@ -1,0 +1,12 @@
+﻿@using BlazorApp1.Class;
+
+<div class="collaspsible-listItem" draggable="true">
+	<img src="@(table != null ? table.ImgURL : "")" />
+	<span>@(table != null ? table.ShapeName : "")</span>
+</div>
+
+@code {
+	[Parameter]
+	public ITable? table { get; set; } 
+
+}
