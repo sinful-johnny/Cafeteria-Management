@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSingleton<TableListItemsService>();
+builder.Services.AddSingleton<FoodListItemService>();
 
 var app = builder.Build();
 

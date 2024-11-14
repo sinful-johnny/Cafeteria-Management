@@ -1,0 +1,20 @@
+﻿.collaspsible-listItem {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--Color-click, #A09A9A);
+    color: #000;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    padding: 20px;
+    cursor: grab;
+}
+
+.collaspsible-listItem > span {
+    margin: 15px;
+}

@@ -1,0 +1,12 @@
+﻿@using BlazorApp1.Class;
+
+<div class="collaspsible-listItem" draggable="true">
+	<img src="@(foodInfo != null ? foodInfo.ImageUrl : "")" />
+	<span>@(foodInfo != null ? foodInfo.FoodName : "")</span>
+</div>
+
+@code {
+	[Parameter]
+	public Food? foodInfo { get; set; }
+
+}

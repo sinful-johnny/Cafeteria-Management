@@ -192,7 +192,8 @@ BEGIN
             EXEC sp_addlogin @Email, @PASSWORD;
             declare @cmd varchar(200);
             set @cmd = ' 
-		                USE cafeteriaDBf
+
+		                USE cafeteria_DB
 		                CREATE USER [' + @NewID + '] FOR LOGIN '+ '[' + @Email + ']';
             EXEC (@cmd);
 

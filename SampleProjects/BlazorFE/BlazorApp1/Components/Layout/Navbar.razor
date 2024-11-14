@@ -1,7 +1,8 @@
 ﻿@using BlazorApp1.Components.Components;
 @using BlazorApp1.Class.Services;
 @rendermode InteractiveServer
-@inject TableListItemsService tableListItemsService
+@inject TableListItemsService tableListItemsService;
+@inject FoodListItemService foodListItemsService;
 
 <div class="admin-navbar">
       <div class="Search--Container">
@@ -9,7 +10,8 @@
       </div>
 
       <div class="CollaspsibleList--container">
-         <TableCollaspsibleList Items=@(tableListItemsService.Items)/>
+         @* <TableCollaspsibleList Items=@(tableListItemsService.Items)/> *@
+         <FoodCollaspsibleList Items="foodListItemsService.Items" />
       </div>
     </div>
 

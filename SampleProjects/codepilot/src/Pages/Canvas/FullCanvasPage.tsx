@@ -111,7 +111,7 @@ const FullCanvasPage: React.FC<FullCanvasPageProps> = () => {
                         ID_FOOD: object.iD_FOOD, 
                         objectType: "Food", 
                         name: object.fooD_NAME, 
-                        img: object.IMAGE_LINK,
+                        img: "/tea1.svg",
                       }
                     );
                   }
