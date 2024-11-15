@@ -1,0 +1,55 @@
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Components
+@using Class
+@implements IDisposable
+
+@code {
+    [Parameter] public List<TableListItem>? Items { get; set; }
+    private Dictionary<int, bool> openIndexes = new Dictionary<int, bool>();
+
+    private void ToggleItem(int index)
+    {
+        Console.WriteLine($"ToggleItem called for index: {index}");
+        if (openIndexes.ContainsKey(index))
+        {
+            openIndexes[index] = !openIndexes[index];
+        }
+        else
+        {
+            openIndexes[index] = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        // Dispose logic if needed
+    }
+}
+
+@* HTML Part *@
+<div class="collapsible-list">
+    @foreach (var item in Items)
+    {
+        if (item.Content != null && item.Content.Count > 0)
+        {
+            <div key="@item.Id">
+                <div @onclick="() => ToggleItem(item.Id)" class="collapsible-header" >
+                    <span>
+                            <img src="@((openIndexes.ContainsKey(item.Id) && openIndexes[item.Id]) ?
+                                    "./public/toggleOpen.svg" : "./public/toggleClosed.svg")" />
+                    </span>
+                    <span>@item.Title</span>
+                </div>
+                @if (openIndexes.ContainsKey(item.Id) && openIndexes[item.Id])
+                {
+                    <div>
+                        @foreach(var shape in item.Content)
+                        {
+                            <TableCollaspsibleItem table="@shape" />
+                        }
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

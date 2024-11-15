@@ -1,0 +1,19 @@
+﻿@using BlazorApp2.Components
+@using Class.Services;
+@inject TableListItemsService tableListItemsService;
+@inject FoodListItemService foodListItemsService;
+
+<div class="admin-navbar">
+      <div class="Search--Container">
+        @* <SearchBar onSearch={onSearch} /> *@
+      </div>
+
+      <div class="CollaspsibleList--container">
+         @* <TableCollaspsibleList Items=@(tableListItemsService.Items)/> *@
+         <FoodCollaspsibleList Items="foodListItemsService.Items" />
+      </div>
+    </div>
+
+@code {
+    
+}
