@@ -1,0 +1,126 @@
+﻿@page "/main-canvas"
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+
+<canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"></canvas>
+
+@code {
+    private ElementReference canvasReference;
+    private DotNetObjectReference<MainCanvas>? dotNetHelper;
+    private bool isDragging = false;
+    private Rect? selectedRect = null;
+    private double offsetX, offsetY;
+    private List<Rect> rectangles;
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        rectangles = new List<Rect>
+        {
+            new Rect { X = 10, Y = 10, Width = 100, Height = 100 },
+            new Rect { X = 150, Y = 50, Width = 100, Height = 100 }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await DrawRectanglesAsync();
+
+            dotNetHelper = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("canvasInterop.initialize", canvasReference, dotNetHelper);
+        }
+    }
+
+    private async Task DrawRectanglesAsync()
+    {
+        await JS.InvokeVoidAsync("canvasInterop.clearCanvas", canvasReference);
+
+        foreach (var rect in rectangles)
+        {
+            await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasReference, rect.X, rect.Y, rect.Width, rect.Height, "green");
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnMouseDown(double clientX, double clientY)
+    {
+        var rect = await GetBoundingClientRectAsync(canvasReference);
+        var x = clientX - rect.Left;
+        var y = clientY - rect.Top;
+
+        foreach (var rectangle in rectangles)
+        {
+            if (x >= rectangle.X && x <= rectangle.X + rectangle.Width &&
+                y >= rectangle.Y && y <= rectangle.Y + rectangle.Height)
+            {
+                isDragging = true;
+                selectedRect = rectangle;
+                offsetX = x - rectangle.X;
+                offsetY = y - rectangle.Y;
+                break;
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnMouseMove(double clientX, double clientY)
+    {
+        if (isDragging && selectedRect != null)
+        {
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left - offsetX;
+            var y = clientY - rect.Top - offsetY;
+            if(selectedRect != null)
+            {
+                selectedRect.X = x;
+                selectedRect.Y = y;
+                
+            }
+            await DrawRectanglesAsync();
+
+        }
+        
+    }
+
+    [JSInvokable]
+    public void OnMouseUp()
+    {
+        isDragging = false;
+        selectedRect = null;
+    }
+
+    private async Task<DOMRect> GetBoundingClientRectAsync(ElementReference element)
+    {
+        return await JS.InvokeAsync<DOMRect>("canvasInterop.getBoundingClientRect", element);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (dotNetHelper is not null)
+        {
+            dotNetHelper.Dispose();
+        }
+    }
+
+    private class DOMRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Right { get; set; }
+        public double Bottom { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
+    private class Rect
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+}

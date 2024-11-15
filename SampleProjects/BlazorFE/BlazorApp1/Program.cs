@@ -1,5 +1,6 @@
 using BlazorApp1.Class.Services;
 using BlazorApp1.Components;
+using Microsoft.JSInterop;
 
 var builder = WebApplication.CreateBuilder(args);
 
