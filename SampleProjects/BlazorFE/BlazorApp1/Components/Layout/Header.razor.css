@@ -140,11 +140,13 @@
 }
 
 .dropdown-menu {
+    flex-direction: column;
+    display: flex;
     position: absolute;
     top: 60px;
     right: 20px;
     width: 150px;
-    height: 54;
+    height: 54px;
     background-color: #F0E6D5;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -163,23 +165,26 @@
 
 .dropdown-menu ul {
     list-style: none;
-    padding: 10px;
     margin: 0;
+    padding: 0;
+    width: 100%;
+    align-items: center;
 }
 
 .dropdown-menu li {
     width: 132px;
     height: 40px;
     display: flex;
-    align-items: center;
+    padding: 0 10px;
+    align-items: flex-end;
     gap: 8px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-    .dropdown-menu li:hover {
-        background-color: #f2f2f2;
-    }
+.dropdown-menu li:hover {
+    background-color: #f2f2f2;
+}
 
 .logout {
     width: 100%;

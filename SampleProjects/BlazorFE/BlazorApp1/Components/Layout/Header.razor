@@ -41,11 +41,15 @@
             <div class="function-selection">
                 <div class="nav-buttons">
                     <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
-                            @onclick=@(() => SetSelectedPage(" Table"))>
+                            @onclick=@(() => {
+                                    SetSelectedPage("Table");
+                                    isTableMenu = false;})>
                         Table
                     </button>
                     <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
-                            @onclick=@(() => SetSelectedPage(" Order"))>
+                            @onclick=@(() => {
+                                SetSelectedPage("Order");
+                                isTableMenu = false;})>
                         Order
                     </button>
                 </div>
