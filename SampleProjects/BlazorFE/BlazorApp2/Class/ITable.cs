@@ -26,5 +26,7 @@
         public bool IsMouseInRange(double x, double y);
 
         public void SetIsHovered(bool value);
+
+        ITable Clone();
     }
 }

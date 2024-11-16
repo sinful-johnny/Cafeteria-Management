@@ -57,5 +57,9 @@
                 await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasContext, X, Y, Width, Height, "green");
             }
         }
+        public ITable Clone()
+        {
+            return new RectangleTable(TableId, ShapeId ?? "", X, Y, Width, Height, TableStatus ?? "");
+        }
     }
 }

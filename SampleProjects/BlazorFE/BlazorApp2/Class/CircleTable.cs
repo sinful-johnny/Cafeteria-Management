@@ -55,6 +55,10 @@
                 await JS.InvokeVoidAsync("canvasInterop.drawCircle", canvasContext, X, Y, Radius, "green");
             }
         }
+        public ITable Clone()
+        {
+            return new CircleTable(TableId, ShapeId ?? "", X, Y, Radius, TableStatus ?? "");
+        }
     }
 
 }

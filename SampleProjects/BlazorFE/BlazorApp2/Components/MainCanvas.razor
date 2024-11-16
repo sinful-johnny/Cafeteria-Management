@@ -5,7 +5,7 @@
 @implements IAsyncDisposable
 
 <canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"
-        ></canvas>
+></canvas>
 
 @code {
     private ElementReference canvasReference;
@@ -87,12 +87,21 @@
             var y = clientY - rect.Top - offsetY;
             if (selectedRect != null)
             {
-                selectedRect.X = x;
-                selectedRect.Y = y;
-
+                double canvasWidth = 600;
+                double canvasHeight = 400;
+                ITable tempShape = selectedRect.Clone();
+                tempShape.X = x;
+                tempShape.Y = y;
+                if (!CollisionUtils.IsCollidingWithBorderX(tempShape, canvasWidth))
+                {
+                    selectedRect.X = x;
+                }
+                if (!CollisionUtils.IsCollidingWithBorderY(tempShape, canvasHeight))
+                {
+                    selectedRect.Y = y;
+                }
             }
             await DrawRectanglesAsync();
-
         }
 
     }
