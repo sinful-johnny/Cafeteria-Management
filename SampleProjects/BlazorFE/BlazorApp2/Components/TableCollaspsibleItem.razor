@@ -8,14 +8,14 @@
 
 @code {
 	[Parameter]
-	public ITable? table { get; set; } 
+	public Shape? table { get; set; } 
 
 	[Inject] private IJSRuntime JS { get; set; }
 
 	protected override async Task OnAfterRenderAsync(bool firstRender) { 
 		if (firstRender && table != null) { 
 			//var jsonData = JsonSerializer.Serialize(table);
-			await JS.InvokeVoidAsync("dragDropInterop.setDragData", table.ShapeId, table.ShapeId);
+			await JS.InvokeVoidAsync("dragDropInterop.setDragTableData", table.ShapeId, table.ShapeId, table.ShapeName, table.Width, table.Height, table.Radius, table.ShapeType, "table");
 		} 
 	}
 }

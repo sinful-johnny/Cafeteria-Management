@@ -2,10 +2,10 @@
 {
     public class TableListItemsService
     {
-        public List<TableListItem> Items { get; set; } = new List<TableListItem>();
+        public List<ShapeListItem> Items { get; set; } = new List<ShapeListItem>();
 
-        public void setItems(List<TableListItem> items)
-        {
+        public void setItems(List<ShapeListItem> items)
+        {   
             Items = items; 
         }
     }

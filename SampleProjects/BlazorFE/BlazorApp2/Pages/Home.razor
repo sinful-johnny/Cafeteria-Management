@@ -21,14 +21,14 @@
 @code{
 	protected override Task OnInitializedAsync()
 	{
-		List<ITable> tables = new List<ITable>()
+		List<Shape> tables = new List<Shape>()
 		{
-			new RectangleTable(-1,"S001",-1,-1,100,100,"unlocked","./public/square.svg", "Rectangle"),
-			new CircleTable(-1,"S002", -1, -1, 100, "unlocked", "./public/circle.svg", "Circle")
+			new Shape("S001","./public/square.svg","Rectangle",100,100, 0, "rectangle"),
+			new Shape("S002","./public/circle.svg","Circular",0, 0, 100, "circle")
 		};
 		tableListItemsService.setItems(
-		new List<TableListItem>([
-			new TableListItem{
+		new List<ShapeListItem>([
+			new ShapeListItem{
 					Id = 1,
 					Title = "Table",
 					Content = tables

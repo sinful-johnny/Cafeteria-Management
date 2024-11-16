@@ -1,9 +1,9 @@
 ﻿namespace Class
 {
-	public class TableListItem
+	public class ShapeListItem
 	{
         public int Id { get; set; }
-        public List<ITable>? Content { get; set; }
+        public List<Shape>? Content { get; set; }
         public string Title { get; set; } = string.Empty;
     }
 }

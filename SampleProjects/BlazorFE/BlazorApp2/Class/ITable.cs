@@ -1,12 +1,14 @@
 ﻿namespace Class
 {
+    using Microsoft.AspNetCore.Components;
+    using Microsoft.JSInterop;
     using System;
     using System.Collections.Generic;
 
     public interface ITable
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
         public bool IsHovered { get; set; }
         public int TableId { get; set; }
         public bool IsSelected { get; set; }
@@ -19,19 +21,10 @@
         public List<FoodOnTable> Foods { get; set; }
 
         // Method signatures without implementation
-        public void Draw(object context)
-        {
-            throw new NotImplementedException();
-        }
+        public Task Draw(IJSRuntime JS, IJSObjectReference canvasContext);
 
-        public bool IsMouseInRange(int x, int y)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsMouseInRange(double x, double y);
 
-        public void SetIsHovered(bool value)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetIsHovered(bool value);
     }
 }

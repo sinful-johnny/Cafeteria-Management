@@ -2,7 +2,6 @@
 @using Class
 @using Class.Services
 @using Microsoft.JSInterop
-@inject TableListItemsService tableListItemsService;
 @implements IAsyncDisposable
 
 <canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"
@@ -13,19 +12,19 @@
     private DotNetObjectReference<MainCanvas>? dotNetHelper;
     private IJSObjectReference? _canvasContext;
     private bool isDragging = false;
-    private Rect? selectedRect = null;
+    private ITable? selectedRect = null;
     private double offsetX, offsetY;
-    private List<Rect>? rectangles;
+    private List<ITable>? rectangles;
 
     [Inject]
-    private IJSRuntime? JS { get; set; }
+    public IJSRuntime? JS { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        rectangles = new List<Rect>
+        rectangles = new List<ITable>
         {
-            new Rect { X = 10, Y = 10, Width = 100, Height = 100 },
-            new Rect { X = 100, Y = 100, Width = 100, Height = 100 },
+            new RectangleTable(1,"S001",0,0,100,100,"unlocked"),
+            new CircleTable(2,"S002", 150, 150, 50, "unlocked")
         };
     }
 
@@ -44,13 +43,13 @@
 
     private async Task DrawRectanglesAsync()
     {
-        if(rectangles != null && JS != null)
+        if(rectangles != null && JS != null && _canvasContext != null)
         {
             await JS.InvokeVoidAsync("canvasInterop.clearCanvas", canvasReference, _canvasContext);
 
             foreach (var rect in rectangles)
             {
-                await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasReference, _canvasContext, rect.X, rect.Y, rect.Width, rect.Height, "green");
+                await rect.Draw(JS, _canvasContext);
             }
         }
     }
@@ -66,8 +65,7 @@
         {
             foreach (var rectangle in rectangles)
             {
-                if (x >= rectangle.X && x <= rectangle.X + rectangle.Width &&
-                    y >= rectangle.Y && y <= rectangle.Y + rectangle.Height)
+                if (rectangle.IsMouseInRange(x,y))
                 {
                     isDragging = true;
                     selectedRect = rectangle;
@@ -119,9 +117,9 @@
     }
 
     [JSInvokable] 
-    public async Task HandleDropData(string data, double clientX, double clientY) { 
+    public async Task HandleDropTableData(Shape data, double clientX, double clientY) { 
         if (data != null) { 
-            Console.WriteLine($"Dropped data: {data}");
+            Console.WriteLine($"Dropped data: {data.ToString()}");
 
             var rect = await GetBoundingClientRectAsync(canvasReference);
             var x = clientX - rect.Left;
@@ -129,21 +127,42 @@
 
             if (rectangles != null)
             {
-                rectangles.Add(new Rect
-                    {
-                        X = x,
-                        Y = y,
-                        Width = 100,
-                        Height = 100
-                    });
+                if(data.ShapeType == "rectangle")
+                {
+                    x -= data.Width / 2;
+                    y -= data.Height / 2;
+                    rectangles.Add(
+                    new RectangleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Width, data.Height, "unlocked")
+                    );
+                }
+                else if (data.ShapeType == "circle")
+                {
+                    rectangles.Add(
+                        new CircleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Radius, "unlocked")
+                    );
+                }
             }
 
             await DrawRectanglesAsync();
+
+
         } 
     }
-    
+
     public async ValueTask DisposeAsync() { 
- 
+
+    }
+
+    public class dndData
+    {
+        public string data { get; set; }
+        public string type { get; set; }
+
+        public dndData(string data, string type)
+        {
+            this.type = type;
+            this.data = data;
+        }
     }
 
     private class DOMRect

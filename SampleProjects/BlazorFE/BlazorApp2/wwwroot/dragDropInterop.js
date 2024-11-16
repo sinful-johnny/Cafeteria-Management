@@ -1,8 +1,20 @@
 ﻿window.dragDropInterop = {
-    setDragData: function (elementId, data) {
+    setDragTableData: function (elementId, ShapeId, ShapeName, Width, Height, Radius, ShapeType, type) {
         const draggable = document.getElementById(elementId);
+
+        const json = JSON.stringify(
+            {
+                ShapeId: ShapeId,
+                ShapeName: ShapeName,
+                Width: Width,
+                Height: Height,
+                Radius: Radius,
+                ShapeType: ShapeType,
+                type: type
+            }
+        );
         draggable.addEventListener('dragstart', function (event) {
-            event.dataTransfer.setData("text/plain", data);
+            event.dataTransfer.setData("application/json", json);
         });
     },
 
@@ -15,9 +27,13 @@
 
         dropzone.addEventListener('drop', function (event) {
             event.preventDefault();
-            //const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-            const data = event.dataTransfer.getData("text/plain");
-            dotNetHelper.invokeMethodAsync('HandleDropData', data, event.clientX, event.clientY);
+            const data = JSON.parse(event.dataTransfer.getData("application/json"));
+            //const data = event.dataTransfer.getData("application/json");
+            if (data.type === "table") {
+                delete data.type;
+                dotNetHelper.invokeMethodAsync('HandleDropTableData', data, event.clientX, event.clientY);
+            }
+           
         });
     }
 };

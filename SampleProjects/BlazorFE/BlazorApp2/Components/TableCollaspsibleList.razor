@@ -4,7 +4,7 @@
 @implements IDisposable
 
 @code {
-    [Parameter] public List<TableListItem>? Items { get; set; }
+    [Parameter] public List<ShapeListItem>? Items { get; set; }
     private Dictionary<int, bool> openIndexes = new Dictionary<int, bool>();
 
     private void ToggleItem(int index)
