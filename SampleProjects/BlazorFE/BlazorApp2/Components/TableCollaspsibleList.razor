@@ -9,14 +9,13 @@
 
     private void ToggleItem(int index)
     {
-        Console.WriteLine($"ToggleItem called for index: {index}");
         if (openIndexes.ContainsKey(index))
         {
             openIndexes[index] = !openIndexes[index];
         }
         else
         {
-            openIndexes[index] = false;
+            openIndexes[index] = true;
         }
     }
 

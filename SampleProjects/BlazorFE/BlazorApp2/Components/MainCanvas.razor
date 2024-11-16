@@ -1,8 +1,12 @@
 ﻿@page "/main-canvas"
+@using Class
+@using Class.Services
 @using Microsoft.JSInterop
+@inject TableListItemsService tableListItemsService;
 @implements IAsyncDisposable
 
-<canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"></canvas>
+<canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"
+        ></canvas>
 
 @code {
     private ElementReference canvasReference;
@@ -11,10 +15,10 @@
     private bool isDragging = false;
     private Rect? selectedRect = null;
     private double offsetX, offsetY;
-    private List<Rect> rectangles;
+    private List<Rect>? rectangles;
 
     [Inject]
-    private IJSRuntime JS { get; set; }
+    private IJSRuntime? JS { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,25 +31,28 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && JS != null)
         {
 
             dotNetHelper = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("canvasInterop.initialize", canvasReference, dotNetHelper);
             _canvasContext = await JS.InvokeAsync<IJSObjectReference>("canvasInterop.getContext2D", canvasReference);
+            await JS.InvokeVoidAsync("dragDropInterop.initializeDropzone", "myCanvas", dotNetHelper);
             await DrawRectanglesAsync();
         }
     }
 
     private async Task DrawRectanglesAsync()
     {
-        await JS.InvokeVoidAsync("canvasInterop.clearCanvas", canvasReference, _canvasContext);
-
-        foreach (var rect in rectangles)
+        if(rectangles != null && JS != null)
         {
-            await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasReference, _canvasContext, rect.X, rect.Y, rect.Width, rect.Height, "green");
-        }
+            await JS.InvokeVoidAsync("canvasInterop.clearCanvas", canvasReference, _canvasContext);
 
+            foreach (var rect in rectangles)
+            {
+                await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasReference, _canvasContext, rect.X, rect.Y, rect.Width, rect.Height, "green");
+            }
+        }
     }
 
     [JSInvokable]
@@ -55,16 +62,19 @@
         var x = clientX - rect.Left;
         var y = clientY - rect.Top;
 
-        foreach (var rectangle in rectangles)
+        if (rectangles != null)
         {
-            if (x >= rectangle.X && x <= rectangle.X + rectangle.Width &&
-                y >= rectangle.Y && y <= rectangle.Y + rectangle.Height)
+            foreach (var rectangle in rectangles)
             {
-                isDragging = true;
-                selectedRect = rectangle;
-                offsetX = x - rectangle.X;
-                offsetY = y - rectangle.Y;
-                break;
+                if (x >= rectangle.X && x <= rectangle.X + rectangle.Width &&
+                    y >= rectangle.Y && y <= rectangle.Y + rectangle.Height)
+                {
+                    isDragging = true;
+                    selectedRect = rectangle;
+                    offsetX = x - rectangle.X;
+                    offsetY = y - rectangle.Y;
+                    break;
+                }
             }
         }
     }
@@ -98,15 +108,42 @@
 
     private async Task<DOMRect> GetBoundingClientRectAsync(ElementReference element)
     {
-        return await JS.InvokeAsync<DOMRect>("canvasInterop.getBoundingClientRect", element);
+        if(JS != null)
+        {
+            return await JS.InvokeAsync<DOMRect>("canvasInterop.getBoundingClientRect", element);
+        }
+        else
+        {
+            throw new Exception("JSRuntime is null");
+        }
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (dotNetHelper is not null)
-        {
-            dotNetHelper.Dispose();
-        }
+    [JSInvokable] 
+    public async Task HandleDropData(string data, double clientX, double clientY) { 
+        if (data != null) { 
+            Console.WriteLine($"Dropped data: {data}");
+
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left;
+            var y = clientY - rect.Top;
+
+            if (rectangles != null)
+            {
+                rectangles.Add(new Rect
+                    {
+                        X = x,
+                        Y = y,
+                        Width = 100,
+                        Height = 100
+                    });
+            }
+
+            await DrawRectanglesAsync();
+        } 
+    }
+    
+    public async ValueTask DisposeAsync() { 
+ 
     }
 
     private class DOMRect
