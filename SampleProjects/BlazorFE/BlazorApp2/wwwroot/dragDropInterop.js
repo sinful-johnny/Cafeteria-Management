@@ -10,7 +10,21 @@
                 Height: Height,
                 Radius: Radius,
                 ShapeType: ShapeType,
-                type: type
+                Type: type
+            }
+        );
+        draggable.addEventListener('dragstart', function (event) {
+            event.dataTransfer.setData("application/json", json);
+        });
+    },
+
+    setDragFoodData: function (elementId, FoodId, type) {
+        const draggable = document.getElementById(elementId);
+
+        const json = JSON.stringify(
+            {
+                FoodId: FoodId,
+                Type: type
             }
         );
         draggable.addEventListener('dragstart', function (event) {
@@ -29,9 +43,13 @@
             event.preventDefault();
             const data = JSON.parse(event.dataTransfer.getData("application/json"));
             //const data = event.dataTransfer.getData("application/json");
-            if (data.type === "table") {
-                delete data.type;
+
+            console.log(data);
+            if (data.Type === "table") {
+                delete data.Type;
                 dotNetHelper.invokeMethodAsync('HandleDropTableData', data, event.clientX, event.clientY);
+            } else if (data.Type === "food") {
+                dotNetHelper.invokeMethodAsync('HandleDropFoodData', data, event.clientX, event.clientY);
             }
            
         });

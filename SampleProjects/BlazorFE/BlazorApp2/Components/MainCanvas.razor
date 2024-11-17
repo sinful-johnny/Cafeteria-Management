@@ -2,6 +2,8 @@
 @using Class
 @using Class.Services
 @using Microsoft.JSInterop
+@using System.Linq
+@inject FoodListItemService foodListItemService;
 @implements IAsyncDisposable
 
 <canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"
@@ -71,6 +73,12 @@
                     selectedRect = rectangle;
                     offsetX = x - rectangle.X;
                     offsetY = y - rectangle.Y;
+
+                    // foreach(var food in rectangle.Foods)
+                    // {
+                    //     Console.WriteLine(food.ToString());
+                    // }
+
                     break;
                 }
             }
@@ -153,24 +161,75 @@
             }
 
             await DrawRectanglesAsync();
-
-
         } 
+    }
+
+    [JSInvokable]
+    public async Task HandleDropFoodData(dndFoodData data, double clientX, double clientY)
+    {
+        if (data != null)
+        {
+            //Console.WriteLine($"Dropped data: {data.ToString()}");
+
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left;
+            var y = clientY - rect.Top;
+
+            if (rectangles != null)
+            {
+                foreach (var rectangle in rectangles)
+                {
+                    if (rectangle.IsMouseInRange(x, y))
+                    {
+                        Food? foodInfo = null;
+                        foreach(var foodList in foodListItemService.Items)
+                        {
+                            if(foodList.Content != null)
+                            {
+                                foreach (var food in foodList.Content)
+                                {
+                                    if(food.FoodId == data.FoodId)
+                                    {
+                                        foodInfo = food;
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if(foodInfo != null)
+                        {
+                            var findFoodResult = rectangle.Foods.FirstOrDefault<FoodOnTable>(x => x.Food.FoodId == foodInfo.FoodId);
+                            if(findFoodResult != null)
+                            {
+                                findFoodResult.Amount += 1;
+                            }
+                            else
+                            {
+                                rectangle.Foods.Add(new FoodOnTable(foodInfo,1));
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public async ValueTask DisposeAsync() { 
 
     }
 
-    public class dndData
+    public class dndFoodData
     {
-        public string data { get; set; }
+        public int FoodId { get; set; }
         public string type { get; set; }
 
-        public dndData(string data, string type)
+        public dndFoodData(int FoodId, string type)
         {
             this.type = type;
-            this.data = data;
+            this.FoodId = FoodId;
         }
     }
 

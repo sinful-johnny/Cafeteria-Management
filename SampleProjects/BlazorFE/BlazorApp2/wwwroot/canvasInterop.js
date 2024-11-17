@@ -22,12 +22,10 @@
     },
 
     drawRect: function (context, x, y, width, height, color) {
-        console.log("Drawing Rectangle");
         context.fillStyle = color;
         context.fillRect(x, y, width, height);
     },
     drawCircle: function (context, x, y, radius, color) {
-        console.log("Drawing Circle");
         context.beginPath(); // Start a new path 
         context.arc(x, y, radius, 0, 2 * Math.PI); // Draw the circle 
         context.fillStyle = color; // Set the fill color 

@@ -53,7 +53,6 @@
             // Placeholder for implementation
             if(JS != null)
             {
-                Console.WriteLine("Drawing");
                 await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasContext, X, Y, Width, Height, "green");
             }
         }

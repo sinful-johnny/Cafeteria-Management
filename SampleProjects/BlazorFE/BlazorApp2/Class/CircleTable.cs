@@ -51,7 +51,6 @@
             // Placeholder for implementation
             if (JS != null)
             {
-                Console.WriteLine("Drawing");
                 await JS.InvokeVoidAsync("canvasInterop.drawCircle", canvasContext, X, Y, Radius, "green");
             }
         }
