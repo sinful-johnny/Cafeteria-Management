@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components
 
 @code {
-    private string selectedPage = "Table";
+    [Parameter] public string selectedPage { get; set; }
     private bool isTableMenu = true;
     private bool isSaved = false;
     private bool isDropdown = false;
@@ -74,4 +74,3 @@
         </ul>
     </div>
 </div>
-

@@ -4,16 +4,20 @@
 @inject FoodListItemService foodListItemsService;
 
 <div class="admin-navbar">
-      <div class="Search--Container">
+    <div class="Search--Container">
         @* <SearchBar onSearch={onSearch} /> *@
-      </div>
-
-      <div class="CollaspsibleList--container">
-         <TableCollaspsibleList Items=@(tableListItemsService.Items)/>
-         <FoodCollaspsibleList Items="foodListItemsService.Items" />
-      </div>
     </div>
 
+    <div class="CollaspsibleList--container">
+        @if(selectedPage == "Table"){
+            <TableCollaspsibleList Items=@(tableListItemsService.Items) />
+        }
+        else if (selectedPage == "Order"){
+            <FoodCollaspsibleList Items="foodListItemsService.Items" />
+        }         
+    </div>
+</div>
+
 @code {
-    
+    [Parameter] public string selectedPage { get; set; }
 }

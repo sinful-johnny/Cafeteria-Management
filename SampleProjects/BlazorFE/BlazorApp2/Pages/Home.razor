@@ -8,9 +8,9 @@
 <PageTitle>Home</PageTitle>
 
 <div class="Global--Container">
-	<Header/>
+	<Header selectedPage="selectedPage"/>
 	<div class="BodyStyle">
-		<Navbar />
+		<Navbar selectedPage="selectedPage" />
 		<div>
 			<MainCanvas />
 		</div>
@@ -19,6 +19,8 @@
 </div>
 
 @code{
+	private string selectedPage = "Table";
+
 	protected override Task OnInitializedAsync()
 	{
 		List<Shape> tables = new List<Shape>()

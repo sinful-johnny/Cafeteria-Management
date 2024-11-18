@@ -12,7 +12,7 @@
         public bool IsHovered { get; set; }
         public int TableId { get; set; }
         public bool IsSelected { get; set; }
-        public string? Color { get; set; }
+        public string? Color { get; set; } = "green";
         public string? TableStatus { get; set; } // "locked", "unlocked", "occupied"
         public string? ShapeId { get; set; }
         public List<FoodOnTable> Foods { get; set; } = new List<FoodOnTable>();
@@ -53,7 +53,7 @@
             // Placeholder for implementation
             if(JS != null)
             {
-                await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasContext, X, Y, Width, Height, "green");
+                await JS.InvokeVoidAsync("canvasInterop.drawRect", canvasContext, X, Y, Width, Height, Color);
             }
         }
         public ITable Clone()

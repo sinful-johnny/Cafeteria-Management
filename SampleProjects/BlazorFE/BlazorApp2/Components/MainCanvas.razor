@@ -208,7 +208,9 @@
                             else
                             {
                                 rectangle.Foods.Add(new FoodOnTable(foodInfo,1));
+                                rectangle.Color = "red";
                             }
+                            await DrawRectanglesAsync();
                         }
                         break;
                     }
