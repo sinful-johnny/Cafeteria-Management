@@ -10,10 +10,10 @@
 
     <div class="CollaspsibleList--container">
         @if(selectedPage == "Table"){
-            <TableCollaspsibleList Items=@(tableListItemsService.Items) />
+            <TableCollaspsibleList Items="@tableListItemsService.Items" />
         }
         else if (selectedPage == "Order"){
-            <FoodCollaspsibleList Items="foodListItemsService.Items" />
+            <FoodCollaspsibleList Items="@foodListItemsService.Items" />
         }         
     </div>
 </div>

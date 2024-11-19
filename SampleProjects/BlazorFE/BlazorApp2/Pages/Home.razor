@@ -8,18 +8,22 @@
 <PageTitle>Home</PageTitle>
 
 <div class="Global--Container">
-	<Header selectedPage="selectedPage"/>
+	<Header @bind-selectedPage="@selectedPage" />
 	<div class="BodyStyle">
-		<Navbar selectedPage="selectedPage" />
+		<Navbar selectedPage="@selectedPage" />
 		<div>
 			<MainCanvas />
 		</div>
-		
 	</div>
 </div>
 
 @code{
 	private string selectedPage = "Table";
+
+	// private void OnSelectedPage(string page)
+	// {
+	// 	selectedPage = page;
+	// }
 
 	protected override Task OnInitializedAsync()
 	{

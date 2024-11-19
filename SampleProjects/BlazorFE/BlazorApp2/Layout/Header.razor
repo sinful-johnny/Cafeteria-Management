@@ -1,15 +1,30 @@
 ﻿@using Microsoft.AspNetCore.Components
 
 @code {
-    [Parameter] public string selectedPage { get; set; }
+    private string _selectedPage;
+    [Parameter]
+    public string selectedPage
+    {
+        get => _selectedPage;
+        set
+        {
+            if (_selectedPage != value)
+            {
+                _selectedPage = value;
+                selectedPageChanged.InvokeAsync(value);
+            }
+        }
+    }
+    [Parameter] public EventCallback<string> selectedPageChanged { get; set; }
+
     private bool isTableMenu = true;
     private bool isSaved = false;
     private bool isDropdown = false;
 
-    private void SetSelectedPage(string page)
+    private async Task SetSelectedPage(string page)
     {
         selectedPage = page;
-        //isTableMenu = (page == "Table");
+        await selectedPageChanged.InvokeAsync(page);
     }
 
     private void Save()
@@ -42,8 +57,8 @@
                 <div class="nav-buttons">
                     <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
                             @onclick=@(() => {
-                                    SetSelectedPage("Table");
-                                    isTableMenu = false;})>
+                                SetSelectedPage("Table");
+                                isTableMenu = true;})>
                         Table
                     </button>
                     <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
