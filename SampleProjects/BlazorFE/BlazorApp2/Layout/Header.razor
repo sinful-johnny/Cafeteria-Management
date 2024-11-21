@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components
+@inject NavigationManager NavigationManager
 
 @code {
     private string _selectedPage;
@@ -43,8 +44,7 @@
 
     private void Logout()
     {
-        // Navigate to home page
-        //NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/login");
     }
 }
 
