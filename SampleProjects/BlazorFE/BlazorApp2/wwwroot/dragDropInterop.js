@@ -44,14 +44,13 @@
             const data = JSON.parse(event.dataTransfer.getData("application/json"));
             //const data = event.dataTransfer.getData("application/json");
 
-            console.log(data);
+            //console.log(data);
             if (data.Type === "table") {
                 delete data.Type;
                 dotNetHelper.invokeMethodAsync('HandleDropTableData', data, event.clientX, event.clientY);
             } else if (data.Type === "food") {
                 dotNetHelper.invokeMethodAsync('HandleDropFoodData', data, event.clientX, event.clientY);
             }
-           
         });
     }
 };

@@ -27,6 +27,6 @@
 
         public void SetIsHovered(bool value);
 
-        ITable Clone();
+        public ITable Clone();
     }
 }

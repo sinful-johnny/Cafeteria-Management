@@ -10,13 +10,61 @@
 ></canvas>
 
 @code {
+    private List<ITable>? _rectangles;
+    private ITable? _selectedTable;
+    private ITable? dragIndex;
+
+    [Parameter]
+    public List<ITable>? rectangles
+    {
+        get => _rectangles;
+        set
+        {
+            if (_rectangles != value)
+            {
+                _rectangles = value;
+                rectanglesChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    [Parameter] public EventCallback<List<ITable>> rectanglesChanged { get; set; }
+
+    private async Task SetTables(List<ITable> data)
+    {
+        rectangles = data;
+        await rectanglesChanged.InvokeAsync(data);
+    }
+
+    [Parameter] public ITable? selectedTable { 
+        get => _selectedTable;
+        set
+        {
+            if (_selectedTable != value)
+            {
+                _selectedTable = value;
+                SelectedTableChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    private async Task SetSelectedTable(ITable? data)
+    {
+        selectedTable = data;
+        await SelectedTableChanged.InvokeAsync(data);
+    }
+
+    [Parameter] public EventCallback<ITable> SelectedTableChanged { get; set; }
+
+    [Parameter] public EventCallback Log { get; set; }
+
     private ElementReference canvasReference;
     private DotNetObjectReference<MainCanvas>? dotNetHelper;
     private IJSObjectReference? _canvasContext;
     private bool isDragging = false;
-    private ITable? selectedRect = null;
+
     private double offsetX, offsetY;
-    private List<ITable>? rectangles;
+
 
     [Inject]
     public IJSRuntime? JS { get; set; }
@@ -59,18 +107,21 @@
     [JSInvokable]
     public async Task OnMouseDown(double clientX, double clientY)
     {
+
         var rect = await GetBoundingClientRectAsync(canvasReference);
         var x = clientX - rect.Left;
         var y = clientY - rect.Top;
 
         if (rectangles != null)
         {
+
             foreach (var rectangle in rectangles)
             {
+
                 if (rectangle.IsMouseInRange(x,y))
                 {
                     isDragging = true;
-                    selectedRect = rectangle;
+                    dragIndex = rectangle;
                     offsetX = x - rectangle.X;
                     offsetY = y - rectangle.Y;
 
@@ -78,10 +129,12 @@
                     // {
                     //     Console.WriteLine(food.ToString());
                     // }
-
-                    break;
+                    await SetSelectedTable(rectangle);
+                    return;
                 }
             }
+            //await Log.InvokeAsync(null);
+            await SetSelectedTable(null);
         }
     }
 
@@ -93,20 +146,29 @@
             var rect = await GetBoundingClientRectAsync(canvasReference);
             var x = clientX - rect.Left - offsetX;
             var y = clientY - rect.Top - offsetY;
-            if (selectedRect != null)
+            if (dragIndex != null)
             {
                 double canvasWidth = 600;
                 double canvasHeight = 400;
-                ITable tempShape = selectedRect.Clone();
+                ITable tempShape = dragIndex.Clone();
                 tempShape.X = x;
                 tempShape.Y = y;
                 if (!CollisionUtils.IsCollidingWithBorderX(tempShape, canvasWidth))
                 {
-                    selectedRect.X = x;
+                    dragIndex.X = x;
+                    // if(rectangles != null)
+                    // {
+                    //     await SetTables(rectangles);
+                    // }
+
                 }
                 if (!CollisionUtils.IsCollidingWithBorderY(tempShape, canvasHeight))
                 {
-                    selectedRect.Y = y;
+                    dragIndex.Y = y;
+                    // if (rectangles != null)
+                    // {
+                    //     await SetTables(rectangles);
+                    // }
                 }
             }
             await DrawRectanglesAsync();
@@ -118,7 +180,7 @@
     public void OnMouseUp()
     {
         isDragging = false;
-        selectedRect = null;
+        dragIndex = null;
     }
 
     private async Task<DOMRect> GetBoundingClientRectAsync(ElementReference element)
@@ -158,6 +220,7 @@
                         new CircleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Radius, "unlocked")
                     );
                 }
+                // await SetTables(rectangles);
             }
 
             await DrawRectanglesAsync();

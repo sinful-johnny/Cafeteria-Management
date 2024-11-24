@@ -1,0 +1,80 @@
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Components
+@using Class
+@implements IDisposable
+
+@code {
+    [Parameter] public ITable? selectedTable { get; set; }
+    public List<FoodListItem> Items { get; set; } = [];
+    private Dictionary<int, bool> openIndexes = new Dictionary<int, bool>();
+
+    protected override void OnParametersSet()
+    {
+        Items = [];
+        //Console.WriteLine(selectedTable);
+        List<Food> foodList = [];
+        if (selectedTable != null)
+        {
+            foreach (FoodOnTable food in selectedTable.Foods)
+            {
+                foodList.Add(food.Food);
+                //Console.WriteLine(food.ToString());
+            }
+        }
+
+        Items.Add(new FoodListItem
+            {
+                Id = 1,
+                Content = foodList,
+                Title = "Food"
+            });
+        base.OnInitialized();
+    }
+
+    private void ToggleItem(int index)
+    {
+        Console.WriteLine($"ToggleItem called for index: {index}");
+        if (openIndexes.ContainsKey(index))
+        {
+            openIndexes[index] = !openIndexes[index];
+        }
+        else
+        {
+            openIndexes[index] = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        // Dispose logic if needed
+    }
+}
+
+@* HTML Part *@
+<div class="collapsible-list">
+    @foreach (var item in Items)
+    {
+        if (item.Content != null && item.Content.Count > 0)
+        {
+            <div key="@item.Id">
+                <div @onclick="() => ToggleItem(item.Id)" class="collapsible-header">
+                    <span>
+                        <img src="@((openIndexes.ContainsKey(item.Id) && openIndexes[item.Id]) ?
+                                    "./public/toggleOpen.svg" : "./public/toggleClosed.svg")" />
+                    </span>
+                    <span>@item.Title</span>
+                </div>
+                @if (openIndexes.ContainsKey(item.Id) && openIndexes[item.Id])
+                {
+                    <div>
+                        @foreach (var food in item.Content)
+                        {
+                            <FoodCollaspsibleItem foodInfo="food" />
+                        }
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+

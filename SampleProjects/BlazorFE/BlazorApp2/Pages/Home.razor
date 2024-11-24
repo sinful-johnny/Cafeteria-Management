@@ -12,13 +12,25 @@
 	<div class="BodyStyle">
 		<Navbar selectedPage="@selectedPage" />
 		<div>
-			<MainCanvas />
+			<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" />
 		</div>
+		@if (selectedTable != null)
+		{
+			<PropertiesSideBar selectedTable="selectedTable" />
+		}
+		
 	</div>
 </div>
 
 @code{
+	public List<ITable>? rectangles = null;
+	public ITable? selectedTable = null;
 	private string selectedPage = "Table";
+
+	public void log()
+	{
+		Console.WriteLine(selectedTable);
+	}
 
 	// private void OnSelectedPage(string page)
 	// {
