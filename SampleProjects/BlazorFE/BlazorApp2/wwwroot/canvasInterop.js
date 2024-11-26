@@ -33,5 +33,10 @@
     },
     getContext2D: function (canvas) {
         return canvas.getContext('2d');
+    },
+
+    logJSONObject: function (JSONStr) {
+        const data = JSON.parse(JSONStr);
+        console.log(data);
     }
 };

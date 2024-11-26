@@ -28,6 +28,7 @@
 
 @* HTML Part *@
 <div class="collapsible-list">
+    @if(Items != null)
     @foreach (var item in Items)
     {
         if (item.Content != null && item.Content.Count > 0)

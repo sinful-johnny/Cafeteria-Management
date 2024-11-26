@@ -8,11 +8,11 @@
 @code {
 	[Parameter]
 	public Food? foodInfo { get; set; }
-	[Inject] private IJSRuntime JS { get; set; }
+	[Inject] private IJSRuntime? JS { get; set; }
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender && foodInfo != null)
+		if (firstRender && foodInfo != null && JS != null)
 		{
 			//var jsonData = JsonSerializer.Serialize(table);
 			await JS.InvokeVoidAsync("dragDropInterop.setDragFoodData", foodInfo.FoodId, foodInfo.FoodId, "food");
