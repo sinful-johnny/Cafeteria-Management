@@ -273,6 +273,7 @@
                                 rectangle.Foods.Add(new FoodOnTable(foodInfo,1));
                                 rectangle.Color = "red";
                             }
+                            await rectanglesChanged.InvokeAsync(rectangles);
                             await DrawRectanglesAsync();
                         }
                         break;

@@ -3,17 +3,35 @@
 @using Class.Services;
 @inject FoodListItemService foodListItemsService;
 
-<div class="admin-navbar">
+<div class="admin-PropertiesBar">
+    <div class="Title">
+        <h4>Table: @(selectedTable != null ? selectedTable.TableId : "Undefined")</h4>
+    </div>
     <div class="CollaspsibleList--container">
         <FoodOnTableCollaspsibleList selectedTable="selectedTable" />
     </div>
+    @if(selectedTable != null && selectedTable.Foods.Count > 0)
+    {
+        <div class="ClearButton-Container">
+            <button class="ClearButton" @onclick="HandleClearTableClick">Clear the table</button>
+        </div>
+    }
+
 </div>
 
 @code {
     [Parameter] public ITable? selectedTable { get; set; }
+    [Parameter] public EventCallback ClearTableFunc { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+    }
+
+    private async Task HandleClearTableClick() { 
+        if (ClearTableFunc.HasDelegate)
+        {
+            await ClearTableFunc.InvokeAsync(null);
+        } 
     }
 }

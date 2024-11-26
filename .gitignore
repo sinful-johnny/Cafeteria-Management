@@ -107,3 +107,4 @@ appsettings.json
 .vscode/**
 
 # Build folders (custom
+.fake

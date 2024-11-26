@@ -1,5 +1,6 @@
 ﻿@page "/"
-@using BlazorApp2.Components
+@using BlazorApp2.Components;
+@using System.Text.Json;
 @using Class.Services;
 @using Class;
 @inject TableListItemsService tableListItemsService;
@@ -8,7 +9,7 @@
 <PageTitle>Home</PageTitle>
 
 <div class="Global--Container">
-	<Header @bind-selectedPage="@selectedPage" />
+	<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save"/>
 	<div class="BodyStyle">
 		<Navbar selectedPage="@selectedPage" />
 		<div>
@@ -16,7 +17,7 @@
 		</div>
 		@if (selectedTable != null)
 		{
-			<PropertiesSideBar selectedTable="selectedTable" />
+			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable"/>
 		}
 		
 	</div>
@@ -26,6 +27,20 @@
 	public List<ITable>? rectangles = null;
 	public ITable? selectedTable = null;
 	private string selectedPage = "Table";
+
+	public void clearTable()
+	{
+		if(selectedTable != null)
+		{
+			selectedTable.Foods.Clear();
+		}
+	}
+
+	public void Save()
+	{
+		string tablesJSON = JsonSerializer.Serialize(rectangles);
+		Console.WriteLine(tablesJSON);
+	}
 
 	public void log()
 	{
@@ -57,12 +72,16 @@
 		var food1 = new Food(1, "Pizza", 10, 12.99m, "Available", "path/to/pizza.jpg"); 
 		var food2 = new Food(2, "Burger", 15, 8.99m, "Available", "path/to/burger.jpg"); 
 		var food3 = new Food(3, "Pasta", 20, 10.50m, "Available", "path/to/pasta.jpg"); // Creating sample FoodListItem objects 
+		var food4 = new Food(4, "Deez Nuts", 20, 10.50m, "Available", "path/to/nuts.jpg");
+
 		var foodListItem1 = new FoodListItem { 
 			Id = 1, Title = "Main Courses", 
 			Content = new List<Food> { food1, food2, food3 } 
 		}; 
 		var foodListItem2 = new FoodListItem { 
-			Id = 2, Title = "Desserts", Content = new List<Food> { food1 } // Example with single item 
+				Id = 2,
+				Title = "Desserts",
+				Content = new List<Food> { food4 } // Example with single item
 		};
 
 		foodListItemsService.setItems(

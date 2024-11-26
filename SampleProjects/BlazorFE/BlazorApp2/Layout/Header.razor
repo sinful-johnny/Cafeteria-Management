@@ -2,9 +2,9 @@
 @inject NavigationManager NavigationManager
 
 @code {
-    private string _selectedPage;
+    private string? _selectedPage;
     [Parameter]
-    public string selectedPage
+    public string? selectedPage
     {
         get => _selectedPage;
         set
@@ -18,6 +18,8 @@
     }
     [Parameter] public EventCallback<string> selectedPageChanged { get; set; }
 
+    [Parameter] public EventCallback SaveFunction { get; set; }
+
     private bool isTableMenu = true;
     private bool isSaved = false;
     private bool isDropdown = false;
@@ -30,9 +32,12 @@
 
     private void Save()
     {
-        if (!isSaved)
+
+        if (!isSaved && SaveFunction.HasDelegate)
         {
             // Save logic here
+            SaveFunction.InvokeAsync(null);
+
             isSaved = true;
         }
     }
@@ -56,14 +61,14 @@
             <div class="function-selection">
                 <div class="nav-buttons">
                     <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
-                            @onclick=@(() => {
-                                SetSelectedPage("Table");
+                            @onclick=@(async () => {
+                                await SetSelectedPage("Table");
                                 isTableMenu = true;})>
                         Table
                     </button>
                     <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
-                            @onclick=@(() => {
-                                SetSelectedPage("Order");
+                            @onclick=@(async () => {
+                                await SetSelectedPage("Order");
                                 isTableMenu = false;})>
                         Order
                     </button>

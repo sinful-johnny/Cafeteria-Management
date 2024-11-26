@@ -41,6 +41,7 @@
 
         dropzone.addEventListener('drop', function (event) {
             event.preventDefault();
+            //console.log(event.dataTransfer.getData("application/json"));
             const data = JSON.parse(event.dataTransfer.getData("application/json"));
             //const data = event.dataTransfer.getData("application/json");
 
