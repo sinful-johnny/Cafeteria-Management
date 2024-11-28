@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Components
+@inject NavigationManager NavigationManager
+
+@code {
+    private string? _selectedPage;
+    [Parameter]
+    public string? selectedPage
+    {
+        get => _selectedPage;
+        set
+        {
+            if (_selectedPage != value)
+            {
+                _selectedPage = value;
+                selectedPageChanged.InvokeAsync(value);
+            }
+        }
+    }
+    [Parameter] public EventCallback<string> selectedPageChanged { get; set; }
+
+    [Parameter] public EventCallback SaveFunction { get; set; }
+
+    private bool isTableMenu = true;
+    private bool isSaved = false;
+    private bool isDropdown = false;
+
+    private async Task SetSelectedPage(string page)
+    {
+        selectedPage = page;
+        await selectedPageChanged.InvokeAsync(page);
+    }
+
+    private void Save()
+    {
+
+        if (!isSaved && SaveFunction.HasDelegate)
+        {
+            // Save logic here
+            SaveFunction.InvokeAsync(null);
+
+            isSaved = true;
+        }
+    }
+
+    private void ToggleDropdown()
+    {
+        isDropdown = !isDropdown;
+    }
+
+    private void Logout()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+}
+
+<div class="header">
+    <div class="logo-and-nav">
+        <img src="./public/Logo.png" class="logo-image" alt="LOGO" />
+        <div class="logo-text">
+            <h3>Morning coffee</h3>
+            <div class="function-selection">
+                <div class="nav-buttons">
+                    <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
+                            @onclick=@(async () => {
+                                await SetSelectedPage("Table");
+                                isTableMenu = true;})>
+                        Table
+                    </button>
+                    <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
+                            @onclick=@(async () => {
+                                await SetSelectedPage("Order");
+                                isTableMenu = false;})>
+                        Order
+                    </button>
+                </div>
+                <button class="save-button-@(isSaved ? "Saved" : "Unsaved")"
+                        @onclick="Save">
+                    @(isSaved ? "Saved" : "Unsaved")
+                </button>
+                <div class="underline"
+                     style="left: @(selectedPage == "Table" ? "0px" : "64px")"></div>
+            </div>
+        </div>
+    </div>
+    <button class="user-toggle-menu" @onclick="ToggleDropdown">
+        <img class="user-image" src="./public/Rectangle.png" alt="Avatar" />
+    </button>
+    <div class="dropdown-menu @(isDropdown ? "dropdown-visible" : "")">
+        <ul>
+            <li>
+                <img src="./public/Logout.png" alt="logout symbol" />
+                <button class="logout" @onclick="Logout">Logout</button>
+            </li>
+        </ul>
+    </div>
+</div>

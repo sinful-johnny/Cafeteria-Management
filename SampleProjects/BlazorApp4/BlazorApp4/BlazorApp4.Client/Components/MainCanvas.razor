@@ -1,0 +1,320 @@
+﻿@page "/main-canvas"
+@using BlazorApp2.Components
+@using Class
+@using Class.Services
+@using Microsoft.JSInterop
+@using System.Linq
+@inject FoodListItemService foodListItemService;
+@implements IAsyncDisposable
+
+<canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid black;" @ref="canvasReference"
+></canvas>
+
+@code {
+    private List<ITable>? _rectangles;
+    private ITable? _selectedTable;
+    private ITable? dragIndex;
+
+    [Parameter]
+    public List<ITable>? rectangles
+    {
+        get => _rectangles;
+        set
+        {
+            if (_rectangles != value)
+            {
+                _rectangles = value;
+                rectanglesChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    [Parameter] public EventCallback<List<ITable>> rectanglesChanged { get; set; }
+
+    private async Task SetTables(List<ITable> data)
+    {
+        rectangles = data;
+        await rectanglesChanged.InvokeAsync(data);
+    }
+
+    [Parameter] public ITable? selectedTable { 
+        get => _selectedTable;
+        set
+        {
+            if (_selectedTable != value)
+            {
+                _selectedTable = value;
+                SelectedTableChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    private async Task SetSelectedTable(ITable? data)
+    {
+        selectedTable = data;
+        await SelectedTableChanged.InvokeAsync(data);
+    }
+
+    [Parameter] public EventCallback<ITable> SelectedTableChanged { get; set; }
+
+    [Parameter] public EventCallback Log { get; set; }
+
+    private ElementReference canvasReference;
+    private DotNetObjectReference<MainCanvas>? dotNetHelper;
+    private IJSObjectReference? _canvasContext;
+    private bool isDragging = false;
+
+    private double offsetX, offsetY;
+
+
+    [Inject]
+    public IJSRuntime? JS { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        rectangles = new List<ITable>
+        {
+            new RectangleTable(1,"S001",0,0,100,100,"unlocked"),
+            new CircleTable(2,"S002", 150, 150, 50, "unlocked")
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && JS != null)
+        {
+
+            dotNetHelper = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("canvasInterop.initialize", canvasReference, dotNetHelper);
+            _canvasContext = await JS.InvokeAsync<IJSObjectReference>("canvasInterop.getContext2D", canvasReference);
+            await JS.InvokeVoidAsync("dragDropInterop.initializeDropzone", "myCanvas", dotNetHelper);
+            await DrawRectanglesAsync();
+        }
+    }
+
+    private async Task DrawRectanglesAsync()
+    {
+        if(rectangles != null && JS != null && _canvasContext != null)
+        {
+            await JS.InvokeVoidAsync("canvasInterop.clearCanvas", canvasReference, _canvasContext);
+
+            foreach (var rect in rectangles)
+            {
+                await rect.Draw(JS, _canvasContext);
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnMouseDown(double clientX, double clientY)
+    {
+
+        var rect = await GetBoundingClientRectAsync(canvasReference);
+        var x = clientX - rect.Left;
+        var y = clientY - rect.Top;
+
+        if (rectangles != null)
+        {
+
+            foreach (var rectangle in rectangles)
+            {
+
+                if (rectangle.IsMouseInRange(x,y))
+                {
+                    isDragging = true;
+                    dragIndex = rectangle;
+                    offsetX = x - rectangle.X;
+                    offsetY = y - rectangle.Y;
+
+                    // foreach(var food in rectangle.Foods)
+                    // {
+                    //     Console.WriteLine(food.ToString());
+                    // }
+                    await SetSelectedTable(rectangle);
+                    return;
+                }
+            }
+            //await Log.InvokeAsync(null);
+            await SetSelectedTable(null);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnMouseMove(double clientX, double clientY)
+    {
+        if (isDragging)
+        {
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left - offsetX;
+            var y = clientY - rect.Top - offsetY;
+            if (dragIndex != null)
+            {
+                double canvasWidth = 600;
+                double canvasHeight = 400;
+                ITable tempShape = dragIndex.Clone();
+                tempShape.X = x;
+                tempShape.Y = y;
+                if (!CollisionUtils.IsCollidingWithBorderX(tempShape, canvasWidth))
+                {
+                    dragIndex.X = x;
+                    // if(rectangles != null)
+                    // {
+                    //     await SetTables(rectangles);
+                    // }
+
+                }
+                if (!CollisionUtils.IsCollidingWithBorderY(tempShape, canvasHeight))
+                {
+                    dragIndex.Y = y;
+                    // if (rectangles != null)
+                    // {
+                    //     await SetTables(rectangles);
+                    // }
+                }
+            }
+            await DrawRectanglesAsync();
+        }
+
+    }
+
+    [JSInvokable]
+    public void OnMouseUp()
+    {
+        isDragging = false;
+        dragIndex = null;
+    }
+
+    private async Task<DOMRect> GetBoundingClientRectAsync(ElementReference element)
+    {
+        if(JS != null)
+        {
+            return await JS.InvokeAsync<DOMRect>("canvasInterop.getBoundingClientRect", element);
+        }
+        else
+        {
+            throw new Exception("JSRuntime is null");
+        }
+    }
+
+    [JSInvokable] 
+    public async Task HandleDropTableData(Shape data, double clientX, double clientY) { 
+        if (data != null) { 
+            Console.WriteLine($"Dropped data: {data.ToString()}");
+
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left;
+            var y = clientY - rect.Top;
+
+            if (rectangles != null)
+            {
+                if(data.ShapeType == "rectangle")
+                {
+                    x -= data.Width / 2;
+                    y -= data.Height / 2;
+                    rectangles.Add(
+                    new RectangleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Width, data.Height, "unlocked")
+                    );
+                }
+                else if (data.ShapeType == "circle")
+                {
+                    rectangles.Add(
+                        new CircleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Radius, "unlocked")
+                    );
+                }
+                // await SetTables(rectangles);
+            }
+
+            await DrawRectanglesAsync();
+        } 
+    }
+
+    [JSInvokable]
+    public async Task HandleDropFoodData(dndFoodData data, double clientX, double clientY)
+    {
+        if (data != null)
+        {
+            //Console.WriteLine($"Dropped data: {data.ToString()}");
+
+            var rect = await GetBoundingClientRectAsync(canvasReference);
+            var x = clientX - rect.Left;
+            var y = clientY - rect.Top;
+
+            if (rectangles != null)
+            {
+                foreach (var rectangle in rectangles)
+                {
+                    if (rectangle.IsMouseInRange(x, y))
+                    {
+                        Food? foodInfo = null;
+                        foreach(var foodList in foodListItemService.Items)
+                        {
+                            if(foodList.Content != null)
+                            {
+                                foreach (var food in foodList.Content)
+                                {
+                                    if(food.FoodId == data.FoodId)
+                                    {
+                                        foodInfo = food;
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if(foodInfo != null)
+                        {
+                            var findFoodResult = rectangle.Foods.FirstOrDefault<FoodOnTable>(x => x.Food.FoodId == foodInfo.FoodId);
+                            if(findFoodResult != null)
+                            {
+                                findFoodResult.Amount += 1;
+                            }
+                            else
+                            {
+                                rectangle.Foods.Add(new FoodOnTable(foodInfo,1));
+                                rectangle.Color = "red";
+                            }
+                            await rectanglesChanged.InvokeAsync(rectangles);
+                            await DrawRectanglesAsync();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync() { 
+
+    }
+
+    public class dndFoodData
+    {
+        public int FoodId { get; set; }
+        public string type { get; set; }
+
+        public dndFoodData(int FoodId, string type)
+        {
+            this.type = type;
+            this.FoodId = FoodId;
+        }
+    }
+
+    private class DOMRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Right { get; set; }
+        public double Bottom { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
+    private class Rect
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+}

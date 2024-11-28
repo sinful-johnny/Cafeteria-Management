@@ -1,0 +1,21 @@
+﻿@using Class;
+@using System.Text.Json
+
+<div class="collaspsible-listItem" draggable="true" id="@(table != null ? table.ShapeId : "draggable")">
+	<img src="@(table != null ? table.ImgURL : "")" />
+	<span>@(table != null ? table.ShapeName : "")</span>
+</div>
+
+@code {
+	[Parameter]
+	public Shape? table { get; set; } 
+
+	[Inject] private IJSRuntime JS { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender) { 
+		if (firstRender && table != null) { 
+			//var jsonData = JsonSerializer.Serialize(table);
+			await JS.InvokeVoidAsync("dragDropInterop.setDragTableData", table.ShapeId, table.ShapeId, table.ShapeName, table.Width, table.Height, table.Radius, table.ShapeType, "table");
+		} 
+	}
+}

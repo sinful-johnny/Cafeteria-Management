@@ -1,0 +1,24 @@
+﻿@using BlazorApp2.Components
+@using BlazorApp4.Client.Components
+@using Class.Services;
+@inject TableListItemsService tableListItemsService;
+@inject FoodListItemService foodListItemsService;
+
+<div class="admin-navbar">
+    <div class="Search--Container">
+        @* <SearchBar onSearch={onSearch} /> *@
+    </div>
+
+    <div class="CollaspsibleList--container">
+        @if(selectedPage == "Table"){
+            <TableCollaspsibleList Items="@tableListItemsService.Items" />
+        }
+        else if (selectedPage == "Order"){
+            <FoodCollaspsibleList Items="@foodListItemsService.Items" />
+        }         
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? selectedPage { get; set; }
+}

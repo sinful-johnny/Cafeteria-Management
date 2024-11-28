@@ -1,0 +1,108 @@
+﻿@page "/login"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap');
+    @@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+    @@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+</style>
+
+<div class="main--login">
+    <h2 class="login-text">Your shift has started; log in and give it your best!</h2>
+
+    <svg class="main--cloud" width="100%" height="100%" viewBox="0 0 1440 406" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="521" cy="70" r="160" fill="#BB9370" opacity="0.56"></circle>
+        <circle cx="400" cy="200" r="50" fill="#BB9370" opacity="0.56"></circle>
+        <circle cx="300" cy="-70" r="40" fill="#BB9370" opacity="0.56"></circle>
+    </svg>
+
+    <div class="login--form">
+        <h1 id="LoginHeader">Welcome!</h1>
+
+        <EditForm Model="@LoginFormModel" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="LoginForm--input">
+                <InputText id="name" @bind-Value="@LoginFormModel.Email" class="input-field" placeholder=" " />
+                <label class="floating-label">Email</label>
+                <ValidationMessage For="@(() => LoginFormModel.Email)" class="error" />
+            </div>
+
+            <div class="LoginForm--input">
+                <InputText id="password" @bind-Value="@LoginFormModel.Password" class="input-field" type="password" placeholder=" " />
+                <label class="floating-label">Password</label>
+                <ValidationMessage For="@(() => LoginFormModel.Password)" class="error" />
+            </div>
+
+            <div class="Form--ButtonContainer">
+                <button type="submit" class="submit-button Button--Signin" disabled="@IsSubmitting">Login</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel LoginFormModel = new LoginModel();
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        IsSubmitting = true;
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("https://localhost:7233/api/account/login", new
+            {
+                emailAddress = LoginFormModel.Email,
+                password = LoginFormModel.Password
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                if (data != null)
+                {
+                    // Store the token and set Authorization header
+                    // await SecureStorage.SetAsync("authToken", data.Token);
+                    // HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", data.Token);
+
+                    // Navigate to the next page
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                Console.WriteLine("Username not found or password incorrect");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Login error:", ex.Message);
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
+        public string? Password { get; set; }
+    }
+
+    public class AuthResponse
+    {
+        public string? Token { get; set; }
+    }
+}
+

@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using BlazorApp2.Components;
 @using System.Text.Json;
+@using BlazorApp4.Client.Components
+@using BlazorApp4.Client.Layout
 @using Class.Services;
 @using Class.Converter;
 @using Class;
@@ -20,7 +22,7 @@
 		{
 			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable"/>
 		}
-		
+
 	</div>
 </div>
 
@@ -46,10 +48,11 @@
 		if(rectangles != null)
 		{
 			string tablesJSON = TablesToDtoConverter.ConvertToJson(rectangles);
+			string tablesDataJSON = JsonSerializer.Serialize(tableListItemsService.Items);
 			if(JS != null)
 			{
 				//Console.WriteLine(tablesJSON);
-				JS.InvokeVoidAsync("canvasInterop.logJSONObject", tablesJSON);
+				JS.InvokeVoidAsync("canvasInterop.logJSONObject", tablesDataJSON);
 			}
 			
 		}

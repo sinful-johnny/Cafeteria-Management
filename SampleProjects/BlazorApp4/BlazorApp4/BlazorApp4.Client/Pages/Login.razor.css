@@ -1,0 +1,125 @@
+﻿/*@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');*/
+
+.main--login {
+    font-family: "Manrope", sans-serif;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(240, 230, 213, 1);
+    padding-right: 50px;
+}
+
+.main--cloud {
+    position: absolute;
+    z-index: 0;
+}
+
+/* Left section text */
+.main--login .login-text {
+    position: absolute;
+    justify-content: left;
+    margin-bottom: 450px;
+    margin-right: 650px;
+    font-size: 40px;
+    font-family: "Madimi One", sans-serif;
+    font-weight: medium;
+    color: rgba(87, 72, 64, 1);
+    max-width: 580px;
+    font-weight: bold;
+    z-index: 1;
+}
+
+#LoginHeader {
+    font-family: "Madimi One", sans-serif;
+    color: rgba(187, 147, 112, 1);
+    font-weight: 100;
+    font-size: 64px;
+}
+
+/* Style for the login form */
+.login--form {
+    max-width: 350px;
+    width: 100%;
+    margin-left: 844px;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+/* Floating label input styling */
+.LoginForm--input {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+::deep .input-field {
+    width: 360px;
+    height: 60px;
+    padding: 12px;
+    padding-top: 20px; /* Space for the floating label */
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    background-color: #FFFFFF;
+}
+
+::deep .floating-label {
+    position: absolute;
+    top: 19px;
+    left: 12px;
+    font-size: 16px;
+    color: #787373;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+/* Move label up when the input is focused or has content */
+::deep .input-field:focus + .floating-label,
+::deep .input-field:not(:placeholder-shown) + .floating-label {
+    top: 3px;
+    left: 11px;
+    font-size: 12px;
+    color: #C5BDBD;
+}
+
+
+.error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.Form--ButtonContainer {
+    width: 100%;
+}
+
+.submit-button {
+    height: 60px;
+    width: 360px;
+    padding: 12px;
+    background-color: #bb9370;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    font-weight: 100;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #9c7b5c;
+}
+
+.Button--Signin {
+    font-weight: bold;
+}
+

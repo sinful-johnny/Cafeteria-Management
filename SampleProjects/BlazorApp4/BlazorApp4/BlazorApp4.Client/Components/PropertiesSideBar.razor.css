@@ -1,0 +1,87 @@
+﻿.admin-PropertiesBar {
+    width: 243px;
+    background-color: #F0E6D5;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--Color-click, #A09A9A);
+}
+
+.Title {
+    border-bottom: 1px solid var(--Color-click, #A09A9A);
+    display: flex;
+    width: 243px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+    .Title > h4 {
+        color: var(--Color-11, #574840);
+        /* Lable 1 */
+        font-family: Manrope;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+    }
+
+.CollaspsibleList--container {
+    overflow: auto;
+}
+
+.CollaspsibleList--container::-webkit-scrollbar {
+    width: 0.3vw;
+}
+
+.CollaspsibleList--container::-webkit-scrollbar-track {
+    background: #F0E6D5;
+}
+
+.CollaspsibleList--container::-webkit-scrollbar-thumb {
+    background: #A09A9A;
+    border-radius: 20px;
+}
+
+.CollaspsibleList--container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.ClearButton-Container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.ClearButton {
+    color: #000;
+    /* Caption */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    display: flex;
+    width: 130px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background: var(--Color-12, #BB9370);
+    border: 0px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+
+    margin-top: 10px;
+}
+
+.ClearButton:hover {
+    background: #a67a55; /* Darker shade on hover */
+}
+
+.ClearButton:active {
+    background: #915b42; /* Even darker shade on click */
+    transform: scale(0.98); /* Slightly shrink on click */
+}

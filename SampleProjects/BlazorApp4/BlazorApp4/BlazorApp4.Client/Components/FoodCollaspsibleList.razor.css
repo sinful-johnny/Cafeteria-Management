@@ -1,0 +1,29 @@
+﻿.collapsible-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: #F0E6D5;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid var(--Color-click, #A09A9A);
+    height: 40px;
+}
+
+.collapsible-header > * {
+    color: black;
+    font-family: 'Manrope', sans-serif;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 5px;
+}
+
+.collapsible-header > :nth-child(1) {
+    padding-top: 3px;
+}
+
+.high-z-index {
+    position: relative;
+    z-index: 1000; /* Ensure this element is above others */
+}
