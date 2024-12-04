@@ -19,7 +19,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN,USER")]
+        //[Authorize(Roles = "ADMIN,USER")]
         public async Task<IActionResult> GetAllFoodType()
         {
             if (!ModelState.IsValid)

@@ -21,6 +21,10 @@
             ShapeType = shapeType;
         }
 
+        public Shape()
+        {
+        }
+
         public override string ToString() { 
             return $"{{\n" + $" \"ShapeId\": \"{ShapeId}\",\n" + $" \"ImgURL\": \"{ImgURL}\",\n" + $" \"ShapeName\": \"{ShapeName}\",\n" + $" \"Width\": {Width},\n" + $" \"Height\": {Height},\n" + $" \"Radius\": {Radius}\n" + $"}}"; 
         }

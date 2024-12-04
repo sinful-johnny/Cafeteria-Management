@@ -2,6 +2,7 @@ using BlazorApp4.Client.Pages;
 using BlazorApp4.Components;
 using BlazorApp4.Components.Account;
 using BlazorApp4.Data;
+using Class.Controller;
 using Class.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +14,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddSingleton<TableListItemsService>();
 builder.Services.AddSingleton<FoodListItemService>();
+builder.Services.AddScoped<TableTypesService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -34,6 +38,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

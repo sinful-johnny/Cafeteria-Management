@@ -3,28 +3,36 @@
 @using System.Text.Json;
 @using BlazorApp4.Client.Components
 @using BlazorApp4.Client.Layout
+@using Class.Controller
 @using Class.Services;
 @using Class.Converter;
 @using Class;
 @inject TableListItemsService tableListItemsService;
 @inject FoodListItemService foodListItemsService;
+@inject TableTypesService TableService;
 
-<PageTitle>Home</PageTitle>
 
-<div class="Global--Container">
-	<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save"/>
-	<div class="BodyStyle">
-		<Navbar selectedPage="@selectedPage" />
-		<div>
-			<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" />
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+
+	<PageTitle>Deez nuts</PageTitle>
+	<div class="Global--Container">
+		<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
+		<div class="BodyStyle">
+			<Navbar selectedPage="@selectedPage" />
+			<div>
+				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" />
+			</div>
+			@if (selectedTable != null)
+			{
+				<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
+			}
 		</div>
-		@if (selectedTable != null)
-		{
-			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable"/>
-		}
-
 	</div>
-</div>
+
+
 
 @code{
 	public List<ITable>? rectangles = null;
@@ -54,7 +62,7 @@
 				//Console.WriteLine(tablesJSON);
 				JS.InvokeVoidAsync("canvasInterop.logJSONObject", tablesDataJSON);
 			}
-			
+
 		}
 	}
 
@@ -68,22 +76,31 @@
 	// 	selectedPage = page;
 	// }
 
-	protected override Task OnInitializedAsync()
+	private string response; 
+	private async Task FetchTables() { 
+		response = await TableService.GetTablesAsync(); 
+	}
+
+	protected override async Task OnInitializedAsync()
 	{
-		List<Shape> tables = new List<Shape>()
-		{
-			new Shape("S001","./public/square.svg","Rectangle",100,100, 0, "rectangle"),
-			new Shape("S002","./public/circle.svg","Circular",0, 0, 100, "circle")
-		};
-		tableListItemsService.setItems(
-		new List<ShapeListItem>([
-			new ShapeListItem{
-					Id = 1,
-					Title = "Table",
-					Content = tables
-				},
-			])
-		);
+		await FetchTables();
+		Console.WriteLine(response);
+
+		// List<Shape> tables = new List<Shape>()
+		// {
+		// 	new Shape("S001","./public/square.svg","Rectangle",100,100, 0, "rectangle"),
+		// 	new Shape("S002","./public/circle.svg","Circular",0, 0, 100, "circle")
+		// };
+		// tableListItemsService.setItems(
+		// new List<ShapeListItem>([
+		// 	new ShapeListItem{
+		// 			Id = 1,
+		// 			Title = "Table",
+		// 			Content = tables
+		// 		},
+		// 	])
+		// );
+		tableListItemsService.SetItemsFromJson(response);
 
 		var food1 = new Food(1, "Pizza", 10, 12.99m, "Available", "path/to/pizza.jpg"); 
 		var food2 = new Food(2, "Burger", 15, 8.99m, "Available", "path/to/burger.jpg"); 
@@ -104,6 +121,6 @@
 			new List<FoodListItem> { foodListItem1, foodListItem2 }
 		);
 
-		return base.OnInitializedAsync();
+		await base.OnInitializedAsync();
 	}
 }

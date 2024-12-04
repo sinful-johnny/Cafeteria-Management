@@ -17,7 +17,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllShapeType() {
             var ShapeTypeModels = await _shapeTypeRepo.GetAllShapeTypeAsync();
             var ShapeTypeDtos = ShapeTypeModels.Select(f => f.ToShapeDto());

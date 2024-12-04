@@ -18,7 +18,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllShapeType()
         {
             if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> SaveCreatedTable([FromBody] List<TABLE_FOODsDto> TablesInCanvaDto)
         {
             if (!ModelState.IsValid)
