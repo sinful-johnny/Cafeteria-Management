@@ -75,11 +75,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        rectangles = new List<ITable>
-        {
-            new RectangleTable(1,"S001",0,0,100,100,"unlocked"),
-            new CircleTable(2,"S002", 150, 150, 50, "unlocked")
-        };
+        // rectangles = new List<ITable>
+        // {
+        //     new RectangleTable(1,"S001",0,0,100,100,"unlocked"),
+        //     new CircleTable(2,"S002", 150, 150, 50, "unlocked")
+        // };
+        rectangles = new List<ITable>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -129,15 +130,11 @@
                     offsetX = x - rectangle.X;
                     offsetY = y - rectangle.Y;
 
-                    // foreach(var food in rectangle.Foods)
-                    // {
-                    //     Console.WriteLine(food.ToString());
-                    // }
                     await SetSelectedTable(rectangle);
                     return;
                 }
             }
-            //await Log.InvokeAsync(null);
+
             await SetSelectedTable(null);
         }
     }
@@ -160,19 +157,10 @@
                 if (!CollisionUtils.IsCollidingWithBorderX(tempShape, canvasWidth))
                 {
                     dragIndex.X = x;
-                    // if(rectangles != null)
-                    // {
-                    //     await SetTables(rectangles);
-                    // }
-
                 }
                 if (!CollisionUtils.IsCollidingWithBorderY(tempShape, canvasHeight))
                 {
                     dragIndex.Y = y;
-                    // if (rectangles != null)
-                    // {
-                    //     await SetTables(rectangles);
-                    // }
                 }
             }
             await DrawRectanglesAsync();
@@ -224,7 +212,6 @@
                         new CircleTable(rectangles.Count + 1, data.ShapeId, x, y, data.Radius, "unlocked")
                     );
                 }
-                // await SetTables(rectangles);
             }
 
             await DrawRectanglesAsync();
@@ -236,8 +223,6 @@
     {
         if (data != null)
         {
-            //Console.WriteLine($"Dropped data: {JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true })}");
-
             var rect = await GetBoundingClientRectAsync(canvasReference);
             var x = clientX - rect.Left;
             var y = clientY - rect.Top;
@@ -249,23 +234,24 @@
                     if (rectangle.IsMouseInRange(x, y))
                     {
                         Food? foodInfo = null;
-                        foreach(var foodList in foodListItemService.Items)
-                        {
-                            if(foodList.Content != null)
+                        if (foodListItemService != null){
+                            foreach (var foodList in foodListItemService.Items)
                             {
-                                foreach (var food in foodList.Content)
+                                if (foodList.Content != null)
                                 {
-                                    Console.WriteLine($"Dropped food ${data.FoodId} vs food info {food.FoodId}");
-                                    if(food.FoodId == data.FoodId)
+                                    foreach (var food in foodList.Content)
                                     {
-                                        foodInfo = food;
-                                        break;
+                                        Console.WriteLine($"Dropped food ${data.FoodId} vs food info {food.FoodId}");
+                                        if (food.FoodId == data.FoodId)
+                                        {
+                                            foodInfo = food;
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
-
-                        //Console.WriteLine($"Dropped data: {JsonSerializer.Serialize(foodInfo, new JsonSerializerOptions { WriteIndented = true })}");
+                        
                         if(foodInfo != null)
                         {
                             var findFoodResult = rectangle.Foods.FirstOrDefault<FoodOnTable>(x => x.Food.FoodId == foodInfo.FoodId);

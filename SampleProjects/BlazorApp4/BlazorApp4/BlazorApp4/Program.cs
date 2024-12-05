@@ -19,6 +19,7 @@ builder.Services.AddSingleton<TableListItemsService>();
 builder.Services.AddSingleton<FoodListItemService>();
 builder.Services.AddScoped<TableTypesService>();
 builder.Services.AddScoped<FoodTypesService>();
+builder.Services.AddScoped<TableService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

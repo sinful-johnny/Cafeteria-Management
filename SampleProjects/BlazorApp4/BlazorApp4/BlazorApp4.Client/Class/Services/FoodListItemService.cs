@@ -34,8 +34,6 @@ namespace Class.Services
                 PropertyNameCaseInsensitive = true
             });
 
-            //Console.WriteLine(JsonSerializer.Serialize(foodDtos, new JsonSerializerOptions { WriteIndented = true }));
-
             if (foodDtos != null)
             {
                 var foodsWithCategory = foodDtos.Select(f => f.ToFoodWithCategory()).ToList();

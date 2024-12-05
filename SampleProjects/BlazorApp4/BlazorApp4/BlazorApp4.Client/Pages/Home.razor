@@ -7,9 +7,9 @@
 @using Class.Services;
 @using Class.Converter;
 @using Class;
-@inject TableTypesService TableService;
+@inject TableTypesService TableTypeService;
 @inject FoodTypesService FoodService;
-
+@inject TableService TableService;
 
 @using Microsoft.AspNetCore.Authorization
 
@@ -52,17 +52,19 @@
 		}
 	}
 
-	public void Save()
+	public async void Save()
 	{
 		//string tablesJSON = JsonSerializer.Serialize(rectangles);
 		if (rectangles != null && tableListItemsService != null)
 		{
 			string tablesJSON = TablesToDtoConverter.ConvertToJson(rectangles);
-			string tablesDataJSON = JsonSerializer.Serialize(tableListItemsService.Items);
+			//string tablesDataJSON = JsonSerializer.Serialize(tableListItemsService.Items);
 			if(JS != null)
 			{
 				//Console.WriteLine(tablesJSON);
-				JS.InvokeVoidAsync("canvasInterop.logJSONObject", tablesDataJSON);
+				//JS.InvokeVoidAsync("canvasInterop.logJSONObject", tablesDataJSON);
+				var result = await TableService.PostTableAsync(tablesJSON);
+				Console.WriteLine(result);
 			}
 
 		}
@@ -80,7 +82,7 @@
 
 	private string? tableResponse; 
 	private async Task FetchTables() { 
-		tableResponse = await TableService.GetTablesAsync();
+		tableResponse = await TableTypeService.GetTablesAsync();
 	}
 
 	private string? foodResponse;
@@ -98,52 +100,13 @@
 		if (tableResponse != null && tableListItemsService != null)
 		{
 			tableListItemsService.SetItemsFromJson(tableResponse);
-
 		}
 
 		await FetchFood();
 		if(foodResponse != null && foodListItemsService != null){
 			foodListItemsService.SetItemsFromJson(foodResponse);
-			Console.WriteLine(foodListItemsService.ToString());
-			//Console.WriteLine($"Response: {foodResponse}");
+			//Console.WriteLine(foodListItemsService.ToString());
 		}
-
-
-		// List<Shape> tables = new List<Shape>()
-		// {
-		// 	new Shape("S001","./public/square.svg","Rectangle",100,100, 0, "rectangle"),
-		// 	new Shape("S002","./public/circle.svg","Circular",0, 0, 100, "circle")
-		// };
-		// tableListItemsService.setItems(
-		// new List<ShapeListItem>([
-		// 	new ShapeListItem{
-		// 			Id = 1,
-		// 			Title = "Table",
-		// 			Content = tables
-		// 		},
-		// 	])
-		// );
-		
-
-		// var food1 = new Food(1, "Pizza", 10, 12.99m, "Available", "path/to/pizza.jpg"); 
-		// var food2 = new Food(2, "Burger", 15, 8.99m, "Available", "path/to/burger.jpg"); 
-		// var food3 = new Food(3, "Pasta", 20, 10.50m, "Available", "path/to/pasta.jpg"); // Creating sample FoodListItem objects 
-		// var food4 = new Food(4, "Deez Nuts", 20, 10.50m, "Available", "path/to/nuts.jpg");
-
-		// var foodListItem1 = new FoodListItem { 
-		// 	Id = 1, Title = "Main Courses", 
-		// 	Content = new List<Food> { food1, food2, food3 } 
-		// }; 
-		// var foodListItem2 = new FoodListItem { 
-		// 		Id = 2,
-		// 		Title = "Desserts",
-		// 		Content = new List<Food> { food4 } // Example with single item
-		// };
-
-		// foodListItemsService.setItems(
-		// 	new List<FoodListItem> { foodListItem1, foodListItem2 }
-		// );
-
 		await base.OnInitializedAsync();
 	}
 }
