@@ -7,9 +7,8 @@
 @using Class.Services;
 @using Class.Converter;
 @using Class;
-@inject TableListItemsService tableListItemsService;
-@inject FoodListItemService foodListItemsService;
 @inject TableTypesService TableService;
+@inject FoodTypesService FoodService;
 
 
 @using Microsoft.AspNetCore.Authorization
@@ -21,16 +20,16 @@
 	<div class="Global--Container">
 		<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
 		<div class="BodyStyle">
-			<Navbar selectedPage="@selectedPage" />
+			<Navbar selectedPage="@selectedPage" tableListItemsService="@tableListItemsService" foodListItemsService="@foodListItemsService"/>
 			<div>
 				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" />
 			</div>
 			@if (selectedTable != null)
-			{
-				<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
-			}
-		</div>
+		{
+			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
+		}
 	</div>
+</div>
 
 
 
@@ -38,6 +37,9 @@
 	public List<ITable>? rectangles = null;
 	public ITable? selectedTable = null;
 	private string selectedPage = "Table";
+
+	public TableListItemsService? tableListItemsService { get; set; }
+	public FoodListItemService? foodListItemsService { get; set; }
 
 	[Inject]
 	public IJSRuntime? JS { get; set; }
@@ -53,7 +55,7 @@
 	public void Save()
 	{
 		//string tablesJSON = JsonSerializer.Serialize(rectangles);
-		if(rectangles != null)
+		if (rectangles != null && tableListItemsService != null)
 		{
 			string tablesJSON = TablesToDtoConverter.ConvertToJson(rectangles);
 			string tablesDataJSON = JsonSerializer.Serialize(tableListItemsService.Items);
@@ -76,15 +78,32 @@
 	// 	selectedPage = page;
 	// }
 
-	private string response; 
+	private string? tableResponse; 
 	private async Task FetchTables() { 
-		response = await TableService.GetTablesAsync(); 
+		tableResponse = await TableService.GetTablesAsync();
 	}
+
+	private string? foodResponse;
+	private async Task FetchFood(){
+		foodResponse = await FoodService.GetFoodsAsync();
+	}
+
 
 	protected override async Task OnInitializedAsync()
 	{
+		tableListItemsService = new TableListItemsService();
+		foodListItemsService = new FoodListItemService();
+
 		await FetchTables();
-		Console.WriteLine(response);
+		if (tableResponse != null && tableListItemsService != null)
+		{
+			tableListItemsService.SetItemsFromJson(tableResponse);
+			Console.WriteLine(tableListItemsService.Items.ToArray());
+			Console.WriteLine($"Response: {tableResponse}");
+		}	
+
+
+
 
 		// List<Shape> tables = new List<Shape>()
 		// {
@@ -100,26 +119,26 @@
 		// 		},
 		// 	])
 		// );
-		tableListItemsService.SetItemsFromJson(response);
+		
 
-		var food1 = new Food(1, "Pizza", 10, 12.99m, "Available", "path/to/pizza.jpg"); 
-		var food2 = new Food(2, "Burger", 15, 8.99m, "Available", "path/to/burger.jpg"); 
-		var food3 = new Food(3, "Pasta", 20, 10.50m, "Available", "path/to/pasta.jpg"); // Creating sample FoodListItem objects 
-		var food4 = new Food(4, "Deez Nuts", 20, 10.50m, "Available", "path/to/nuts.jpg");
+		// var food1 = new Food(1, "Pizza", 10, 12.99m, "Available", "path/to/pizza.jpg"); 
+		// var food2 = new Food(2, "Burger", 15, 8.99m, "Available", "path/to/burger.jpg"); 
+		// var food3 = new Food(3, "Pasta", 20, 10.50m, "Available", "path/to/pasta.jpg"); // Creating sample FoodListItem objects 
+		// var food4 = new Food(4, "Deez Nuts", 20, 10.50m, "Available", "path/to/nuts.jpg");
 
-		var foodListItem1 = new FoodListItem { 
-			Id = 1, Title = "Main Courses", 
-			Content = new List<Food> { food1, food2, food3 } 
-		}; 
-		var foodListItem2 = new FoodListItem { 
-				Id = 2,
-				Title = "Desserts",
-				Content = new List<Food> { food4 } // Example with single item
-		};
+		// var foodListItem1 = new FoodListItem { 
+		// 	Id = 1, Title = "Main Courses", 
+		// 	Content = new List<Food> { food1, food2, food3 } 
+		// }; 
+		// var foodListItem2 = new FoodListItem { 
+		// 		Id = 2,
+		// 		Title = "Desserts",
+		// 		Content = new List<Food> { food4 } // Example with single item
+		// };
 
-		foodListItemsService.setItems(
-			new List<FoodListItem> { foodListItem1, foodListItem2 }
-		);
+		// foodListItemsService.setItems(
+		// 	new List<FoodListItem> { foodListItem1, foodListItem2 }
+		// );
 
 		await base.OnInitializedAsync();
 	}

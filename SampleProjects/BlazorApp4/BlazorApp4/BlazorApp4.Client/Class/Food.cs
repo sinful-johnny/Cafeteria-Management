@@ -2,7 +2,7 @@
 {
     public class Food
     {
-        public int FoodId { get; set; }
+        public string FoodId { get; set; }
         public string FoodName { get; set; }
         public int AmountLeft { get; set; }
         public decimal Price { get; set; }
@@ -10,7 +10,7 @@
         public string ImageUrl { get; set; }
 
         // Constructor
-        public Food(int foodId, string foodName, int amountLeft, decimal price, string foodTypeStatus, string imageUrl)
+        public Food(string foodId, string foodName, int amountLeft, decimal price, string foodTypeStatus, string imageUrl)
         {
             FoodId = foodId;
             FoodName = foodName;
@@ -18,6 +18,10 @@
             Price = price;
             FoodTypeStatus = foodTypeStatus;
             ImageUrl = imageUrl;
+        }
+
+        public Food()
+        {
         }
     }
 

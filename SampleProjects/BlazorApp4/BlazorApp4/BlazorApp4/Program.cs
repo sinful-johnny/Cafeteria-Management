@@ -1,4 +1,3 @@
-using BlazorApp4.Client.Pages;
 using BlazorApp4.Components;
 using BlazorApp4.Components.Account;
 using BlazorApp4.Data;
@@ -19,6 +18,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<TableListItemsService>();
 builder.Services.AddSingleton<FoodListItemService>();
 builder.Services.AddScoped<TableTypesService>();
+builder.Services.AddScoped<FoodTypesService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

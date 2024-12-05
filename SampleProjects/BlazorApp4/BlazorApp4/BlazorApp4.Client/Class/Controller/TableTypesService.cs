@@ -14,7 +14,7 @@ namespace Class.Controller
 
         public async Task<string> GetTablesAsync()
         {
-            var response = await _httpClient.GetAsync("https://localhost:7233/api/ShapeType");
+            var response = await _httpClient.GetAsync($"{HttpInfo.Domain}/api/ShapeType");
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();

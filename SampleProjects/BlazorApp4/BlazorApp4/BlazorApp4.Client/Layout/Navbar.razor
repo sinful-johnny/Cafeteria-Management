@@ -1,8 +1,6 @@
 ﻿@using BlazorApp2.Components
 @using BlazorApp4.Client.Components
 @using Class.Services;
-@inject TableListItemsService tableListItemsService;
-@inject FoodListItemService foodListItemsService;
 
 <div class="admin-navbar">
     <div class="Search--Container">
@@ -10,10 +8,10 @@
     </div>
 
     <div class="CollaspsibleList--container">
-        @if(selectedPage == "Table"){
+        @if(selectedPage == "Table" && tableListItemsService != null){
             <TableCollaspsibleList Items="@tableListItemsService.Items" />
         }
-        else if (selectedPage == "Order"){
+        else if (selectedPage == "Order" && foodListItemsService != null){
             <FoodCollaspsibleList Items="@foodListItemsService.Items" />
         }         
     </div>
@@ -21,4 +19,8 @@
 
 @code {
     [Parameter] public string? selectedPage { get; set; }
+
+    [Parameter] public TableListItemsService? tableListItemsService { get; set; }
+
+    [Parameter] public FoodListItemService? foodListItemsService { get; set; }
 }
