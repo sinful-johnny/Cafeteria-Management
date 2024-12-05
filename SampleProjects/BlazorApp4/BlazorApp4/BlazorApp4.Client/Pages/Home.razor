@@ -22,7 +22,7 @@
 		<div class="BodyStyle">
 			<Navbar selectedPage="@selectedPage" tableListItemsService="@tableListItemsService" foodListItemsService="@foodListItemsService"/>
 			<div>
-				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" />
+				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService"/>
 			</div>
 			@if (selectedTable != null)
 		{
@@ -98,11 +98,15 @@
 		if (tableResponse != null && tableListItemsService != null)
 		{
 			tableListItemsService.SetItemsFromJson(tableResponse);
-			Console.WriteLine(tableListItemsService.Items.ToArray());
-			Console.WriteLine($"Response: {tableResponse}");
-		}	
 
+		}
 
+		await FetchFood();
+		if(foodResponse != null && foodListItemsService != null){
+			foodListItemsService.SetItemsFromJson(foodResponse);
+			Console.WriteLine(foodListItemsService.ToString());
+			//Console.WriteLine($"Response: {foodResponse}");
+		}
 
 
 		// List<Shape> tables = new List<Shape>()

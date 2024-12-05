@@ -30,7 +30,7 @@
 
     public static class JsonToFoodTypeConverter
     {
-        public static FoodWithCategory ToFoodListItem(this FOODsDto foodsDto) {
+        public static FoodWithCategory ToFoodWithCategory(this FOODsDto foodsDto) {
             return new FoodWithCategory()
             {
                 Food = new Food()
