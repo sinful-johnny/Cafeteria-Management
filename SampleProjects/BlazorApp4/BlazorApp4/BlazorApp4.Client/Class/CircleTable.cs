@@ -49,6 +49,15 @@
         {
             // Implement drawing logic using Blazor's Canvas or other graphics library
             // Placeholder for implementation
+            if (Foods.Count > 0)
+            {
+                Color = "red";
+            }
+            else
+            {
+                Color = "green";
+            }
+
             if (JS != null)
             {
                 await JS.InvokeVoidAsync("canvasInterop.drawCircle", canvasContext, X, Y, Radius, Color);

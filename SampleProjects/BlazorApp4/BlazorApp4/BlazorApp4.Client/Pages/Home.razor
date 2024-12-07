@@ -12,6 +12,7 @@
 @inject TableService TableService;
 
 @using Microsoft.AspNetCore.Authorization
+@using static Class.Converter.TablesToDtoConverter
 
 @attribute [Authorize]
 
@@ -22,9 +23,11 @@
 		<div class="BodyStyle">
 			<Navbar selectedPage="@selectedPage" tableListItemsService="@tableListItemsService" foodListItemsService="@foodListItemsService"/>
 			<div>
-				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService"/>
-			</div>
-			@if (selectedTable != null)
+				@if(rectangles != null){
+				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+			}
+		</div>
+		@if (selectedTable != null)
 		{
 			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
 		}
@@ -90,6 +93,11 @@
 		foodResponse = await FoodService.GetFoodsAsync();
 	}
 
+	private string? canvasResponse;
+	private async Task FetchCanvas(){
+		canvasResponse = await TableService.GetTablesAsync();
+	}
+
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -107,6 +115,23 @@
 			foodListItemsService.SetItemsFromJson(foodResponse);
 			//Console.WriteLine(foodListItemsService.ToString());
 		}
+
+		await FetchCanvas();
+		if (canvasResponse != null){
+			var canvasDto = JsonSerializer.Deserialize<List<TABLE_FOODsDto>>(canvasResponse, new JsonSerializerOptions
+				{
+					PropertyNameCaseInsensitive = true
+				});
+			if(canvasDto != null){
+				Console.WriteLine($"Dto: {JsonSerializer.Serialize(canvasDto)}");
+				rectangles = TablesToDtoConverter.ConvertToITable(canvasDto);
+				Console.WriteLine($"Rectangles: {JsonSerializer.Serialize(rectangles)}");
+			}
+			if(rectangles == null){
+				rectangles = new List<ITable>();
+			}
+		}
+
 		await base.OnInitializedAsync();
 	}
 }

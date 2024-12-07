@@ -4,7 +4,7 @@ namespace Class.Converter
 {
 	public static class TablesToDtoConverter
 	{
-		private class FOODOnTABLE
+        public class FOODOnTABLE
 		{
 			public string foodId { get; set; } = string.Empty;
 			public string ID_TABLE { get; set; } = string.Empty;
@@ -15,12 +15,12 @@ namespace Class.Converter
 			public string? imageURL { get; set; } = null;
 		}
 
-		private class FOODwithAmount
+		public class FOODwithAmount
 		{
 			public FOODOnTABLE food { get; set; } = new FOODOnTABLE();
 			public int? amount { get; set; } = 0;
 		}
-		private class TABLE_FOODsDto
+		public class TABLE_FOODsDto
 		{
 			public double? x { get; set; } = 0;
 			public double? y { get; set; } = 0;
@@ -31,7 +31,7 @@ namespace Class.Converter
 			public string tableStatus { get; set; } = string.Empty;
 			public string tableId { get; set; } = string.Empty;
 			public string shapeId { get; set; } = string.Empty;
-			public string ID_CANVA { get; set; } = string.Empty;
+			public string iD_CANVA { get; set; } = string.Empty;
 		}
 
 		private static List<TABLE_FOODsDto> ConvertToDtoList(List<ITable> tables)
@@ -75,5 +75,63 @@ namespace Class.Converter
 			var dtoList = ConvertToDtoList(tables);
 			return JsonSerializer.Serialize(dtoList);
 		}
-	}
+
+        public static List<ITable> ConvertToITable(List<TABLE_FOODsDto> tableFoodsDtos)
+        {
+            List<ITable> tables = new List<ITable>();
+
+            foreach (var dto in tableFoodsDtos)
+            {
+                ITable table;
+
+                if (dto.width != null && dto.height != null && dto.width != 0 && dto.height != 0)
+                {
+                    table = new RectangleTable(
+                        int.Parse(dto.tableId),
+                        dto.shapeId,
+                        dto.x.Value,
+                        dto.y.Value,
+                        dto.width.Value,
+                        dto.height.Value,
+                        dto.tableStatus
+                    );
+                }
+                else if (dto.radius != null && dto.radius != 0)
+                {
+                    table = new CircleTable(
+                        int.Parse(dto.tableId),
+                        dto.shapeId,
+                        dto.x.Value,
+                        dto.y.Value,
+                        dto.radius.Value,
+                        dto.tableStatus
+                    );
+                }
+                else
+                {
+                    throw new Exception("Invalid table shape information.");
+                }
+
+                foreach (var foodDto in dto.foods)
+                {
+                    var food = new Food(
+                        foodDto.food.foodId,
+                        foodDto.food.foodName,
+                        foodDto.food.amount_left ?? 0,
+                        foodDto.food.price ?? 0,
+                        foodDto.food.foodTypeStatus,
+                        foodDto.food.imageURL
+                    );
+
+                    var foodOnTable = new FoodOnTable(food, foodDto.amount ?? 0);
+                    table.Foods.Add(foodOnTable);
+                }
+
+                tables.Add(table);
+            }
+
+            return tables;
+        }
+
+    }
 }

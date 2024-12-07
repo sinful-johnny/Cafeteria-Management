@@ -80,7 +80,8 @@
         //     new RectangleTable(1,"S001",0,0,100,100,"unlocked"),
         //     new CircleTable(2,"S002", 150, 150, 50, "unlocked")
         // };
-        rectangles = new List<ITable>();
+        //rectangles = new List<ITable>();
+        await DrawRectanglesAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
