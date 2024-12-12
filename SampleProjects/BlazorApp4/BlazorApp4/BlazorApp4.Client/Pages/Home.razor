@@ -3,6 +3,7 @@
 @using System.Text.Json;
 @using BlazorApp4.Client.Components
 @using BlazorApp4.Client.Layout
+@using Class.Auth
 @using Class.Controller
 @using Class.Services;
 @using Class.Converter;
@@ -12,28 +13,42 @@
 @inject TableService TableService;
 
 @using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @using static Class.Converter.TablesToDtoConverter
 
 @attribute [Authorize]
 
+<AuthorizeView>
+	@if(@context.User.Identity != null){
 
-	<PageTitle>Deez nuts</PageTitle>
+		<PageTitle>@context.User.Identity.Name</PageTitle>
+	}else{
+		<PageTitle>Deez Nuts</PageTitle>
+	}
+
 	<div class="Global--Container">
 		<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
 		<div class="BodyStyle">
-			<Navbar selectedPage="@selectedPage" tableListItemsService="@tableListItemsService" foodListItemsService="@foodListItemsService"/>
+			<Navbar 
+			selectedPage="@selectedPage" 
+			tableListItemsService="@tableListItemsService" 
+			foodListItemsService="@foodListItemsService" 
+			user="user"
+			/>
 			<div>
-				@if(rectangles != null){
-				<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+				@if (rectangles != null)
+				{
+					<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+				}
+			</div>
+			@if (selectedTable != null)
+			{
+				<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
 			}
 		</div>
-		@if (selectedTable != null)
-		{
-			<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
-		}
 	</div>
-</div>
-
+</AuthorizeView>
 
 
 @code{
@@ -43,6 +58,8 @@
 
 	public TableListItemsService? tableListItemsService { get; set; }
 	public FoodListItemService? foodListItemsService { get; set; }
+
+	public ClaimsPrincipal user { get; set; }
 
 	[Inject]
 	public IJSRuntime? JS { get; set; }
@@ -69,7 +86,6 @@
 				var result = await TableService.PostTableAsync(tablesJSON);
 				Console.WriteLine(result);
 			}
-
 		}
 	}
 
@@ -123,14 +139,17 @@
 					PropertyNameCaseInsensitive = true
 				});
 			if(canvasDto != null){
-				Console.WriteLine($"Dto: {JsonSerializer.Serialize(canvasDto)}");
+				//Console.WriteLine($"Dto: {JsonSerializer.Serialize(canvasDto)}");
 				rectangles = TablesToDtoConverter.ConvertToITable(canvasDto);
-				Console.WriteLine($"Rectangles: {JsonSerializer.Serialize(rectangles)}");
+				// Console.WriteLine($"Rectangles: {JsonSerializer.Serialize(rectangles)}");
 			}
 			if(rectangles == null){
 				rectangles = new List<ITable>();
 			}
 		}
+
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync(); 
+		user = authState.User;
 
 		await base.OnInitializedAsync();
 	}

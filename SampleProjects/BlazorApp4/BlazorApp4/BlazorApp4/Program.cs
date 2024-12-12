@@ -1,8 +1,12 @@
 using BlazorApp4.Components;
 using BlazorApp4.Components.Account;
 using BlazorApp4.Data;
+using Class.Auth;
 using Class.Controller;
 using Class.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +35,18 @@ builder.Services.AddAuthentication(options =>
         options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
     })
     .AddIdentityCookies();
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RW", policy =>
+    {
+        policy.Requirements.Add(new ResourceRoleRequirement("RW"));
+    });
+    options.AddPolicy("R", policy =>
+    {
+        policy.Requirements.Add(new ResourceRoleRequirement("R"));
+    });
+});
+builder.Services.AddSingleton<IAuthorizationHandler, ResourceRoleAuthorizationHandler>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -45,6 +60,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+//builder.Services.AddTransient<IClaimsTransformation, CustomClaimsTransformation>();
+
 
 var app = builder.Build();
 

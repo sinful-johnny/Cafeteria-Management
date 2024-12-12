@@ -1,0 +1,115 @@
+﻿@page "/role-based-resource"
+
+@using Class.Auth
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@attribute [Authorize]
+
+<h3>Role-Based Resource Access</h3>
+
+<AuthorizeView Policy="R" Resource="@myResource">
+    <Authorized>
+        <p>You are authorized to access this resource based on your role.</p>
+        @if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                <p>You are @role</p>
+            }
+        }
+        else
+        {
+            <p>it's null'</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not authorized to access this resource.</p>
+        @if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                <p>You are @role</p>
+            }
+        }
+        else
+        {
+            <p>it's null'</p>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Policy="RW" Resource="@myResource">
+    <Authorized>
+        <p>You are authorized to access this resource based on your role.</p>
+        @if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                <p>You are @role</p>
+            }
+        }
+        else
+        {
+            <p>it's null'</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not authorized to access this resource.</p>
+        @if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                <p>You are @role</p>
+            }
+        }
+        else
+        {
+            <p>it's null'</p>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    //public List<string> PermissionTypes { get; set; } = new List<string> { "RW" };
+    public MenuResource myResource = new MenuResource{
+        MenuName = "RoleBasedResource",
+        OwnerRoles = new List<RolePermission> {
+            new RolePermission
+            {
+                RoleName = "Admin",
+                PermissionType = new List<string> { "RW", "R" }
+            }
+        },
+        children = null
+    };
+    private IEnumerable<string>? roles { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // myResource = new MenuResource
+        //     {
+        //     MenuName = "RoleBasedResource",
+        //     OwnerRoles = new List<RolePermission> {
+        //         new RolePermission
+        //         {
+        //             RoleName = "Admin",
+        //             PermissionType = PermissionTypes
+        //         }
+        //     },
+        //     children = null
+        // };
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value);
+        @if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                Console.WriteLine(role);
+            }
+        }
+    }
+}
+

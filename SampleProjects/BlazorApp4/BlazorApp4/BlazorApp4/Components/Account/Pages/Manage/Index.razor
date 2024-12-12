@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using BlazorApp4.Data
+@using System.Text.Json
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -49,6 +50,8 @@
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
         phoneNumber = await UserManager.GetPhoneNumberAsync(user);
+        var roles = await UserManager.GetRolesAsync(user);
+        Console.WriteLine(JsonSerializer.Serialize(roles));
 
         Input.PhoneNumber ??= phoneNumber;
     }
