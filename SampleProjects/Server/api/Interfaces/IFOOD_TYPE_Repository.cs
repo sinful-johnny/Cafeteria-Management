@@ -1,4 +1,4 @@
-﻿using CafeteriaDB;
+﻿using cafeteriaDBLocalHost;
 
 namespace api.Interfaces
 {

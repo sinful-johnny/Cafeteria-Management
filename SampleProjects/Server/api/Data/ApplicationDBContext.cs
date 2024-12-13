@@ -1,19 +1,18 @@
 ﻿using api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using CafeteriaDB;
+using Microsoft.AspNetCore.Identity;
+using cafeteriaDBLocalHost;
 using Microsoft.Extensions.Configuration;
 using api.Dtos.Account;
 using api.Dtos.USER;
-using api.Identity;
-using IdentityCafeteriaModel;
 
 namespace api.Data
 {
-    public class ApplicationDBContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class ApplicationDBContext : IdentityDbContext<AppUser>
     {
         //private readonly string _connectionString;
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> dbContextOptions)
+        public ApplicationDBContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
         {
         }
@@ -33,19 +32,6 @@ namespace api.Data
         //    _connectionString = BuildConnectionString(baseConnectionString, loginDto.EmailAddress, loginDto.Password);
         //}
 
-
-        //Entity for Identity
-        public DbSet<MenuItem> MenuItems { get; set; }
-        public DbSet<MenuPermission> MenuPermissions { get; set; }
-        public DbSet<Identity.Permission> Permissions { get; set; }
-        public DbSet<ApplicationRoleMenu> RoleMenus { get; set; }
-
-        //View for Identity
-        public DbSet<V_Menu> VMenus { get; set; }
-        public DbSet<V_Permission_RoleMenu> VPermission_Roles { get; set; }
-        public DbSet<V_Role_Menu> VRole_Menus { get; set; }
-
-        //Entity for Db
         public DbSet<UserRole> userRoles { get; set; }
         public DbSet<ADMIN> Admin {  get; set; }
 
@@ -72,72 +58,6 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //Constraints for Identity
-            modelBuilder.Entity<MenuItem>(item =>
-            {
-                item.ToTable("AspNetMenu");
-                item.HasMany(y => y.Children)
-                    .WithOne(r => r.ParentItem)
-                    .HasForeignKey(u => u.ParentId);
-
-                item.HasMany(t => t.RoleMenus)
-                    .WithOne(u => u.MenuItem)
-                    .HasForeignKey(r => r.MenuId)
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
-
-            modelBuilder.Entity<ApplicationRoleMenu>(roleMenu =>
-            {
-                roleMenu.ToTable("AspNetRoleMenu");
-
-                roleMenu.HasOne(o => o.Role)
-                    .WithMany(u => u.RoleMenus)
-                    .HasForeignKey(e => e.RoleId)
-                    .OnDelete(DeleteBehavior.NoAction);
-
-                roleMenu.HasOne(o => o.MenuItem)
-                    .WithMany(u => u.RoleMenus)
-                    .HasForeignKey(e => e.MenuId)
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
-
-            modelBuilder.Entity<MenuPermission>(mp =>
-            {
-                mp.ToTable("MenuPermission");
-
-                mp.HasKey(l => new { l.RoleMenuId, l.PermissionId });
-
-                mp.HasOne(o => o.Permission)
-                    .WithMany(i => i.MenuPermissions)
-                    .IsRequired();
-
-                mp.HasOne(o => o.RoleMenu)
-                    .WithMany(i => i.Permissions)
-                    .IsRequired();
-            });
-
-            modelBuilder.Entity<Identity.Permission>(mp =>
-            {
-                mp.ToTable("Permission");
-
-                mp.HasKey(l => l.Id);
-
-                mp.HasMany(o => o.MenuPermissions)
-                    .WithOne(i => i.Permission)
-                    .HasForeignKey(y => y.PermissionId);
-            });
-
-            modelBuilder.Entity<V_Menu>()
-                .HasKey(v => new { v.menuID }); // Composite key for V_Menu
-
-            modelBuilder.Entity<V_Permission_RoleMenu>()
-                .HasKey(v => new { v.rolemenuID }); // Composite key for V_Permission_RoleMenu
-
-            modelBuilder.Entity<V_Role_Menu>()
-                .HasKey(v => new { v.rolemenuID }); // Composite key for V_Role_Menu
-
-            //Constraints for CafeteriaDB
 
             modelBuilder.Entity<UserRole>()
                 .HasNoKey();

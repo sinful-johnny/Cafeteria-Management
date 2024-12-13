@@ -1,0 +1,970 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="cafeteria_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ADMIN">
+          <Key>
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_ADMIN" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="255" />
+          <Property Name="PASSWORDHASH" Type="varbinary" MaxLength="64" />
+          <Property Name="SALT" Type="varbinary" MaxLength="16" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CAFETERIA_TABLE">
+          <Key>
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_TABLE" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="X_COORDINATE" Type="float" />
+          <Property Name="Y_COORDINATE" Type="float" />
+          <Property Name="ID_SHAPE" Type="varchar" MaxLength="5" />
+          <Property Name="ID_CANVA" Type="varchar" MaxLength="5" />
+          <Property Name="ID_ADMIN" Type="varchar" MaxLength="5" />
+          <Property Name="TABLE_STATUS" Type="varchar" MaxLength="50" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CANVA">
+          <Key>
+            <PropertyRef Name="ID_CANVA" />
+          </Key>
+          <Property Name="ID_CANVA" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="WIDTH" Type="float" />
+          <Property Name="HEIGHT" Type="float" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CANVA_ADMIN">
+          <Key>
+            <PropertyRef Name="ID_CANVA" />
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_CANVA" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="ID_ADMIN" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="LOGIN_STATUS" Type="varchar" MaxLength="50" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="FOOD_TABLE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_FOOD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="ID_TABLE" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="AMOUNT_IN_TABLE" Type="int" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="FOOD_TYPE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+          </Key>
+          <Property Name="ID_FOOD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="FOOD_NAME" Type="varchar" MaxLength="255" />
+          <Property Name="FOOD_TYPENAME" Type="varchar" MaxLength="255" />
+          <Property Name="AMOUNT_LEFT" Type="int" />
+          <Property Name="PRICE" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="FOOD_TYPE_STATUS" Type="varchar" MaxLength="50" />
+          <Property Name="IMAGE_LINK" Type="varchar" MaxLength="255" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SHAPE_TYPE">
+          <Key>
+            <PropertyRef Name="ID_SHAPE" />
+          </Key>
+          <Property Name="ID_SHAPE" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="WIDTH" Type="float" />
+          <Property Name="HEIGHT" Type="float" />
+          <Property Name="RADIUS" Type="float" />
+          <Property Name="MIDPOINT_X_COORDINATE" Type="float" />
+          <Property Name="MIDPOINT_Y_COORDINATE" Type="float" />
+          <Property Name="SHAPE_TYPENAME" Type="varchar" MaxLength="50" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'cafeteria_DB.dbo.V_ADMIN_CANVA_ADMIN' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="V_ADMIN_CANVA_ADMIN">
+          <Property Name="LOGIN_STATUS" Type="varchar" MaxLength="50" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'cafeteria_DB.dbo.V_ADMIN_FOOD_TABLE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_ADMIN_FOOD_TABLE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_FOOD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="ID_TABLE" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="AMOUNT_IN_TABLE" Type="int" />
+          <Property Name="CREATED_AT" Type="datetime" />
+          <Property Name="UPDATE_AT" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'cafeteria_DB.dbo.V_ADMIN_INFOR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_ADMIN_INFOR">
+          <Key>
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_ADMIN" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'cafeteria_DB.dbo.V_ADMIN_TABLE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_ADMIN_TABLE">
+          <Key>
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_TABLE" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="ID_SHAPE" Type="varchar" MaxLength="5" />
+          <Property Name="TABLE_STATUS" Type="varchar" MaxLength="50" />
+          <Property Name="X_COORDINATE" Type="float" />
+          <Property Name="Y_COORDINATE" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'cafeteria_DB.dbo.V_ADMIN_UPDATE_DELETE_INFOR' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="V_ADMIN_UPDATE_DELETE_INFOR">
+          <Property Name="EMAIL" Type="varchar" MaxLength="255" />
+          <Property Name="PASSWORDHASH" Type="varbinary" MaxLength="64" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'cafeteria_DB.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="database_firewall_rules">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="name" />
+            <PropertyRef Name="start_ip_address" />
+            <PropertyRef Name="end_ip_address" />
+            <PropertyRef Name="create_date" />
+            <PropertyRef Name="modify_date" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="start_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="end_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="create_date" Type="datetime" Nullable="false" />
+          <Property Name="modify_date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__CAFETERIA__ID_SH__6C190EBB">
+          <End Role="SHAPE_TYPE" Type="Self.SHAPE_TYPE" Multiplicity="0..1" />
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SHAPE_TYPE">
+              <PropertyRef Name="ID_SHAPE" />
+            </Principal>
+            <Dependent Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_SHAPE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CAFETERIA_TABLE__6D0D32F4">
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="0..1" />
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_CANVA" />
+              <PropertyRef Name="ID_ADMIN" />
+            </Principal>
+            <Dependent Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_CANVA" />
+              <PropertyRef Name="ID_ADMIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CANVA_ADM__ID_AD__6754599E">
+          <End Role="ADMIN" Type="Self.ADMIN" Multiplicity="1" />
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ADMIN">
+              <PropertyRef Name="ID_ADMIN" />
+            </Principal>
+            <Dependent Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_ADMIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CANVA_ADM__ID_CA__66603565">
+          <End Role="CANVA" Type="Self.CANVA" Multiplicity="1" />
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CANVA">
+              <PropertyRef Name="ID_CANVA" />
+            </Principal>
+            <Dependent Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_CANVA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FOOD_TABL__ID_FO__71D1E811">
+          <End Role="FOOD_TYPE" Type="Self.FOOD_TYPE" Multiplicity="1" />
+          <End Role="FOOD_TABLE" Type="Self.FOOD_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD_TYPE">
+              <PropertyRef Name="ID_FOOD" />
+            </Principal>
+            <Dependent Role="FOOD_TABLE">
+              <PropertyRef Name="ID_FOOD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FOOD_TABL__ID_TA__72C60C4A">
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="1" />
+          <End Role="FOOD_TABLE" Type="Self.FOOD_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_TABLE" />
+            </Principal>
+            <Dependent Role="FOOD_TABLE">
+              <PropertyRef Name="ID_TABLE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ADD_ROLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CheckCanva_AdminExists" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+          <Parameter Name="ID_ADMIN" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="DeleteCanva" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetAllFoodType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllShapeTypes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="InsertCanva" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WIDTH" Type="float" Mode="In" />
+          <Parameter Name="HEIGHT" Type="float" Mode="In" />
+        </Function>
+        <Function Name="SelectAllCanva" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectIdCanva" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADMIN_CLEAR_TABLEFOOD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_TABLE" Type="varchar" Mode="In" />
+          <Parameter Name="ID_FOOD" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_DELETETABLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_TABLE" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_INSERT_TABLEFOOD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_TABLE" Type="varchar" Mode="In" />
+          <Parameter Name="ID_FOOD" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_INSERTTABLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+          <Parameter Name="ID_SHAPE" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_LOAD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_LOGIN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_REGISTER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="PASSWORD" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADMIN_UPDATETABLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_TABLE" Type="varchar" Mode="In" />
+          <Parameter Name="X_COORDINATE" Type="float" Mode="In" />
+          <Parameter Name="Y_COORDINATE" Type="float" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_CANVA_LOGINSTATUS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+          <Parameter Name="ResponseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_CANVA_LOGOUTSTATUS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID_CANVA" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="cafeteria_DBModelStoreContainer">
+          <EntitySet Name="ADMIN" EntityType="Self.ADMIN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAFETERIA_TABLE" EntityType="Self.CAFETERIA_TABLE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CANVA" EntityType="Self.CANVA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CANVA_ADMIN" EntityType="Self.CANVA_ADMIN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FOOD_TABLE" EntityType="Self.FOOD_TABLE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FOOD_TYPE" EntityType="Self.FOOD_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SHAPE_TYPE" EntityType="Self.SHAPE_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="V_ADMIN_FOOD_TABLE" EntityType="Self.V_ADMIN_FOOD_TABLE" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_ADMIN_FOOD_TABLE].[ID_FOOD] AS [ID_FOOD], 
+    [V_ADMIN_FOOD_TABLE].[ID_TABLE] AS [ID_TABLE], 
+    [V_ADMIN_FOOD_TABLE].[AMOUNT_IN_TABLE] AS [AMOUNT_IN_TABLE], 
+    [V_ADMIN_FOOD_TABLE].[CREATED_AT] AS [CREATED_AT], 
+    [V_ADMIN_FOOD_TABLE].[UPDATE_AT] AS [UPDATE_AT]
+    FROM [dbo].[V_ADMIN_FOOD_TABLE] AS [V_ADMIN_FOOD_TABLE]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_ADMIN_INFOR" EntityType="Self.V_ADMIN_INFOR" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_ADMIN_INFOR].[ID_ADMIN] AS [ID_ADMIN], 
+    [V_ADMIN_INFOR].[EMAIL] AS [EMAIL]
+    FROM [dbo].[V_ADMIN_INFOR] AS [V_ADMIN_INFOR]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_ADMIN_TABLE" EntityType="Self.V_ADMIN_TABLE" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_ADMIN_TABLE].[ID_TABLE] AS [ID_TABLE], 
+    [V_ADMIN_TABLE].[ID_SHAPE] AS [ID_SHAPE], 
+    [V_ADMIN_TABLE].[TABLE_STATUS] AS [TABLE_STATUS], 
+    [V_ADMIN_TABLE].[X_COORDINATE] AS [X_COORDINATE], 
+    [V_ADMIN_TABLE].[Y_COORDINATE] AS [Y_COORDINATE]
+    FROM [dbo].[V_ADMIN_TABLE] AS [V_ADMIN_TABLE]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
+            <DefiningQuery>SELECT 
+    [database_firewall_rules].[id] AS [id], 
+    [database_firewall_rules].[name] AS [name], 
+    [database_firewall_rules].[start_ip_address] AS [start_ip_address], 
+    [database_firewall_rules].[end_ip_address] AS [end_ip_address], 
+    [database_firewall_rules].[create_date] AS [create_date], 
+    [database_firewall_rules].[modify_date] AS [modify_date]
+    FROM [sys].[database_firewall_rules] AS [database_firewall_rules]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__CAFETERIA__ID_SH__6C190EBB" Association="Self.FK__CAFETERIA__ID_SH__6C190EBB">
+            <End Role="SHAPE_TYPE" EntitySet="SHAPE_TYPE" />
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CAFETERIA_TABLE__6D0D32F4" Association="Self.FK__CAFETERIA_TABLE__6D0D32F4">
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CANVA_ADM__ID_AD__6754599E" Association="Self.FK__CANVA_ADM__ID_AD__6754599E">
+            <End Role="ADMIN" EntitySet="ADMIN" />
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CANVA_ADM__ID_CA__66603565" Association="Self.FK__CANVA_ADM__ID_CA__66603565">
+            <End Role="CANVA" EntitySet="CANVA" />
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FOOD_TABL__ID_FO__71D1E811" Association="Self.FK__FOOD_TABL__ID_FO__71D1E811">
+            <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
+            <End Role="FOOD_TABLE" EntitySet="FOOD_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FOOD_TABL__ID_TA__72C60C4A" Association="Self.FK__FOOD_TABL__ID_TA__72C60C4A">
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+            <End Role="FOOD_TABLE" EntitySet="FOOD_TABLE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cafeteria_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ADMIN">
+          <Key>
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_ADMIN" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="PASSWORDHASH" Type="Binary" MaxLength="64" FixedLength="false" />
+          <Property Name="SALT" Type="Binary" MaxLength="16" FixedLength="false" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CANVA_ADMIN" Relationship="Self.FK__CANVA_ADM__ID_AD__6754599E" FromRole="ADMIN" ToRole="CANVA_ADMIN" />
+        </EntityType>
+        <EntityType Name="CAFETERIA_TABLE">
+          <Key>
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="X_COORDINATE" Type="Double" />
+          <Property Name="Y_COORDINATE" Type="Double" />
+          <Property Name="ID_SHAPE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ID_CANVA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ID_ADMIN" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="TABLE_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="SHAPE_TYPE" Relationship="Self.FK__CAFETERIA__ID_SH__6C190EBB" FromRole="CAFETERIA_TABLE" ToRole="SHAPE_TYPE" />
+          <NavigationProperty Name="CANVA_ADMIN" Relationship="Self.FK__CAFETERIA_TABLE__6D0D32F4" FromRole="CAFETERIA_TABLE" ToRole="CANVA_ADMIN" />
+          <NavigationProperty Name="FOOD_TABLE" Relationship="Self.FK__FOOD_TABL__ID_TA__72C60C4A" FromRole="CAFETERIA_TABLE" ToRole="FOOD_TABLE" />
+        </EntityType>
+        <EntityType Name="CANVA">
+          <Key>
+            <PropertyRef Name="ID_CANVA" />
+          </Key>
+          <Property Name="ID_CANVA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="WIDTH" Type="Double" />
+          <Property Name="HEIGHT" Type="Double" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CANVA_ADMIN" Relationship="Self.FK__CANVA_ADM__ID_CA__66603565" FromRole="CANVA" ToRole="CANVA_ADMIN" />
+        </EntityType>
+        <EntityType Name="CANVA_ADMIN">
+          <Key>
+            <PropertyRef Name="ID_CANVA" />
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_CANVA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_ADMIN" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LOGIN_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ADMIN" Relationship="Self.FK__CANVA_ADM__ID_AD__6754599E" FromRole="CANVA_ADMIN" ToRole="ADMIN" />
+          <NavigationProperty Name="CAFETERIA_TABLE" Relationship="Self.FK__CAFETERIA_TABLE__6D0D32F4" FromRole="CANVA_ADMIN" ToRole="CAFETERIA_TABLE" />
+          <NavigationProperty Name="CANVA" Relationship="Self.FK__CANVA_ADM__ID_CA__66603565" FromRole="CANVA_ADMIN" ToRole="CANVA" />
+        </EntityType>
+        <EntityType Name="FOOD_TABLE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_FOOD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AMOUNT_IN_TABLE" Type="Int32" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CAFETERIA_TABLE" Relationship="Self.FK__FOOD_TABL__ID_TA__72C60C4A" FromRole="FOOD_TABLE" ToRole="CAFETERIA_TABLE" />
+          <NavigationProperty Name="FOOD_TYPE" Relationship="Self.FK__FOOD_TABL__ID_FO__71D1E811" FromRole="FOOD_TABLE" ToRole="FOOD_TYPE" />
+        </EntityType>
+        <EntityType Name="FOOD_TYPE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+          </Key>
+          <Property Name="ID_FOOD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FOOD_NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="FOOD_TYPENAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="AMOUNT_LEFT" Type="Int32" />
+          <Property Name="PRICE" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="FOOD_TYPE_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IMAGE_LINK" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="FOOD_TABLE" Relationship="Self.FK__FOOD_TABL__ID_FO__71D1E811" FromRole="FOOD_TYPE" ToRole="FOOD_TABLE" />
+        </EntityType>
+        <EntityType Name="SHAPE_TYPE">
+          <Key>
+            <PropertyRef Name="ID_SHAPE" />
+          </Key>
+          <Property Name="ID_SHAPE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="WIDTH" Type="Double" />
+          <Property Name="HEIGHT" Type="Double" />
+          <Property Name="RADIUS" Type="Double" />
+          <Property Name="MIDPOINT_X_COORDINATE" Type="Double" />
+          <Property Name="MIDPOINT_Y_COORDINATE" Type="Double" />
+          <Property Name="SHAPE_TYPENAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CAFETERIA_TABLE" Relationship="Self.FK__CAFETERIA__ID_SH__6C190EBB" FromRole="SHAPE_TYPE" ToRole="CAFETERIA_TABLE" />
+        </EntityType>
+        <EntityType Name="V_ADMIN_FOOD_TABLE">
+          <Key>
+            <PropertyRef Name="ID_FOOD" />
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_FOOD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AMOUNT_IN_TABLE" Type="Int32" />
+          <Property Name="CREATED_AT" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_AT" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="V_ADMIN_INFOR">
+          <Key>
+            <PropertyRef Name="ID_ADMIN" />
+          </Key>
+          <Property Name="ID_ADMIN" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="V_ADMIN_TABLE">
+          <Key>
+            <PropertyRef Name="ID_TABLE" />
+          </Key>
+          <Property Name="ID_TABLE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_SHAPE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="TABLE_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="X_COORDINATE" Type="Double" />
+          <Property Name="Y_COORDINATE" Type="Double" />
+        </EntityType>
+        <EntityType Name="database_firewall_rules">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="name" />
+            <PropertyRef Name="start_ip_address" />
+            <PropertyRef Name="end_ip_address" />
+            <PropertyRef Name="create_date" />
+            <PropertyRef Name="modify_date" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="start_ip_address" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="end_ip_address" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="create_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modify_date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <Association Name="FK__CANVA_ADM__ID_AD__6754599E">
+          <End Role="ADMIN" Type="Self.ADMIN" Multiplicity="1" />
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ADMIN">
+              <PropertyRef Name="ID_ADMIN" />
+            </Principal>
+            <Dependent Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_ADMIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CAFETERIA__ID_SH__6C190EBB">
+          <End Role="SHAPE_TYPE" Type="Self.SHAPE_TYPE" Multiplicity="0..1" />
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SHAPE_TYPE">
+              <PropertyRef Name="ID_SHAPE" />
+            </Principal>
+            <Dependent Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_SHAPE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CAFETERIA_TABLE__6D0D32F4">
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="0..1" />
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_CANVA" />
+              <PropertyRef Name="ID_ADMIN" />
+            </Principal>
+            <Dependent Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_CANVA" />
+              <PropertyRef Name="ID_ADMIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FOOD_TABL__ID_TA__72C60C4A">
+          <End Role="CAFETERIA_TABLE" Type="Self.CAFETERIA_TABLE" Multiplicity="1" />
+          <End Role="FOOD_TABLE" Type="Self.FOOD_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAFETERIA_TABLE">
+              <PropertyRef Name="ID_TABLE" />
+            </Principal>
+            <Dependent Role="FOOD_TABLE">
+              <PropertyRef Name="ID_TABLE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CANVA_ADM__ID_CA__66603565">
+          <End Role="CANVA" Type="Self.CANVA" Multiplicity="1" />
+          <End Role="CANVA_ADMIN" Type="Self.CANVA_ADMIN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CANVA">
+              <PropertyRef Name="ID_CANVA" />
+            </Principal>
+            <Dependent Role="CANVA_ADMIN">
+              <PropertyRef Name="ID_CANVA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FOOD_TABL__ID_FO__71D1E811">
+          <End Role="FOOD_TYPE" Type="Self.FOOD_TYPE" Multiplicity="1" />
+          <End Role="FOOD_TABLE" Type="Self.FOOD_TABLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD_TYPE">
+              <PropertyRef Name="ID_FOOD" />
+            </Principal>
+            <Dependent Role="FOOD_TABLE">
+              <PropertyRef Name="ID_FOOD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cafeteria_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ADMINs" EntityType="Self.ADMIN" />
+          <EntitySet Name="CAFETERIA_TABLE" EntityType="Self.CAFETERIA_TABLE" />
+          <EntitySet Name="CANVAs" EntityType="Self.CANVA" />
+          <EntitySet Name="CANVA_ADMIN" EntityType="Self.CANVA_ADMIN" />
+          <EntitySet Name="FOOD_TABLE" EntityType="Self.FOOD_TABLE" />
+          <EntitySet Name="FOOD_TYPE" EntityType="Self.FOOD_TYPE" />
+          <EntitySet Name="SHAPE_TYPE" EntityType="Self.SHAPE_TYPE" />
+          <EntitySet Name="V_ADMIN_FOOD_TABLE" EntityType="Self.V_ADMIN_FOOD_TABLE" />
+          <EntitySet Name="V_ADMIN_INFOR" EntityType="Self.V_ADMIN_INFOR" />
+          <EntitySet Name="V_ADMIN_TABLE" EntityType="Self.V_ADMIN_TABLE" />
+          <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" />
+          <AssociationSet Name="FK__CANVA_ADM__ID_AD__6754599E" Association="Self.FK__CANVA_ADM__ID_AD__6754599E">
+            <End Role="ADMIN" EntitySet="ADMINs" />
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CAFETERIA__ID_SH__6C190EBB" Association="Self.FK__CAFETERIA__ID_SH__6C190EBB">
+            <End Role="SHAPE_TYPE" EntitySet="SHAPE_TYPE" />
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CAFETERIA_TABLE__6D0D32F4" Association="Self.FK__CAFETERIA_TABLE__6D0D32F4">
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FOOD_TABL__ID_TA__72C60C4A" Association="Self.FK__FOOD_TABL__ID_TA__72C60C4A">
+            <End Role="CAFETERIA_TABLE" EntitySet="CAFETERIA_TABLE" />
+            <End Role="FOOD_TABLE" EntitySet="FOOD_TABLE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CANVA_ADM__ID_CA__66603565" Association="Self.FK__CANVA_ADM__ID_CA__66603565">
+            <End Role="CANVA" EntitySet="CANVAs" />
+            <End Role="CANVA_ADMIN" EntitySet="CANVA_ADMIN" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FOOD_TABL__ID_FO__71D1E811" Association="Self.FK__FOOD_TABL__ID_FO__71D1E811">
+            <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
+            <End Role="FOOD_TABLE" EntitySet="FOOD_TABLE" />
+          </AssociationSet>
+          <FunctionImport Name="ADD_ROLE" />
+          <FunctionImport Name="CheckCanva_AdminExists">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+            <Parameter Name="ID_ADMIN" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteCanva">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllFoodType" ReturnType="Collection(cafeteria_DBModel.GetAllFoodType_Result)" />
+          <FunctionImport Name="GetAllShapeTypes" ReturnType="Collection(cafeteria_DBModel.GetAllShapeTypes_Result)" />
+          <FunctionImport Name="InsertCanva" ReturnType="Collection(String)">
+            <Parameter Name="WIDTH" Mode="In" Type="Double" />
+            <Parameter Name="HEIGHT" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="SelectAllCanva" ReturnType="Collection(cafeteria_DBModel.SelectAllCanva_Result)" />
+          <FunctionImport Name="SelectIdCanva" ReturnType="Collection(cafeteria_DBModel.SelectIdCanva_Result)">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_CLEAR_TABLEFOOD">
+            <Parameter Name="ID_TABLE" Mode="In" Type="String" />
+            <Parameter Name="ID_FOOD" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_DELETETABLE">
+            <Parameter Name="ID_TABLE" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_INSERT_TABLEFOOD">
+            <Parameter Name="ID_TABLE" Mode="In" Type="String" />
+            <Parameter Name="ID_FOOD" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_INSERTTABLE">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+            <Parameter Name="ID_SHAPE" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_LOAD" ReturnType="Collection(cafeteria_DBModel.sp_ADMIN_LOAD_Result)">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_LOGIN">
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_REGISTER">
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="PASSWORD" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ADMIN_UPDATETABLE">
+            <Parameter Name="ID_TABLE" Mode="In" Type="String" />
+            <Parameter Name="X_COORDINATE" Mode="In" Type="Double" />
+            <Parameter Name="Y_COORDINATE" Mode="In" Type="Double" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_CANVA_LOGINSTATUS">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+            <Parameter Name="ResponseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_CANVA_LOGOUTSTATUS">
+            <Parameter Name="ID_CANVA" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetAllFoodType_Result">
+          <Property Type="String" Name="ID_FOOD" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="FOOD_NAME" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="FOOD_TYPENAME" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="AMOUNT_LEFT" Nullable="true" />
+          <Property Type="Decimal" Name="PRICE" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="String" Name="FOOD_TYPE_STATUS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IMAGE_LINK" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="CREATED_AT" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UPDATE_AT" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="GetAllShapeTypes_Result">
+          <Property Type="String" Name="ID_SHAPE" Nullable="false" MaxLength="5" />
+          <Property Type="Double" Name="WIDTH" Nullable="true" />
+          <Property Type="Double" Name="HEIGHT" Nullable="true" />
+          <Property Type="Double" Name="RADIUS" Nullable="true" />
+          <Property Type="Double" Name="MIDPOINT_X_COORDINATE" Nullable="true" />
+          <Property Type="Double" Name="MIDPOINT_Y_COORDINATE" Nullable="true" />
+          <Property Type="String" Name="SHAPE_TYPENAME" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATED_AT" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UPDATE_AT" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SelectAllCanva_Result">
+          <Property Type="String" Name="ID_CANVA" Nullable="false" MaxLength="5" />
+          <Property Type="Double" Name="WIDTH" Nullable="true" />
+          <Property Type="Double" Name="HEIGHT" Nullable="true" />
+          <Property Type="DateTime" Name="CREATED_AT" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UPDATE_AT" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SelectIdCanva_Result">
+          <Property Type="Double" Name="HEIGHT" Nullable="true" />
+          <Property Type="Double" Name="WIDTH" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_ADMIN_LOAD_Result">
+          <Property Type="String" Name="ID_TABLE" Nullable="false" MaxLength="5" />
+          <Property Type="Double" Name="X_COORDINATE" Nullable="true" />
+          <Property Type="Double" Name="Y_COORDINATE" Nullable="true" />
+          <Property Type="String" Name="TABLE_STATUS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SHAPE_TYPENAME" Nullable="true" MaxLength="50" />
+          <Property Type="Double" Name="HEIGHT" Nullable="true" />
+          <Property Type="Double" Name="WIDTH" Nullable="true" />
+          <Property Type="Double" Name="RADIUS" Nullable="true" />
+          <Property Type="String" Name="ID_FOOD" Nullable="false" MaxLength="5" />
+          <Property Type="Int32" Name="AMOUNT_IN_TABLE" Nullable="true" />
+          <Property Type="String" Name="FOOD_NAME" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="FOOD_TYPENAME" Nullable="true" MaxLength="255" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cafeteria_DBModelStoreContainer" CdmEntityContainer="cafeteria_DBEntities">
+          <EntitySetMapping Name="ADMINs">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.ADMIN">
+              <MappingFragment StoreEntitySet="ADMIN">
+                <ScalarProperty Name="ID_ADMIN" ColumnName="ID_ADMIN" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PASSWORDHASH" ColumnName="PASSWORDHASH" />
+                <ScalarProperty Name="SALT" ColumnName="SALT" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CAFETERIA_TABLE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.CAFETERIA_TABLE">
+              <MappingFragment StoreEntitySet="CAFETERIA_TABLE">
+                <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
+                <ScalarProperty Name="X_COORDINATE" ColumnName="X_COORDINATE" />
+                <ScalarProperty Name="Y_COORDINATE" ColumnName="Y_COORDINATE" />
+                <ScalarProperty Name="ID_SHAPE" ColumnName="ID_SHAPE" />
+                <ScalarProperty Name="ID_CANVA" ColumnName="ID_CANVA" />
+                <ScalarProperty Name="ID_ADMIN" ColumnName="ID_ADMIN" />
+                <ScalarProperty Name="TABLE_STATUS" ColumnName="TABLE_STATUS" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CANVAs">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.CANVA">
+              <MappingFragment StoreEntitySet="CANVA">
+                <ScalarProperty Name="ID_CANVA" ColumnName="ID_CANVA" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CANVA_ADMIN">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.CANVA_ADMIN">
+              <MappingFragment StoreEntitySet="CANVA_ADMIN">
+                <ScalarProperty Name="ID_CANVA" ColumnName="ID_CANVA" />
+                <ScalarProperty Name="ID_ADMIN" ColumnName="ID_ADMIN" />
+                <ScalarProperty Name="LOGIN_STATUS" ColumnName="LOGIN_STATUS" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FOOD_TABLE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.FOOD_TABLE">
+              <MappingFragment StoreEntitySet="FOOD_TABLE">
+                <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
+                <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
+                <ScalarProperty Name="AMOUNT_IN_TABLE" ColumnName="AMOUNT_IN_TABLE" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FOOD_TYPE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.FOOD_TYPE">
+              <MappingFragment StoreEntitySet="FOOD_TYPE">
+                <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
+                <ScalarProperty Name="FOOD_NAME" ColumnName="FOOD_NAME" />
+                <ScalarProperty Name="FOOD_TYPENAME" ColumnName="FOOD_TYPENAME" />
+                <ScalarProperty Name="AMOUNT_LEFT" ColumnName="AMOUNT_LEFT" />
+                <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+                <ScalarProperty Name="FOOD_TYPE_STATUS" ColumnName="FOOD_TYPE_STATUS" />
+                <ScalarProperty Name="IMAGE_LINK" ColumnName="IMAGE_LINK" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SHAPE_TYPE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.SHAPE_TYPE">
+              <MappingFragment StoreEntitySet="SHAPE_TYPE">
+                <ScalarProperty Name="ID_SHAPE" ColumnName="ID_SHAPE" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="RADIUS" ColumnName="RADIUS" />
+                <ScalarProperty Name="MIDPOINT_X_COORDINATE" ColumnName="MIDPOINT_X_COORDINATE" />
+                <ScalarProperty Name="MIDPOINT_Y_COORDINATE" ColumnName="MIDPOINT_Y_COORDINATE" />
+                <ScalarProperty Name="SHAPE_TYPENAME" ColumnName="SHAPE_TYPENAME" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_ADMIN_FOOD_TABLE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.V_ADMIN_FOOD_TABLE">
+              <MappingFragment StoreEntitySet="V_ADMIN_FOOD_TABLE">
+                <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
+                <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
+                <ScalarProperty Name="AMOUNT_IN_TABLE" ColumnName="AMOUNT_IN_TABLE" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_ADMIN_INFOR">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.V_ADMIN_INFOR">
+              <MappingFragment StoreEntitySet="V_ADMIN_INFOR">
+                <ScalarProperty Name="ID_ADMIN" ColumnName="ID_ADMIN" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_ADMIN_TABLE">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.V_ADMIN_TABLE">
+              <MappingFragment StoreEntitySet="V_ADMIN_TABLE">
+                <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
+                <ScalarProperty Name="ID_SHAPE" ColumnName="ID_SHAPE" />
+                <ScalarProperty Name="TABLE_STATUS" ColumnName="TABLE_STATUS" />
+                <ScalarProperty Name="X_COORDINATE" ColumnName="X_COORDINATE" />
+                <ScalarProperty Name="Y_COORDINATE" ColumnName="Y_COORDINATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="database_firewall_rules">
+            <EntityTypeMapping TypeName="cafeteria_DBModel.database_firewall_rules">
+              <MappingFragment StoreEntitySet="database_firewall_rules">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="start_ip_address" ColumnName="start_ip_address" />
+                <ScalarProperty Name="end_ip_address" ColumnName="end_ip_address" />
+                <ScalarProperty Name="create_date" ColumnName="create_date" />
+                <ScalarProperty Name="modify_date" ColumnName="modify_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ADD_ROLE" FunctionName="cafeteria_DBModel.Store.ADD_ROLE" />
+          <FunctionImportMapping FunctionImportName="CheckCanva_AdminExists" FunctionName="cafeteria_DBModel.Store.CheckCanva_AdminExists" />
+          <FunctionImportMapping FunctionImportName="DeleteCanva" FunctionName="cafeteria_DBModel.Store.DeleteCanva" />
+          <FunctionImportMapping FunctionImportName="GetAllFoodType" FunctionName="cafeteria_DBModel.Store.GetAllFoodType">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="cafeteria_DBModel.GetAllFoodType_Result">
+                <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
+                <ScalarProperty Name="FOOD_NAME" ColumnName="FOOD_NAME" />
+                <ScalarProperty Name="FOOD_TYPENAME" ColumnName="FOOD_TYPENAME" />
+                <ScalarProperty Name="AMOUNT_LEFT" ColumnName="AMOUNT_LEFT" />
+                <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+                <ScalarProperty Name="FOOD_TYPE_STATUS" ColumnName="FOOD_TYPE_STATUS" />
+                <ScalarProperty Name="IMAGE_LINK" ColumnName="IMAGE_LINK" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllShapeTypes" FunctionName="cafeteria_DBModel.Store.GetAllShapeTypes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="cafeteria_DBModel.GetAllShapeTypes_Result">
+                <ScalarProperty Name="ID_SHAPE" ColumnName="ID_SHAPE" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="RADIUS" ColumnName="RADIUS" />
+                <ScalarProperty Name="MIDPOINT_X_COORDINATE" ColumnName="MIDPOINT_X_COORDINATE" />
+                <ScalarProperty Name="MIDPOINT_Y_COORDINATE" ColumnName="MIDPOINT_Y_COORDINATE" />
+                <ScalarProperty Name="SHAPE_TYPENAME" ColumnName="SHAPE_TYPENAME" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InsertCanva" FunctionName="cafeteria_DBModel.Store.InsertCanva" />
+          <FunctionImportMapping FunctionImportName="SelectAllCanva" FunctionName="cafeteria_DBModel.Store.SelectAllCanva">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="cafeteria_DBModel.SelectAllCanva_Result">
+                <ScalarProperty Name="ID_CANVA" ColumnName="ID_CANVA" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="UPDATE_AT" ColumnName="UPDATE_AT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectIdCanva" FunctionName="cafeteria_DBModel.Store.SelectIdCanva">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="cafeteria_DBModel.SelectIdCanva_Result">
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_CLEAR_TABLEFOOD" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_CLEAR_TABLEFOOD" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_DELETETABLE" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_DELETETABLE" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_INSERT_TABLEFOOD" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_INSERT_TABLEFOOD" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_INSERTTABLE" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_INSERTTABLE" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_LOAD" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_LOAD">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="cafeteria_DBModel.sp_ADMIN_LOAD_Result">
+                <ScalarProperty Name="ID_TABLE" ColumnName="ID_TABLE" />
+                <ScalarProperty Name="X_COORDINATE" ColumnName="X_COORDINATE" />
+                <ScalarProperty Name="Y_COORDINATE" ColumnName="Y_COORDINATE" />
+                <ScalarProperty Name="TABLE_STATUS" ColumnName="TABLE_STATUS" />
+                <ScalarProperty Name="SHAPE_TYPENAME" ColumnName="SHAPE_TYPENAME" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="RADIUS" ColumnName="RADIUS" />
+                <ScalarProperty Name="ID_FOOD" ColumnName="ID_FOOD" />
+                <ScalarProperty Name="AMOUNT_IN_TABLE" ColumnName="AMOUNT_IN_TABLE" />
+                <ScalarProperty Name="FOOD_NAME" ColumnName="FOOD_NAME" />
+                <ScalarProperty Name="FOOD_TYPENAME" ColumnName="FOOD_TYPENAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_LOGIN" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_LOGIN" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_REGISTER" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_REGISTER" />
+          <FunctionImportMapping FunctionImportName="sp_ADMIN_UPDATETABLE" FunctionName="cafeteria_DBModel.Store.sp_ADMIN_UPDATETABLE" />
+          <FunctionImportMapping FunctionImportName="sp_CANVA_LOGINSTATUS" FunctionName="cafeteria_DBModel.Store.sp_CANVA_LOGINSTATUS" />
+          <FunctionImportMapping FunctionImportName="sp_CANVA_LOGOUTSTATUS" FunctionName="cafeteria_DBModel.Store.sp_CANVA_LOGOUTSTATUS" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="637e759335de4238bb62161328b7abe1" Name="Diagram1" ZoomLevel="55">
+        <EntityTypeShape EntityType="cafeteria_DBModel.ADMIN" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.CAFETERIA_TABLE" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.CANVA" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.CANVA_ADMIN" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.FOOD_TABLE" Width="1.5" PointX="7.5" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.FOOD_TYPE" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.SHAPE_TYPE" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.V_ADMIN_FOOD_TABLE" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.V_ADMIN_INFOR" Width="1.5" PointX="7.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.V_ADMIN_TABLE" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.database_firewall_rules" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__CANVA_ADM__ID_AD__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__CAFETERIA__ID_SH__6C190EBB" ManuallyRouted="false" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__CAFETERIA_TABLE__6D0D32F4" ManuallyRouted="false" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__FOOD_TABL__ID_TA__72C60C4A" ManuallyRouted="false" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__CANVA_ADM__ID_CA__66603565" ManuallyRouted="false" />
+        <AssociationConnector Association="cafeteria_DBModel.FK__FOOD_TABL__ID_FO__71D1E811" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="cafeteria_DBModel.V_ADMIN_TABLE_FOODs" Width="1.5" PointX="9.875" PointY="7.625" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

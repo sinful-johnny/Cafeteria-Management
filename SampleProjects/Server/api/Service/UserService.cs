@@ -1,7 +1,7 @@
 ﻿using api.Data;
 using api.Dtos.USER;
 using api.Interfaces;
-using CafeteriaDB;
+using cafeteriaDBLocalHost;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Service

@@ -2,7 +2,7 @@
 using api.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using CafeteriaDB;
+using cafeteriaDBLocalHost;
 
 namespace EFTut.Repository
 {
