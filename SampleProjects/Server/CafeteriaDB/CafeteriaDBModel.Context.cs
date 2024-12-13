@@ -15,10 +15,10 @@ namespace CafeteriaDB
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class cafeteriaDBEntities : DbContext
+    public partial class cafeteriaDBEntities1 : DbContext
     {
-        public cafeteriaDBEntities()
-            : base("name=cafeteriaDBEntities")
+        public cafeteriaDBEntities1()
+            : base("name=cafeteriaDBEntities1")
         {
         }
     
@@ -34,180 +34,19 @@ namespace CafeteriaDB
         public virtual DbSet<FOOD_TABLE> FOOD_TABLE { get; set; }
         public virtual DbSet<FOOD_TYPE> FOOD_TYPE { get; set; }
         public virtual DbSet<SHAPE_TYPE> SHAPE_TYPE { get; set; }
-        public virtual DbSet<V_ADMIN_FOOD_TABLE> V_ADMIN_FOOD_TABLE { get; set; }
-        public virtual DbSet<V_ADMIN_INFOR> V_ADMIN_INFOR { get; set; }
-        public virtual DbSet<V_ADMIN_TABLE> V_ADMIN_TABLE { get; set; }
     
-        public virtual int ADD_ROLE()
+        public virtual ObjectResult<V_ADMIN_FOODsOnTABLE> sp_ADMIN_FOODsOnTABLE()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ADD_ROLE");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<V_ADMIN_FOODsOnTABLE>("sp_ADMIN_FOODsOnTABLE");
         }
     
-        public virtual int DeleteCanva(string iD_CANVA)
+        public virtual ObjectResult<V_ADMIN_TABLEInCANVA> sp_ADMIN_TABLEInCANVA(string iD_CANVA)
         {
             var iD_CANVAParameter = iD_CANVA != null ?
                 new ObjectParameter("ID_CANVA", iD_CANVA) :
                 new ObjectParameter("ID_CANVA", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteCanva", iD_CANVAParameter);
-        }
-    
-        public virtual ObjectResult<GetCanva_Result> GetCanva()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCanva_Result>("GetCanva");
-        }
-    
-        public virtual ObjectResult<string> InsertCanva(Nullable<double> wIDTH, Nullable<double> hEIGHT)
-        {
-            var wIDTHParameter = wIDTH.HasValue ?
-                new ObjectParameter("WIDTH", wIDTH) :
-                new ObjectParameter("WIDTH", typeof(double));
-    
-            var hEIGHTParameter = hEIGHT.HasValue ?
-                new ObjectParameter("HEIGHT", hEIGHT) :
-                new ObjectParameter("HEIGHT", typeof(double));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("InsertCanva", wIDTHParameter, hEIGHTParameter);
-        }
-    
-        public virtual ObjectResult<SelectAllCanva_Result> SelectAllCanva()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SelectAllCanva_Result>("SelectAllCanva");
-        }
-    
-        public virtual ObjectResult<SelectIdCanva_Result> SelectIdCanva(string iD_CANVA)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SelectIdCanva_Result>("SelectIdCanva", iD_CANVAParameter);
-        }
-    
-        public virtual int sp_ADMIN_LOGIN(string email, string password, ObjectParameter responseMessage)
-        {
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var passwordParameter = password != null ?
-                new ObjectParameter("Password", password) :
-                new ObjectParameter("Password", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_LOGIN", emailParameter, passwordParameter, responseMessage);
-        }
-    
-        public virtual int sp_ADMIN_REGISTER(string email, string pASSWORD, ObjectParameter responseMessage)
-        {
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var pASSWORDParameter = pASSWORD != null ?
-                new ObjectParameter("PASSWORD", pASSWORD) :
-                new ObjectParameter("PASSWORD", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_REGISTER", emailParameter, pASSWORDParameter, responseMessage);
-        }
-    
-        public virtual int CheckCanva_AdminExists(string iD_CANVA, string iD_ADMIN)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            var iD_ADMINParameter = iD_ADMIN != null ?
-                new ObjectParameter("ID_ADMIN", iD_ADMIN) :
-                new ObjectParameter("ID_ADMIN", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CheckCanva_AdminExists", iD_CANVAParameter, iD_ADMINParameter);
-        }
-    
-        public virtual int sp_ADMIN_CLEAR_TABLEFOOD(string iD_TABLE, string iD_FOOD, ObjectParameter responseMessage)
-        {
-            var iD_TABLEParameter = iD_TABLE != null ?
-                new ObjectParameter("ID_TABLE", iD_TABLE) :
-                new ObjectParameter("ID_TABLE", typeof(string));
-    
-            var iD_FOODParameter = iD_FOOD != null ?
-                new ObjectParameter("ID_FOOD", iD_FOOD) :
-                new ObjectParameter("ID_FOOD", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_CLEAR_TABLEFOOD", iD_TABLEParameter, iD_FOODParameter, responseMessage);
-        }
-    
-        public virtual int sp_ADMIN_INSERT_TABLEFOOD(string iD_TABLE, string iD_FOOD, ObjectParameter responseMessage)
-        {
-            var iD_TABLEParameter = iD_TABLE != null ?
-                new ObjectParameter("ID_TABLE", iD_TABLE) :
-                new ObjectParameter("ID_TABLE", typeof(string));
-    
-            var iD_FOODParameter = iD_FOOD != null ?
-                new ObjectParameter("ID_FOOD", iD_FOOD) :
-                new ObjectParameter("ID_FOOD", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_INSERT_TABLEFOOD", iD_TABLEParameter, iD_FOODParameter, responseMessage);
-        }
-    
-        public virtual int sp_ADMIN_INSERTTABLE(string iD_CANVA, string iD_SHAPE, ObjectParameter responseMessage)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            var iD_SHAPEParameter = iD_SHAPE != null ?
-                new ObjectParameter("ID_SHAPE", iD_SHAPE) :
-                new ObjectParameter("ID_SHAPE", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_INSERTTABLE", iD_CANVAParameter, iD_SHAPEParameter, responseMessage);
-        }
-    
-        public virtual ObjectResult<sp_ADMIN_LOAD_Result> sp_ADMIN_LOAD(string iD_CANVA, ObjectParameter responseMessage)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ADMIN_LOAD_Result>("sp_ADMIN_LOAD", iD_CANVAParameter, responseMessage);
-        }
-    
-        public virtual int sp_ADMIN_UPDATETABLE(string iD_TABLE, Nullable<double> x_COORDINATE, Nullable<double> y_COORDINATE, string iD_ADMIN, ObjectParameter responseMessage)
-        {
-            var iD_TABLEParameter = iD_TABLE != null ?
-                new ObjectParameter("ID_TABLE", iD_TABLE) :
-                new ObjectParameter("ID_TABLE", typeof(string));
-    
-            var x_COORDINATEParameter = x_COORDINATE.HasValue ?
-                new ObjectParameter("X_COORDINATE", x_COORDINATE) :
-                new ObjectParameter("X_COORDINATE", typeof(double));
-    
-            var y_COORDINATEParameter = y_COORDINATE.HasValue ?
-                new ObjectParameter("Y_COORDINATE", y_COORDINATE) :
-                new ObjectParameter("Y_COORDINATE", typeof(double));
-    
-            var iD_ADMINParameter = iD_ADMIN != null ?
-                new ObjectParameter("ID_ADMIN", iD_ADMIN) :
-                new ObjectParameter("ID_ADMIN", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ADMIN_UPDATETABLE", iD_TABLEParameter, x_COORDINATEParameter, y_COORDINATEParameter, iD_ADMINParameter, responseMessage);
-        }
-    
-        public virtual int sp_CANVA_LOGINSTATUS(string iD_CANVA, ObjectParameter responseMessage)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_CANVA_LOGINSTATUS", iD_CANVAParameter, responseMessage);
-        }
-    
-        public virtual int sp_CANVA_LOGOUTSTATUS(string iD_CANVA)
-        {
-            var iD_CANVAParameter = iD_CANVA != null ?
-                new ObjectParameter("ID_CANVA", iD_CANVA) :
-                new ObjectParameter("ID_CANVA", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_CANVA_LOGOUTSTATUS", iD_CANVAParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<V_ADMIN_TABLEInCANVA>("sp_ADMIN_TABLEInCANVA", iD_CANVAParameter);
         }
     }
 }

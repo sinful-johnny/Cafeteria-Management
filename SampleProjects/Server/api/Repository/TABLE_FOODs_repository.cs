@@ -1,7 +1,7 @@
 ﻿using api.Data;
 using api.Dtos.FOOD_TABLE;
 using api.Interfaces;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository

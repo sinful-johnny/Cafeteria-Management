@@ -1,6 +1,6 @@
 ﻿using api.Data;
 using api.Interfaces;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository

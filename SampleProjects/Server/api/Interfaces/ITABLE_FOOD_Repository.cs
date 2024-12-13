@@ -1,5 +1,5 @@
 ﻿using api.Dtos.FOOD_TABLE;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 
 namespace api.Interfaces
 {

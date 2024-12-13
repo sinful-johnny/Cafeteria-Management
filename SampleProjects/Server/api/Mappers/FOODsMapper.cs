@@ -1,5 +1,5 @@
 ﻿using api.Dtos.FOOD;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace api.Mappers

@@ -1,4 +1,4 @@
-﻿using cafeteriaDBLocalHost;
+﻿using CafeteriaDB;
 
 namespace api.Dtos.CANVA
 {

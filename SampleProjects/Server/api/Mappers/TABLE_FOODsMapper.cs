@@ -1,6 +1,6 @@
 ﻿using api.Dtos.FOOD;
 using api.Dtos.FOOD_TABLE;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 using System.Runtime.CompilerServices;
 
 namespace api.Mappers

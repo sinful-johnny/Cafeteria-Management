@@ -11,8 +11,7 @@ namespace CafeteriaDB
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class ADMIN
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,12 +19,9 @@ namespace CafeteriaDB
         {
             this.CANVA_ADMIN = new HashSet<CANVA_ADMIN>();
         }
-
-        [Key]
+    
         public string ID_ADMIN { get; set; }
         public string EMAIL { get; set; }
-        public byte[] Salt { get; set; }
-        public byte[] PasswordHash { get; set; }
         public byte[] PASSWORDHASH { get; set; }
         public byte[] SALT { get; set; }
         public Nullable<System.DateTime> CREATED_AT { get; set; }

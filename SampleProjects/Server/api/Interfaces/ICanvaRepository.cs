@@ -1,4 +1,4 @@
-﻿using cafeteriaDBLocalHost;
+﻿using CafeteriaDB;
 using System.Data;
 
 namespace api.Interfaces

@@ -133,6 +133,11 @@ builder.Services.AddScoped<IAdminRepository, ADMIN_repository>();
 builder.Services.AddScoped<IFOOD_TYPE_Repository, FOOD_repository>();
 builder.Services.AddScoped<ISHAPE_TYPE_Repository, SHAPE_TYPE_repository>();
 builder.Services.AddScoped<ITABLE_FOOD_Repository, TABLE_FOODs_repository>();
+
+
+//Identity Scope
+builder.Services.AddScoped<IMenuResource_Repository, MenuResource_repository>();
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 

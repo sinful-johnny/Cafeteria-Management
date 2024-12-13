@@ -1,5 +1,5 @@
 ﻿using api.Dtos.USER;
-using cafeteriaDBLocalHost;
+using CafeteriaDB;
 
 namespace api.Interfaces
 {
