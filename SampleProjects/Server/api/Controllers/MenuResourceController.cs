@@ -1,10 +1,8 @@
-﻿using api.Dtos.MenuResource;
-using api.Interfaces;
+﻿using api.Interfaces;
 using api.Mappers;
 using api.Models.AuthModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata;
 
 namespace api.Controllers
 {
@@ -27,32 +25,36 @@ namespace api.Controllers
 
             var (menus, roleMenus, permissionRoles) = await _tableMenuResouceRepo.getAllMenuResource();
 
-            // Map permissions
-            var permissionMap = permissionRoles.Select(p => p.ToPermissionDto()).ToList();
+            var permissionDtos = permissionRoles.Select(p => p.ToPermissionDto()).ToList();
 
-            // Map roles and their permissions
+
             var rolePermissionMap = roleMenus
-            .GroupBy(r => r.menuID)
-            .ToDictionary(
-                group => group.Key,
-                group => group.Select(roleMenu =>
-                    roleMenu.ToRolePermissionDto(
-                        permissionMap.Where(p => p.rolemenuID == roleMenu.rolemenuID).ToList()
-                    )
-                ).ToList()
-            );
+        .GroupBy(rm => rm.menuID)
+        .ToDictionary(
+            g => g.Key,
+            g => g.Select(rm => new api.Models.AuthModels.RolePermission
+            {
+                RoleName = rm.roleName,
+                PermissionType = permissionRoles
+                    .Where(pr => pr.rolemenuID == rm.rolemenuID)
+                    .Select(pr => pr.permissionName)
+                    .ToList()
+            }).ToList()
+        );
 
             // Recursive function to build the menu tree
-            List<MenuResourceDto> BuildMenuTree(int? parentId)
+            List<api.Models.AuthModels.MenuResourceDto> BuildMenuTree(int? parentId)
             {
                 return menus
                     .Where(menu => menu.menuParent == parentId)
-                    .Select(menu => menu.ToMenuResourceDto(
-                        BuildMenuTree(menu.menuID), // Recursive call for nested children
-                        rolePermissionMap.ContainsKey(menu.menuID)
-                        ? rolePermissionMap[menu.menuID] // Roles for this menu
-                        : new List<RolePermissionDto>() // No roles found
-                    ))
+                    .Select(menu => new api.Models.AuthModels.MenuResourceDto
+                    {
+                        MenuName = menu.menuName,
+                        OwnerRoles = rolePermissionMap.ContainsKey(menu.menuID)
+                                        ? rolePermissionMap[menu.menuID]
+                                        : new List<api.Models.AuthModels.RolePermission>(),
+                        children = BuildMenuTree(menu.menuID) // Recursive call for nested children
+                    })
                     .ToList();
             }
 
