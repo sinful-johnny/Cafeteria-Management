@@ -19,11 +19,10 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddSingleton<TableListItemsService>();
-builder.Services.AddSingleton<FoodListItemService>();
 builder.Services.AddScoped<TableTypesService>();
 builder.Services.AddScoped<FoodTypesService>();
 builder.Services.AddScoped<TableService>();
+builder.Services.AddScoped<MenuResourceService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -37,13 +36,13 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RW", policy =>
+    options.AddPolicy("ReadWrite", policy =>
     {
-        policy.Requirements.Add(new ResourceRoleRequirement("RW"));
+        policy.Requirements.Add(new ResourceRoleRequirement("ReadWrite"));
     });
-    options.AddPolicy("R", policy =>
+    options.AddPolicy("Read", policy =>
     {
-        policy.Requirements.Add(new ResourceRoleRequirement("R"));
+        policy.Requirements.Add(new ResourceRoleRequirement("Read"));
     });
 });
 builder.Services.AddSingleton<IAuthorizationHandler, ResourceRoleAuthorizationHandler>();

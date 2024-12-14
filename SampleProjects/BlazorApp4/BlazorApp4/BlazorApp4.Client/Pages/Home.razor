@@ -11,6 +11,7 @@
 @inject TableTypesService TableTypeService;
 @inject FoodTypesService FoodService;
 @inject TableService TableService;
+@inject MenuResourceService MenuResourceService;
 
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
@@ -19,39 +20,48 @@
 
 @attribute [Authorize]
 
-<AuthorizeView>
-	@if(@context.User.Identity != null){
+<AuthorizeView Policy="Read" Resource="menuResource">
+	<Authorized>
+		@if (@context.User.Identity != null)
+		{
 
-		<PageTitle>@context.User.Identity.Name</PageTitle>
-	}else{
-		<PageTitle>Deez Nuts</PageTitle>
-	}
+			<PageTitle>@context.User.Identity.Name</PageTitle>
+		}
+		else
+		{
+			<PageTitle>Deez Nuts</PageTitle>
+		}
 
-	<div class="Global--Container">
-		<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
-		<div class="BodyStyle">
-			<Navbar 
-			selectedPage="@selectedPage" 
-			tableListItemsService="@tableListItemsService" 
-			foodListItemsService="@foodListItemsService" 
-			user="user"
-			/>
-			<div>
-				@if (rectangles != null)
+		<div class="Global--Container">
+			<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
+			<div class="BodyStyle">
+				<Navbar selectedPage="@selectedPage"
+						tableListItemsService="@tableListItemsService"
+						foodListItemsService="@foodListItemsService"
+						user="user" />
+				<div>
+					@if (rectangles != null)
+					{
+						<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+					}
+				</div>
+				@if (selectedTable != null)
 				{
-					<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+					<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
 				}
 			</div>
-			@if (selectedTable != null)
-			{
-				<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
-			}
 		</div>
-	</div>
+	</Authorized>
+	<NotAuthorized>
+		<h3>Access denied!</h3>
+	</NotAuthorized>
 </AuthorizeView>
 
 
 @code{
+	private string MenuName = "Home";
+	public MenuResource? menuResource { get; set; }
+
 	public List<ITable>? rectangles = null;
 	public ITable? selectedTable = null;
 	private string selectedPage = "Table";
@@ -114,9 +124,21 @@
 		canvasResponse = await TableService.GetTablesAsync();
 	}
 
+	private string? menuResourceResponse;
+	private async Task FetchResource()
+	{
+		menuResourceResponse = await MenuResourceService.GetResourceAsync("Home");
+	}
+
 
 	protected override async Task OnInitializedAsync()
 	{
+		await FetchResource();
+		if (menuResourceResponse != null){
+			menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
+			Console.WriteLine(JsonSerializer.Serialize(menuResource));
+		}
+
 		tableListItemsService = new TableListItemsService();
 		foodListItemsService = new FoodListItemService();
 
