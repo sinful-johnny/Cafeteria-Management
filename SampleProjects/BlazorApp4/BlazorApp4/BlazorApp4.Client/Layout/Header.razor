@@ -1,7 +1,17 @@
-﻿@using Microsoft.AspNetCore.Components
+﻿@using Class.Auth
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
+@attribute [Authorize]
 @inject NavigationManager NavigationManager
 
 @code {
+    [Parameter] public MenuResource? Resource { get; set; }
+
+    public MenuResource? TableButtonResource { get; set; }
+
+    public MenuResource? OrderButtonResource { get; set; }
+
     private string? _selectedPage;
     [Parameter]
     public string? selectedPage
@@ -23,6 +33,29 @@
     private bool isTableMenu = true;
     private bool isSaved = false;
     private bool isDropdown = false;
+
+    // protected override Task OnAfterRenderAsync(bool firstRender)
+    // {
+
+    //     if(firstRender && Resource != null){
+    //         TableButtonResource = Resource.Children?.FirstOrDefault(r => r.MenuName == "Table Button");
+    //         OrderButtonResource = Resource.Children?.FirstOrDefault(r => r.MenuName == "Order Button");
+    //         Console.WriteLine(JsonSerializer.Serialize(TableButtonResource, new JsonSerializerOptions { WriteIndented = true }));
+    //     }
+
+    //     return base.OnAfterRenderAsync(firstRender);
+    // }
+
+    protected override Task OnInitializedAsync()
+    {
+        if (Resource != null)
+        {
+            TableButtonResource = Resource.Children?.FirstOrDefault(r => r.MenuName == "Table Button");
+            OrderButtonResource = Resource.Children?.FirstOrDefault(r => r.MenuName == "Order Button");
+            //Console.WriteLine(JsonSerializer.Serialize(TableButtonResource, new JsonSerializerOptions { WriteIndented = true }));
+        }
+        return base.OnInitializedAsync();
+    }
 
     private async Task SetSelectedPage(string page)
     {
@@ -60,23 +93,38 @@
             <h3>Morning coffee</h3>
             <div class="function-selection">
                 <div class="nav-buttons">
-                    <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
-                            @onclick=@(async () => {
-                                await SetSelectedPage("Table");
-                                isTableMenu = true;})>
-                        Table
-                    </button>
-                    <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
-                            @onclick=@(async () => {
-                                await SetSelectedPage("Order");
-                                isTableMenu = false;})>
-                        Order
-                    </button>
+                    <AuthorizeView Resource="TableButtonResource" Policy="Read">
+                        <Authorized>
+                            <button class="nav-button @(selectedPage == "Table" ? "selected" : "")"
+                                    @onclick=@(async () => {
+                                    await SetSelectedPage("Table");
+                                    isTableMenu = true;})>
+                                Table
+                            </button>
+                        </Authorized>
+                        <NotAuthorized></NotAuthorized>
+                    </AuthorizeView>
+                    <AuthorizeView Resource="OrderButtonResource" Policy="Read">
+                        <Authorized>
+                            <button class="nav-button @(selectedPage == "Order" ? "selected" : "")"
+                                    @onclick=@(async () => {
+                                    await SetSelectedPage("Order");
+                                    isTableMenu = false;})>
+                                Order
+                            </button>
+                        </Authorized>
+                        <NotAuthorized></NotAuthorized>
+                    </AuthorizeView>
                 </div>
-                <button class="save-button-@(isSaved ? "Saved" : "Unsaved")"
-                        @onclick="Save">
-                    @(isSaved ? "Saved" : "Unsaved")
-                </button>
+                <AuthorizeView Resource="Resource" Policy="ReadWrite">
+                    <Authorized>
+                        <button class="save-button-@(isSaved ? "Saved" : "Unsaved")"
+                                @onclick="Save">
+                            @(isSaved ? "Saved" : "Unsaved")
+                        </button>
+                    </Authorized>
+                    <NotAuthorized></NotAuthorized>
+                </AuthorizeView>
                 <div class="underline"
                      style="left: @(selectedPage == "Table" ? "0px" : "64px")"></div>
             </div>

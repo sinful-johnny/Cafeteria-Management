@@ -32,5 +32,4 @@ builder.Services.AddScoped<TableService>();
 builder.Services.AddScoped<MenuResourceService>();
 builder.Services.AddSingleton<IAuthorizationHandler, ResourceRoleAuthorizationHandler>();
 
-
 await builder.Build().RunAsync();

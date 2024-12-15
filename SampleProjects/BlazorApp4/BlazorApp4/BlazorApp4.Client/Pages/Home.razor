@@ -24,7 +24,6 @@
 	<Authorized>
 		@if (@context.User.Identity != null)
 		{
-
 			<PageTitle>@context.User.Identity.Name</PageTitle>
 		}
 		else
@@ -33,22 +32,48 @@
 		}
 
 		<div class="Global--Container">
-			<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" />
+			<Header @bind-selectedPage="@selectedPage" SaveFunction="@Save" resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "Header")"/>
 			<div class="BodyStyle">
-				<Navbar selectedPage="@selectedPage"
-						tableListItemsService="@tableListItemsService"
-						foodListItemsService="@foodListItemsService"
-						user="user" />
+				<AuthorizeView Context="Navbar" Policy="Read" Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "Navbar")">
+					<Authorized>
+						<Navbar selectedPage="@selectedPage"
+								tableListItemsService="@tableListItemsService"
+								foodListItemsService="@foodListItemsService"
+								Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "Navbar")" />
+					</Authorized>
+					<NotAuthorized></NotAuthorized>
+				</AuthorizeView>
 				<div>
 					@if (rectangles != null)
 					{
-						<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+						<AuthorizeView Context="Canvas" Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "MainCanvas")" Policy="ReadWrite">
+							<Authorized>
+								<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
+							</Authorized>
+							<NotAuthorized>
+								<AuthorizeView Context="ReadOnlyCanvas" Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "MainCanvas")" Policy="Read">
+									<Authorized>
+										<ReadOnlyCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService"/>
+									</Authorized>
+									<NotAuthorized>You can not see the canvas!</NotAuthorized>
+								</AuthorizeView>
+							</NotAuthorized>
+						</AuthorizeView>
+						//<MainCanvas @bind-rectangles="rectangles" @bind-selectedTable="selectedTable" Log="@log" foodListItemService="@foodListItemsService" />
 					}
 				</div>
-				@if (selectedTable != null)
-				{
-					<PropertiesSideBar selectedTable="selectedTable" ClearTableFunc="@clearTable" />
-				}
+				<AuthorizeView Context="PropertiesSideBar" Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "PropertiesSideBar")" Policy="Read">
+					<Authorized>
+						@if (selectedTable != null)
+						{
+							<PropertiesSideBar Resource="@menuResource?.Children?.FirstOrDefault(r => r.MenuName == "PropertiesSideBar")"
+								FoodListItemService="foodListItemsService" 
+								selectedTable="selectedTable" 		   
+								ClearTableFunc="@clearTable" />
+						}
+					</Authorized>
+					<NotAuthorized></NotAuthorized>
+				</AuthorizeView>
 			</div>
 		</div>
 	</Authorized>
@@ -69,7 +94,7 @@
 	public TableListItemsService? tableListItemsService { get; set; }
 	public FoodListItemService? foodListItemsService { get; set; }
 
-	public ClaimsPrincipal user { get; set; }
+	public ClaimsPrincipal? user { get; set; }
 
 	[Inject]
 	public IJSRuntime? JS { get; set; }
@@ -136,7 +161,7 @@
 		await FetchResource();
 		if (menuResourceResponse != null){
 			menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
-			Console.WriteLine(JsonSerializer.Serialize(menuResource));
+			//Console.WriteLine(JsonSerializer.Serialize(menuResource));
 		}
 
 		tableListItemsService = new TableListItemsService();

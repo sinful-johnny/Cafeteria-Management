@@ -4,20 +4,24 @@
 @using Class.Services;
 
 @using Microsoft.AspNetCore.Authorization
-@using System.Security.Claims
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+@* @using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider *@
 
+<AuthorizeView>
+
+</AuthorizeView>
 <div class="admin-navbar">
     <div class="Search--Container">
         @* <SearchBar onSearch={onSearch} /> *@
-        @if(user != null){
+@*         @if(user != null){
             <ul>
                 @foreach (var claim in user.Claims)
                 {
                     <li>@claim.Type: @claim.Value</li>
                 }
             </ul>
-        }
+        } *@
 
     </div>
 
@@ -32,12 +36,14 @@
 </div>
 
 @code {
+    [Parameter] public MenuResource? Resource { get; set; }
+
     [Parameter] public string? selectedPage { get; set; }
 
     [Parameter] public TableListItemsService? tableListItemsService { get; set; }
 
     [Parameter] public FoodListItemService? foodListItemsService { get; set; }
 
-    [Parameter]
-    public ClaimsPrincipal? user { get; set; }
+    // [Parameter]
+    // public ClaimsPrincipal? user { get; set; }
 }

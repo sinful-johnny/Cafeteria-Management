@@ -10,7 +10,7 @@ namespace Class.Auth
             MenuResource resource)
         {
             // Access the policy name
-            var policyName = requirement.PolicyName; //RW; R;
+            var policyName = requirement.PolicyName; //ReadWrite; Read;
 
             // Check if the user is in any of the roles that define ownership of the resource
             if (resource.OwnerRoles.Any(

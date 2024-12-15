@@ -1,7 +1,10 @@
 ﻿@using BlazorApp2.Components
 @using Class
+@using Class.Auth
 @using Class.Services;
-@inject FoodListItemService foodListItemsService;
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@* @inject FoodListItemService foodListItemsService; *@
 
 <div class="admin-PropertiesBar">
     <div class="Title">
@@ -10,16 +13,22 @@
     <div class="CollaspsibleList--container">
         <FoodOnTableCollaspsibleList selectedTable="selectedTable" />
     </div>
-    @if(selectedTable != null && selectedTable.Foods.Count > 0)
-    {
-        <div class="ClearButton-Container">
-            <button class="ClearButton" @onclick="HandleClearTableClick">Clear the table</button>
-        </div>
-    }
-
+    <AuthorizeView Resource="Resource" Policy="ReadWrite">
+        <Authorized>
+            @if (selectedTable != null && selectedTable.Foods.Count > 0)
+            {
+                <div class="ClearButton-Container">
+                    <button class="ClearButton" @onclick="HandleClearTableClick">Clear the table</button>
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized></NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
+    [Parameter] public MenuResource? Resource { get; set; }
+    [Parameter] public FoodListItemService? FoodListItemService { get; set; }
     [Parameter] public ITable? selectedTable { get; set; }
     [Parameter] public EventCallback ClearTableFunc { get; set; }
 
