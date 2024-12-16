@@ -1,0 +1,317 @@
+﻿@page "/admin"
+
+<div class="admin-page">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin</h3>
+        </div>
+        <ul>
+            <li class="selected">
+                <a href="/admin">User</a>
+            </li>
+            <li><a href="/admin/role">Role</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="header">
+            <div class="header-content">
+                <label>User/All</label>
+                <a href="/Account/Login" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+
+        <!-- Filters, search and some buttons -->
+        <div class="upper-body-container">
+            <div class="filters">
+                <div class="filter-dropdown">
+                    <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Role)">Role</button>
+                    @if (ShowRoleDropdown)
+                    {
+                        <ul class="dropdown-menu">
+                            <li @onclick='() => SelectFilter(FilterType.Role, "Admin")'>Admin</li>
+                            <li @onclick='() => SelectFilter(FilterType.Role, "Manager")'>Manager</li>
+                            <li @onclick='() => SelectFilter(FilterType.Role, "Staff")'>Staff</li>
+                            <li @onclick='() => SelectFilter(FilterType.Role, "Customer")'>Customer</li>
+                        </ul>
+                    }
+                </div>
+                <div class="filter-dropdown">
+                    <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.EmailVerified)">Email Verified</button>
+                    @if (ShowEmailDropdown)
+                    {
+                        <ul class="dropdown-menu">
+                            <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Verified")'>Verified</li>
+                            <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Unverified")'>Unverified</li>
+                        </ul>
+                    }
+                </div>
+                <div class="filter-dropdown">
+                    <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.PhoneVerified)">Phone Number Verified</button>
+                    @if (ShowPhoneDropdown)
+                    {
+                        <ul class="dropdown-menu">
+                            <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Verified")'>Verified</li>
+                            <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Unverified")'>Unverified</li>
+                        </ul>
+                    }
+                </div>
+                <div class="filter-dropdown">
+                    <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Lockout)">Lockout</button>
+                    @if (ShowLockoutDropdown)
+                    {
+                        <ul class="dropdown-menu">
+                            <li @onclick='() => SelectFilter(FilterType.Lockout, " Locked")'>Locked</li>
+                            <li @onclick='() => SelectFilter(FilterType.Lockout, " Unlocked")'>Unlocked</li>
+                        </ul>
+                    }
+                </div>              
+            </div>
+            <div class="search-and-buttons">
+                <input type="text" placeholder="Search" bind="@SearchQuery">
+                <button style="border:none; outline:none; background-color:transparent;color:#441FCB">New</button>
+                <button style="border:none; outline:none; background-color:transparent;color:#DF0728">Delete</button>
+            </div>
+        </div>
+
+        <!-- Active Filters -->
+        <div class="active-filters">
+            @foreach (var filter in ActiveFilters)
+            {
+                <span class="active-filter">
+                    @filter.Value <button class="remove-filter" @onclick="() => RemoveFilter(filter.Key)">X</button>
+                </span>
+            }
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
+                        </th>
+                        <th>STT</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Email Verified</th>
+                        <th>Phone Number</th>
+                        <th>Phone Verified</th>
+                        <th>Role</th>
+                        <th>Lockout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in PaginatedUsers)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="checkbox-rounded" @bind="user.Selected" @onclick="() => ToggleRowSelection(user)" />
+                            </td>
+                            <td>@user.Id</td>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <div class="custom-select">
+                                    <select @onchange="@(e => user.EmailVerified = e.Value.ToString() == "Verified")">
+                                        <option value="Verified" selected="@(user.EmailVerified)">Verified</option>
+                                        <option value="Unverified" selected="@(user.EmailVerified == false)">Unverified</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>@user.PhoneNumber</td>
+                            <td>
+                                <div class="custom-select">
+                                    <select @onchange="@(e => user.PhoneVerified = e.Value.ToString() == "Verified")">
+                                        <option value="Verified" selected="@(user.PhoneVerified)">Verified</option>
+                                        <option value="Unverified" selected="@(user.PhoneVerified == false)">Unverified</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-select">
+                                    <select @onchange="@(e => user.Role = e.Value.ToString())">
+                                        <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                                        <option value="Manager" selected="@(user.Role == "Manager")">Manager</option>
+                                        <option value="Staff" selected="@(user.Role == "Staff")">Staff</option>                                       
+                                        <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>                                     
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" checked="@user.Locked" @onchange="() => ToggleLockout(user)" />
+                                    <span class="slider @(user.Locked ? "locked" : "unlocked")"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <div class="item-per-page">
+                <span>Rows per page:</span>
+                <select @onchange="UpdateRowsPerPage">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="choose-page">
+                <span>@(TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) page(s)</span>
+                <button @onclick="PreviousPage">&lt;</button>
+                <span>@CurrentPage</span>
+                <button @onclick="NextPage">&gt;</button>
+                <span>@(CurrentPage < (TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) ? (CurrentPage + 1) : "")</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private enum FilterType { Role, EmailVerified, PhoneVerified, Lockout }
+
+    private Dictionary<FilterType, string> ActiveFilters { get; set; } = new();
+
+    private bool ShowRoleDropdown { get; set; }
+    private bool ShowEmailDropdown { get; set; }
+    private bool ShowPhoneDropdown { get; set; }
+    private bool ShowLockoutDropdown { get; set; }
+
+    private string SearchQuery { get; set; }
+
+    private int RowsPerPage { get; set; } = 10;
+    private int CurrentPage { get; set; } = 1;
+    private int TotalRows { get; set; } = 12;
+
+    private List<User> Users { get; set; } = new()
+    {
+        new User { Id = 1, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 2, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
+        new User { Id = 3, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 4, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
+        new User { Id = 5, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 6, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 7, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
+        new User { Id = 8, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
+        new User { Id = 9, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 10, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 11, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
+        new User { Id = 12, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false }
+    };
+
+    private void updateRowCount()
+    {
+        TotalRows = Users.Count;
+    }
+
+    private void ToggleDropdown(FilterType filterType)
+    {
+        ShowRoleDropdown = filterType == FilterType.Role && !ShowRoleDropdown;
+        ShowEmailDropdown = filterType == FilterType.EmailVerified && !ShowEmailDropdown;
+        ShowPhoneDropdown = filterType == FilterType.PhoneVerified && !ShowPhoneDropdown;
+        ShowLockoutDropdown = filterType == FilterType.Lockout && !ShowLockoutDropdown;
+    }
+
+    // private void ToggleDropdown(FilterType filterType)
+    // {
+    //     Reset all dropdowns first
+    //     ShowRoleDropdown = false;
+    //     ShowEmailDropdown = false;
+    //     ShowPhoneDropdown = false;
+    //     ShowLockoutDropdown = false;
+    //     Toggle the clicked dropdown
+    //     switch (filterType)
+    //     {
+    //         case FilterType.Role:
+    //             ShowRoleDropdown = !ShowRoleDropdown;
+    //             break;
+    //         case FilterType.EmailVerified:
+    //             ShowEmailDropdown = !ShowEmailDropdown;
+    //             break;
+    //         case FilterType.PhoneVerified:
+    //             ShowPhoneDropdown = !ShowPhoneDropdown;
+    //             break;
+    //         case FilterType.Lockout:
+    //             ShowLockoutDropdown = !ShowLockoutDropdown;
+    //             break;
+    //     }
+    // }
+
+
+    private void SelectFilter(FilterType filterType, string value)
+    {
+        ActiveFilters[filterType] = value;
+        ToggleDropdown(filterType);
+    }
+
+    private void RemoveFilter(FilterType filterType)
+    {
+        ActiveFilters.Remove(filterType);
+    }
+
+    private List<User> users = new List<User>();
+    private bool selectAllChecked = false;
+
+    private void ToggleSelectAll()
+    {
+        selectAllChecked = !selectAllChecked;
+        foreach (var user in PaginatedUsers)
+        {
+            user.Selected = selectAllChecked;
+        }
+    }
+
+    private void ToggleRowSelection(User user)
+    {
+        user.Selected = !user.Selected;
+    }
+
+    private List<User> PaginatedUsers => Users
+    .Skip((CurrentPage - 1) * RowsPerPage)
+    .Take(RowsPerPage)
+    .ToList();
+
+    private void UpdateRowsPerPage(ChangeEventArgs e)
+    {
+        RowsPerPage = int.Parse(e.Value.ToString());
+        CurrentPage = 1; // Reset to first page
+    }
+
+    private void ToggleLockout(User user)
+    {
+        user.Locked = !user.Locked;
+    }
+
+    private void PreviousPage()
+    {
+        if (CurrentPage > 1) CurrentPage--;
+    }
+
+    private void NextPage()
+    {
+        if (CurrentPage * RowsPerPage < TotalRows) CurrentPage++;
+    }
+
+    public class User
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public bool EmailVerified { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneVerified { get; set; }
+        public string Role { get; set; }
+        public bool Locked { get; set; }
+        public bool Selected { get; set; }
+    }
+}
+
+

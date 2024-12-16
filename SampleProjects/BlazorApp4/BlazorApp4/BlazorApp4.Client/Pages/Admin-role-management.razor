@@ -1,0 +1,108 @@
+﻿@page "/admin/role/management"
+
+<div class="admin-page">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin</h3>
+        </div>
+        <ul>
+            <li><a href="/admin">User</a></li>
+            <li class="selected"><a href="/admin/role">Role</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="header">
+            <div class="header-content">
+                <label>Role/Role Management</label>
+                <a href="/Account/Login" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <div class="search-and-buttons">
+            <a href="/admin/role" >Back</a>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        @foreach (var role in Roles){
+                            <th>@role.RoleName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var permission in new[] { "TableTypePerm", "CanvasPerm", "FoodPerm", "OrderPerm", "UserPerm", "RolePerm" })
+                    {
+                        <tr>
+                            <td>@permission</td>
+                            @foreach (var role in Roles)
+                            {
+                                <td>
+                                    <div class="custom-select">
+                                        <select @onchange="(e) => UpdatePermission(role, permission, e.Value)">
+                                            @foreach (var option in new[] { "Read", "Read,Write", "No" })
+                                            {
+                                                <option value="@option" selected="@((string)role.GetType().GetProperty(permission)?.GetValue(role) == option)">
+                                                    @option
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private List<Role> Roles { get; set; } = new()
+    {
+        new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
+                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
+        new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
+                    FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
+        new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
+                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
+        new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
+                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
+    };
+    
+    private void UpdatePermission(Role role, string permission, object value)
+    {
+        var property = role.GetType().GetProperty(permission);
+        if (property != null)
+        {
+            property.SetValue(role, value.ToString());
+        }
+    }
+
+    public class Role
+    {
+        public int Id { get; set; }
+        public string RoleName { get; set; }
+        public string Description { get; set; }
+        public int Users { get; set; }
+        public bool Selected { get; set; }
+        public string TableTypePerm { get; set; }
+        public string CanvasPerm { get; set; }
+        public string FoodPerm { get; set; }
+        public string OrderPerm { get; set; }
+        public string UserPerm { get; set; }
+        public string RolePerm { get; set; }
+    }
+
+}
+
+

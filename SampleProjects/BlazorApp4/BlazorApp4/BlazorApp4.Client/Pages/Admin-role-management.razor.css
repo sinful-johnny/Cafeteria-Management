@@ -1,0 +1,238 @@
+﻿/* General Page Styling */
+.admin-page {
+    display: flex;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    background-color: #FFFFFF;
+}
+
+/* Sidebar container */
+.sidebar {
+    background-color: #2B3543;
+    color: #FFFFFF;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-header {
+    background-color: #252D39;
+    padding: 10px 10px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+    .sidebar ul li {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        font-size: 20px;
+    }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #8A8F99;
+            display: block;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li.selected a {
+            color: #FFFFFF;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .sidebar ul li.selected::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 120px;
+            height: 30px;
+            width: 2px;
+            background-color: #6A5ACD;
+            border-radius: 2px;
+        }
+
+        .sidebar ul li a:hover {
+            color: #FFFFFF;
+        }
+
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Header Styling */
+.header {
+    background-color: #F8F8F8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: space-between;
+    font-family: Arial, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 250px;
+    height: 60px;
+    width: 87%;
+    box-sizing: border-box;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .header-content label {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+/* Logout Button */
+.logout-btn {
+    text-decoration: none;
+    color: #331798;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.search-and-buttons {
+    padding: 70px;
+}
+
+    .search-and-buttons input[type="text"] {
+        border-radius: 8px;
+        background-color: #F8F8F8;
+        border: 1px solid #BDBCBF;
+    }
+
+/* User Table */
+.table-container {
+    width: 660px;
+    margin: auto 20px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0px;
+    overflow: auto;
+    font-family: Arial, sans-serif;
+}
+
+.checkbox-rounded {
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid black;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+}
+
+    .checkbox-rounded:checked {
+        background-color: gray;
+    }
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .user-table select {
+        border: none;
+        box-shadow: none;
+        outline: none;
+        appearance: none;
+        background-color: transparent;
+    }
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+}
+
+    .custom-select::before {
+        content: '▼';
+        position: absolute;
+        left: 0px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #575659;
+    }
+
+    .custom-select select {
+        padding-left: 25px;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        appearance: none;
+        background-color: transparent;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+td {
+    text-align: left;
+    padding: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #F8F8F8;
+}
+
+th {
+    text-align: left;
+    font-size: 15px;
+    padding: 10px;
+    border-bottom: 1.5px solid #919095;
+    background-color: #F8F8F8;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    width: 660px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+    .pagination button {
+        background-color: white;
+        color: #575659;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .pagination span {
+        color: #333;
+    }
