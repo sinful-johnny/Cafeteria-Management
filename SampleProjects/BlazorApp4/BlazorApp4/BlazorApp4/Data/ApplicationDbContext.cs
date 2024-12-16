@@ -10,6 +10,10 @@ namespace BlazorApp4.Data
         public required DbSet<Permission> Permissions { get; set; }
         public required DbSet<ApplicationRoleMenu> RoleMenus { get; set; }
 
+        public required DbSet<APIPermission> APIPermissions { get; set; }
+        public required DbSet<ApplicationAPI> ApplicationAPIs { get; set; }
+        public required DbSet<ApplicationRoleAPI> ApplicationRoleAPIs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -68,6 +72,23 @@ namespace BlazorApp4.Data
                 mp.HasMany(o => o.MenuPermissions)
                     .WithOne(i => i.Permission)
                     .HasForeignKey(y => y.PermissionId);
+            });
+
+            modelBuilder.Entity<ApplicationAPI>(item =>
+            {
+                item.ToTable("AspNetAPI");
+
+                item.HasMany(t => t.RoleApis)
+                    .WithOne(u => u.API)
+                    .HasForeignKey(r => r.ApiId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<APIPermission>(mp =>
+            {
+                mp.ToTable("ApiPermission");
+
+                mp.HasKey(l => new { l.RoleApiId, l.PermissionId });
             });
         }
     }
