@@ -29,8 +29,7 @@
             <div class="filters">
                 <div class="filter-dropdown">
                     <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Role)">Role</button>
-                    @if (ShowRoleDropdown)
-                    {
+                    @if (ShowRoleDropdown){
                         <ul class="dropdown-menu">
                             <li @onclick='() => SelectFilter(FilterType.Role, "Admin")'>Admin</li>
                             <li @onclick='() => SelectFilter(FilterType.Role, "Manager")'>Manager</li>
@@ -39,6 +38,8 @@
                         </ul>
                     }
                 </div>
+
+
                 <div class="filter-dropdown">
                     <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.EmailVerified)">Email Verified</button>
                     @if (ShowEmailDropdown)
@@ -81,9 +82,13 @@
         <div class="active-filters">
             @foreach (var filter in ActiveFilters)
             {
-                <span class="active-filter">
-                    @filter.Value <button class="remove-filter" @onclick="() => RemoveFilter(filter.Key)">X</button>
-                </span>
+                @foreach (var value in filter.Value)
+                {
+                    <span class="active-filter">
+                        @filter.Key - @value
+                        <button class="remove-filter" @onclick="() => RemoveFilter(filter.Key, value)">X</button>
+                    </span>
+                }
             }
         </div>
 
@@ -178,26 +183,25 @@
 @code {
     private enum FilterType { Role, EmailVerified, PhoneVerified, Lockout }
 
-    private Dictionary<FilterType, string> ActiveFilters { get; set; } = new();
+    private Dictionary<FilterType, List<string>> ActiveFilters { get; set; } = new();
 
-    private bool ShowRoleDropdown { get; set; }
-    private bool ShowEmailDropdown { get; set; }
-    private bool ShowPhoneDropdown { get; set; }
-    private bool ShowLockoutDropdown { get; set; }
+    private bool ShowRoleDropdown { get; set; } = false;
+    private bool ShowEmailDropdown { get; set; } = false;
+    private bool ShowPhoneDropdown { get; set; } = false;
+    private bool ShowLockoutDropdown { get; set; } = false;
 
     private string SearchQuery { get; set; }
 
     private int RowsPerPage { get; set; } = 10;
     private int CurrentPage { get; set; } = 1;
-    private int TotalRows { get; set; } = 12;
+    private int TotalRows { get; set; } = 11;
 
     private List<User> Users { get; set; } = new()
     {
         new User { Id = 1, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
         new User { Id = 2, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
         new User { Id = 3, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 4, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 5, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
+        new User { Id = 4, Username = "asdfasdf", Email = "kienphan11052003@gmail.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
         new User { Id = 6, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
         new User { Id = 7, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
         new User { Id = 8, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
@@ -214,48 +218,46 @@
 
     private void ToggleDropdown(FilterType filterType)
     {
+        Console.WriteLine(filterType);
         ShowRoleDropdown = filterType == FilterType.Role && !ShowRoleDropdown;
+        Console.WriteLine(ShowRoleDropdown);
         ShowEmailDropdown = filterType == FilterType.EmailVerified && !ShowEmailDropdown;
         ShowPhoneDropdown = filterType == FilterType.PhoneVerified && !ShowPhoneDropdown;
         ShowLockoutDropdown = filterType == FilterType.Lockout && !ShowLockoutDropdown;
     }
 
-    // private void ToggleDropdown(FilterType filterType)
-    // {
-    //     Reset all dropdowns first
-    //     ShowRoleDropdown = false;
-    //     ShowEmailDropdown = false;
-    //     ShowPhoneDropdown = false;
-    //     ShowLockoutDropdown = false;
-    //     Toggle the clicked dropdown
-    //     switch (filterType)
-    //     {
-    //         case FilterType.Role:
-    //             ShowRoleDropdown = !ShowRoleDropdown;
-    //             break;
-    //         case FilterType.EmailVerified:
-    //             ShowEmailDropdown = !ShowEmailDropdown;
-    //             break;
-    //         case FilterType.PhoneVerified:
-    //             ShowPhoneDropdown = !ShowPhoneDropdown;
-    //             break;
-    //         case FilterType.Lockout:
-    //             ShowLockoutDropdown = !ShowLockoutDropdown;
-    //             break;
-    //     }
-    // }
-
-
     private void SelectFilter(FilterType filterType, string value)
     {
-        ActiveFilters[filterType] = value;
+        if (!ActiveFilters.ContainsKey(filterType))
+        {
+            ActiveFilters[filterType] = new List<string>(); // Initialize list if empty
+        }
+
+        // Add the value only if it's not already in the list
+        if (!ActiveFilters[filterType].Contains(value))
+        {
+            ActiveFilters[filterType].Add(value);
+        }
+
         ToggleDropdown(filterType);
     }
 
-    private void RemoveFilter(FilterType filterType)
+
+
+    private void RemoveFilter(FilterType filterType, string value)
     {
-        ActiveFilters.Remove(filterType);
+        if (ActiveFilters.ContainsKey(filterType))
+        {
+            ActiveFilters[filterType].Remove(value);
+
+            // Remove filterType if the list becomes empty
+            if (ActiveFilters[filterType].Count == 0)
+            {
+                ActiveFilters.Remove(filterType);
+            }
+        }
     }
+
 
     private List<User> users = new List<User>();
     private bool selectAllChecked = false;
@@ -313,5 +315,3 @@
         public bool Selected { get; set; }
     }
 }
-
-
