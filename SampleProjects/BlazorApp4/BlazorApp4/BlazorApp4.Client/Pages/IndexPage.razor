@@ -1,0 +1,13 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        try{
+            NavigationManager.NavigateTo($"/Home", forceLoad: true);
+        }catch(Exception e){
+
+        }
+    }
+}

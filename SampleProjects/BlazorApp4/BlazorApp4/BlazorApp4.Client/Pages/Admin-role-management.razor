@@ -1,4 +1,6 @@
 ﻿@page "/admin/role/management"
+@using Class
+@using System.Text.Json
 
 <div class="admin-page">
     <!-- Sidebar -->
@@ -38,19 +40,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var permission in new[] { "TableTypePerm", "CanvasPerm", "FoodPerm", "OrderPerm", "UserPerm", "RolePerm" })
+                    @foreach (var menu in Menus)
                     {
                         <tr>
-                            <td>@permission</td>
+                            <td>@menu.MenuName</td>
                             @foreach (var role in Roles)
                             {
                                 <td>
                                     <div class="custom-select">
-                                        <select @onchange="(e) => UpdatePermission(role, permission, e.Value)">
-                                            @foreach (var option in new[] { "Read", "Read,Write", "No" })
+                                        <select @onchange="(e) => UpdatePermission(role, menu, e.Value)">
+                                            @foreach (var perm in Perms)
                                             {
-                                                <option value="@option" selected="@((string)role.GetType().GetProperty(permission)?.GetValue(role) == option)">
-                                                    @option
+                                                var rmp = RoleMenuPerms?.FirstOrDefault(rmp => rmp.Menu.Id == menu.Id && rmp.Role.Id == role.Id);
+                                                <option value="@perm.Id" selected="@(rmp != null && rmp.Perm?.Id == perm.Id ? "selected" : false)">
+                                                    @perm.PermName
                                                 </option>
                                             }
                                         </select>
@@ -67,42 +70,115 @@
 
 @code {
 
-    private List<Role> Roles { get; set; } = new()
+    //private List<Role> Roles { get; set; } = new()
+    //{
+    //    new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
+    //                FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
+    //    new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
+    //                FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
+    //    new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
+    //                FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
+    //    new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
+    //                FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
+    //};
+
+    public required List<Role> Roles { get; set; }
+    public required List<Menu> Menus { get; set; }
+    public required List<Perm> Perms { get; set; }
+
+    public List<RoleMenuPerm>? RoleMenuPerms { get; set; }
+
+    protected async override Task OnInitializedAsync()
     {
-        new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
-        new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
-                    FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
-        new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
-        new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
-    };
-    
-    private void UpdatePermission(Role role, string permission, object value)
+        Roles = MockGenerator.GenerateMockRoles();
+        Menus = MockGenerator.GenerateMockMenus();
+        Perms = MockGenerator.GenerateMockPerms();
+
+        RoleMenuPerms = MockGenerator.GenerateMockRoleMenuPerms(Roles,Menus,Perms);
+
+        await base.OnInitializedAsync();
+    }
+
+    private void UpdatePermission(Role role, Menu menu, object? value)
     {
-        var property = role.GetType().GetProperty(permission);
-        if (property != null)
+        var property = RoleMenuPerms?.FirstOrDefault(rmp => rmp.Menu.Id == menu.Id && rmp.Role.Id == role.Id);
+        if (property != null && value != null)
         {
-            property.SetValue(role, value.ToString());
+            int permId;
+            var res = int.TryParse((string)value,out permId);
+            if(res){
+                property.Perm = Perms?.FirstOrDefault(p => p.Id == permId);
+                // Console.WriteLine(JsonSerializer.Serialize(property, new JsonSerializerOptions
+                //     {
+                //         PropertyNameCaseInsensitive = true
+                //     }));
+
+                //make API call
+            }
         }
     }
 
-    public class Role
+    public static class MockGenerator
     {
-        public int Id { get; set; }
-        public string RoleName { get; set; }
-        public string Description { get; set; }
-        public int Users { get; set; }
-        public bool Selected { get; set; }
-        public string TableTypePerm { get; set; }
-        public string CanvasPerm { get; set; }
-        public string FoodPerm { get; set; }
-        public string OrderPerm { get; set; }
-        public string UserPerm { get; set; }
-        public string RolePerm { get; set; }
-    }
+        private static Random random = new Random();
 
+        public static List<Role> GenerateMockRoles()
+        {
+            return new List<Role>
+            {
+                new Role { Id = 1, RoleName = "Admin"},
+                new Role { Id = 2, RoleName = "Manager"},
+                new Role { Id = 3, RoleName = "Staff"   },
+                new Role { Id = 4, RoleName = "Customer"},
+                new Role { Id = 5, RoleName = "Guest"   },
+                new Role { Id = 6, RoleName = "Support" }
+            };
+        }
+
+        public static List<Menu> GenerateMockMenus()
+        {
+            return new List<Menu>
+            {
+                new Menu { Id = 1, MenuName = "Dashboard" },
+                new Menu { Id = 2, MenuName = "Settings" },
+                new Menu { Id = 3, MenuName = "Profile" },
+                new Menu { Id = 4, MenuName = "Reports" },
+                new Menu { Id = 5, MenuName = "Notifications" },
+                new Menu { Id = 6, MenuName = "Help" }
+            };
+        }
+
+        public static List<Perm> GenerateMockPerms()
+        {
+            return new List<Perm>
+            {
+                new Perm { Id = 1, PermName = "No" },
+                new Perm { Id = 2, PermName = "Read" },
+                new Perm { Id = 3, PermName = "ReadWrite" }
+            };
+        }
+
+        public static List<RoleMenuPerm> GenerateMockRoleMenuPerms(List<Role> roles, List<Menu> menus, List<Perm> perms)
+        {
+            var roleMenuPerms = new List<RoleMenuPerm>();
+
+            foreach (var role in roles)
+            {
+                foreach (var menu in menus)
+                {
+                    var perm = perms[random.Next(perms.Count)];
+                    roleMenuPerms.Add(new RoleMenuPerm
+                        {
+                            Role = role,
+                            Menu = menu,
+                            Perm = perm
+                        });
+                }
+            }
+
+            return roleMenuPerms;
+        }
+    }
 }
 
 
