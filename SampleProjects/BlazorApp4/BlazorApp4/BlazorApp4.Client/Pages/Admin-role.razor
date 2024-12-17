@@ -1,4 +1,6 @@
 ﻿@page "/admin/role"
+@using Class
+@using Class.MockData
 
 <div class="admin-page">
     <!-- Sidebar -->
@@ -39,7 +41,6 @@
                         </th>
                         <th>STT</th>
                         <th>Role Name</th>
-                        <th>Description</th>
                         <th>Users</th>
                         <th></th>
                     </tr>
@@ -51,10 +52,9 @@
                             <td>
                                 <input type="checkbox" class="checkbox-rounded" @bind="role.Selected" @onclick="() => ToggleRowSelection(role)" />
                             </td>
-                            <td>@role.Id</td>
-                            <td>@role.RoleName</td>
-                            <td>@role.Description</td>
-                            <td>@role.Users</td>
+                            <td>@role.Role.Id</td>
+                            <td>@role.Role.RoleName</td>
+                            <td>@role.Role.UserCount</td>
                             <td>
                                 <a href="\ManageRole" style="color:#441FCB; text-decoration:none;">Manager Users</a>
                             </td>
@@ -97,30 +97,39 @@
     private int CurrentPage { get; set; } = 1;
     private int TotalRows { get; set; } = 4;
 
-    private List<Role> Roles { get; set; } = new()
+    public required List<RoleWithDecoration> Roles { get; set; }
+
+    // private List<Role> Roles { get; set; } = new()
+    // {
+    //     new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write", 
+    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
+    //     new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
+    //                 FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
+    //     new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
+    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
+    //     new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
+    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
+    // };
+
+    protected async override Task OnInitializedAsync()
     {
-        new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write", 
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
-        new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
-                    FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
-        new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
-        new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
-                    FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
-    };
+        List<Role> mockRoles = MockGenerator.GenerateMockRoles();
+        Roles = mockRoles.Select(r => new RoleWithDecoration { Role = r, Selected = false }).ToList();
+
+        await base.OnInitializedAsync();
+    }
 
 
-    private void ToggleRowSelection(Role role)
+    private void ToggleRowSelection(RoleWithDecoration role)
     {
         role.Selected = !role.Selected;
     }
 
-    private List<Role> PaginatedRoles => Roles
+    private List<RoleWithDecoration> PaginatedRoles => Roles
     .Skip((CurrentPage - 1) * RowsPerPage)
     .Take(RowsPerPage)
     .ToList();
 
-    private List<Role> roles = new List<Role>();
     private bool selectAllChecked = false;
 
     private void ToggleSelectAll()
@@ -148,19 +157,24 @@
         if (CurrentPage * RowsPerPage < TotalRows) CurrentPage++;
     }
 
-    public class Role
-    {
-        public int Id { get; set; }
-        public string RoleName { get; set; }
-        public string Description { get; set; }
-        public int Users { get; set; }
+    // public class Role
+    // {
+    //     public int Id { get; set; }
+    //     public string RoleName { get; set; }
+    //     public string Description { get; set; }
+    //     public int Users { get; set; }
+    //     public bool Selected { get; set; }
+    //     public string TableTypePerm { get; set; }
+    //     public string CanvasPerm { get; set; }
+    //     public string FoodPerm { get; set; }
+    //     public string OrderPerm { get; set; }
+    //     public string UserPerm { get; set; }
+    //     public string RolePerm { get; set; }
+    // }
+
+    public class RoleWithDecoration{
+        public required Role Role { get; set; }
         public bool Selected { get; set; }
-        public string TableTypePerm { get; set; }
-        public string CanvasPerm { get; set; }
-        public string FoodPerm { get; set; }
-        public string OrderPerm { get; set; }
-        public string UserPerm { get; set; }
-        public string RolePerm { get; set; }
     }
 }
 
