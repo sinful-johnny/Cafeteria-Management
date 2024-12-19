@@ -76,8 +76,9 @@
 
 /* Main Content */
 .main-content {
-    width:100vh;
-    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -88,11 +89,10 @@
     padding: 10px 20px;
     justify-content: space-between;
     font-family: Arial, sans-serif;
-    position: fixed;
-    top: 0;
-    left: 250px;
+/*    position: fixed;
+    top: 0;*/
     height: 60px;
-    width: 87%;
+    width: 100%;
     box-sizing: border-box;
 }
 
