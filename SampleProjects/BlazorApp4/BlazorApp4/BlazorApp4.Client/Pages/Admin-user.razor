@@ -1,4 +1,10 @@
 ﻿@page "/admin"
+@using Class
+@using Class.Controller
+@using System.Text.Json
+@using Class.Converter
+@inject UserService UserService;
+@inject RoleService RoleService;
 
 <div class="admin-page">
     <!-- Sidebar -->
@@ -101,7 +107,7 @@
                             <th>
                                 <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
                             </th>
-                            <th>STT</th>
+                            @* <th>STT</th> *@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Email Verified</th>
@@ -116,42 +122,57 @@
                         {
                             <tr>
                                 <td>
-                                    <input type="checkbox" class="checkbox-rounded" @bind="user.Selected" @onclick="() => ToggleRowSelection(user)" />
+                                    <input type="checkbox" class="checkbox-rounded" @bind="user.User.Selected" @onclick="() => ToggleRowSelection(user)" />
                                 </td>
-                                <td>@user.Id</td>
-                                <td>@user.Username</td>
-                                <td>@user.Email</td>
+                                @* <td>@user.User.Id</td> *@
+                                <td>@user.User.Username</td>
+                                <td>@user.User.Email</td>
                                 <td>
                                     <div class="custom-select">
-                                        <select @onchange="@(e => user.EmailVerified = e.Value.ToString() == "Verified")">
-                                            <option value="Verified" selected="@(user.EmailVerified)">Verified</option>
-                                            <option value="Unverified" selected="@(user.EmailVerified == false)">Unverified</option>
+                                        <select @onchange="@(e => user.User.EmailVerified = e.Value.ToString() == "Verified")">
+                                            <option value="Verified" selected="@(user.User.EmailVerified)">Verified</option>
+                                            <option value="Unverified" selected="@(user.User.EmailVerified == false)">Unverified</option>
                                         </select>
                                     </div>
                                 </td>
-                                <td>@user.PhoneNumber</td>
+                                <td>@user.User.PhoneNumber</td>
                                 <td>
                                     <div class="custom-select">
-                                        <select @onchange="@(e => user.PhoneVerified = e.Value.ToString() == "Verified")">
-                                            <option value="Verified" selected="@(user.PhoneVerified)">Verified</option>
-                                            <option value="Unverified" selected="@(user.PhoneVerified == false)">Unverified</option>
+                                        <select @onchange="@(e => user.User.PhoneVerified = e.Value.ToString() == "Verified")">
+                                            <option value="Verified" selected="@(user.User.PhoneVerified)">Verified</option>
+                                            <option value="Unverified" selected="@(user.User.PhoneVerified == false)">Unverified</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="custom-select">
-                                        <select @onchange="@(e => user.Role = e.Value.ToString())">
-                                            <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
-                                            <option value="Manager" selected="@(user.Role == "Manager")">Manager</option>
-                                            <option value="Staff" selected="@(user.Role == "Staff")">Staff</option>
-                                            <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>
-                                        </select>
+                                    @* <div class="custom-select">
+                                        
+                                    </div> *@
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleRoleDropdown(user))">
+                                            Edit  Roles
+                                        </button>
+                                        <div class="dropdown-menu @(user.isOpen ? "show" : "")">
+                                            @foreach (var role in Roles)
+                                            {
+                                                var dataRole = user.Roles?.FirstOrDefault(p => p.Role.Id == role.Id);
+                                                //Console.WriteLine(JsonSerializer.Serialize(user.Roles, new JsonSerializerOptions { WriteIndented = true }));
+
+                                                <div class="dropdown-item">
+                                                    @if (dataRole != null)
+                                                    {
+                                                        <input type="checkbox" @bind="dataRole.IsInRole" />
+                                                    }
+                                                    <span>@dataRole?.Role.RoleName</span>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
                                     <label class="switch">
-                                        <input type="checkbox" checked="@user.Locked" @onchange="() => ToggleLockout(user)" />
-                                        <span class="slider @(user.Locked ? "locked" : "unlocked")"></span>
+                                        <input type="checkbox" checked="@user.User.Locked" @onchange="() => ToggleLockout(user.User)" />
+                                        <span class="slider @(user.User.Locked ? "locked" : "unlocked")"></span>
                                     </label>
                                 </td>
                             </tr>
@@ -192,26 +213,57 @@
     private bool ShowPhoneDropdown { get; set; } = false;
     private bool ShowLockoutDropdown { get; set; } = false;
 
-    private string SearchQuery { get; set; }
+    private string? SearchQuery { get; set; } = null;
 
     private int RowsPerPage { get; set; } = 10;
     private int CurrentPage { get; set; } = 1;
     private int TotalRows { get; set; } = 11;
 
-    private List<User> Users { get; set; } = new()
+    private List<UserData> Users { get; set; } = new();
+
+    private List<Role> Roles { get; set; } = new();
+
+    public List<UserDataWithDecoration> ViewData { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        new User { Id = 1, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 2, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 3, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 4, Username = "asdfasdf", Email = "kienphan11052003@gmail.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 6, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 7, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 8, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 9, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 10, Username = "kien123", Email = "kienphan11052003@gmail.com", EmailVerified = true, PhoneNumber = "023423", PhoneVerified = true, Role = "Admin", Locked = true },
-        new User { Id = 11, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false },
-        new User { Id = 12, Username = "asdfasdf", Email = "test@example.com", EmailVerified = false, PhoneNumber = "013192932", PhoneVerified = true, Role = "Customer", Locked = false }
-    };
+        string userResponse = await UserService.GetUsersAsync();
+        if(userResponse != null){
+            var usersList = JsonSerializer.Deserialize<List<UserDto>>(userResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(usersList != null){
+                Users = usersList.Select(u => u.ConvertToUserData()).ToList();
+                //Console.WriteLine(JsonSerializer.Serialize(Users, new JsonSerializerOptions { WriteIndented = true }));
+            }
+        }
+
+        string roleResponse = await RoleService.GetRolesAsync();
+        if(roleResponse != null){
+            var rolesList = JsonSerializer.Deserialize<List<Role>>(roleResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(rolesList != null){
+                Roles = rolesList;
+            }
+        }
+
+        ViewData = new List<UserDataWithDecoration>();
+        foreach(var user in Users){
+            var RoleView = new List<RoleWithDecoration>();
+            foreach(var role in Roles){
+                RoleView.Add(new RoleWithDecoration {
+                    Role = role,
+                    IsInRole = user.Roles != null ? user.Roles.Any(r => r.Id == role.Id) : false
+                });
+            }
+            ViewData.Add(new UserDataWithDecoration
+            {
+                User = user,
+                Roles = RoleView
+            });
+        }
+
+        Console.WriteLine(JsonSerializer.Serialize(ViewData, new JsonSerializerOptions { WriteIndented = true }));
+
+        await base.OnInitializedAsync();
+    }
 
     private void updateRowCount()
     {
@@ -261,7 +313,7 @@
     }
 
 
-    private List<User> users = new List<User>();
+    private List<UserData> users = new List<UserData>();
     private bool selectAllChecked = false;
 
     private void ToggleSelectAll()
@@ -269,16 +321,16 @@
         selectAllChecked = !selectAllChecked;
         foreach (var user in PaginatedUsers)
         {
-            user.Selected = selectAllChecked;
+            user.User.Selected = selectAllChecked;
         }
     }
 
-    private void ToggleRowSelection(User user)
+    private void ToggleRowSelection(UserDataWithDecoration user)
     {
-        user.Selected = !user.Selected;
+        user.User.Selected = !user.User.Selected;
     }
 
-    private List<User> PaginatedUsers => Users
+    private List<UserDataWithDecoration> PaginatedUsers => ViewData
     .Skip((CurrentPage - 1) * RowsPerPage)
     .Take(RowsPerPage)
     .ToList();
@@ -289,7 +341,7 @@
         CurrentPage = 1; // Reset to first page
     }
 
-    private void ToggleLockout(User user)
+    private void ToggleLockout(UserData user)
     {
         user.Locked = !user.Locked;
     }
@@ -304,16 +356,21 @@
         if (CurrentPage * RowsPerPage < TotalRows) CurrentPage++;
     }
 
-    public class User
+    public void ToggleRoleDropdown(UserDataWithDecoration User)
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public bool EmailVerified { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool PhoneVerified { get; set; }
-        public string Role { get; set; }
-        public bool Locked { get; set; }
-        public bool Selected { get; set; }
+        ViewData = ViewData.Select(d => { d.isOpen = d.User.Id == User.User.Id ? User.isOpen : false; return d; }).ToList();
+        User.isOpen = !User.isOpen;
+        Console.WriteLine(JsonSerializer.Serialize(User.isOpen, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    public class UserDataWithDecoration{
+        public required UserData User { get; set; }
+        public List<RoleWithDecoration>? Roles { get; set; }
+        public bool isOpen { get; set; } = false;
+    }
+
+    public class RoleWithDecoration {
+        public required Role Role { get; set; }
+        public bool IsInRole { get; set; }
     }
 }

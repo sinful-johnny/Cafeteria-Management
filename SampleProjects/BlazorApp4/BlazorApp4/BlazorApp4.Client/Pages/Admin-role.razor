@@ -1,6 +1,9 @@
 ﻿@page "/admin/role"
 @using Class
+@using Class.Controller
 @using Class.MockData
+@using System.Text.Json
+@inject RoleService RoleService;
 
 <div class="admin-page">
     <!-- Sidebar -->
@@ -39,7 +42,7 @@
                         <th>
                             <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
                         </th>
-                        <th>STT</th>
+                        @* <th>STT</th> *@
                         <th>Role Name</th>
                         <th>Users</th>
                         <th></th>
@@ -52,7 +55,7 @@
                             <td>
                                 <input type="checkbox" class="checkbox-rounded" @bind="role.Selected" @onclick="() => ToggleRowSelection(role)" />
                             </td>
-                            <td>@role.Role.Id</td>
+                            @* <td>@role.Role.Id</td> *@
                             <td>@role.Role.RoleName</td>
                             <td>@role.Role.UserCount</td>
                             <td>
@@ -97,7 +100,7 @@
     private int CurrentPage { get; set; } = 1;
     private int TotalRows { get; set; } = 4;
 
-    public required List<RoleWithDecoration> Roles { get; set; }
+    public required List<RoleWithDecoration> Roles { get; set; } = new List<RoleWithDecoration>();
 
     // private List<Role> Roles { get; set; } = new()
     // {
@@ -113,8 +116,14 @@
 
     protected async override Task OnInitializedAsync()
     {
-        List<Role> mockRoles = MockGenerator.GenerateMockRoles();
-        Roles = mockRoles.Select(r => new RoleWithDecoration { Role = r, Selected = false }).ToList();
+        //List<Role> mockRoles = MockGenerator.GenerateMockRoles();
+        string roleResponse = await RoleService.GetRolesAsync();
+        if(roleResponse != null){
+            var roleList = JsonSerializer.Deserialize<List<Role>>(roleResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(roleList != null){
+                Roles = roleList.Select(r => new RoleWithDecoration { Role = r, Selected = false }).ToList();
+            }
+        }
 
         await base.OnInitializedAsync();
     }

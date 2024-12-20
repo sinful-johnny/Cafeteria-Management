@@ -19,23 +19,23 @@ namespace Class.Controller
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> AddRoleMenuPermControllerAsync(string RoleId, string MenuId, string PermId)
+        public async Task<HttpResponseMessage> AddRoleMenuPermAsync(string RoleId, int MenuId, int PermId)
         {
             var body = new PermDto { permId = PermId };
-            var response = await _httpClient.PostAsJsonAsync($"{HttpInfo.Domain}/api/RoleMenuPerm/?roleId={RoleId}&menuId={MenuId}", body);
-            return await response.Content.ReadAsStringAsync();
+            var response = await _httpClient.PostAsJsonAsync($"{HttpInfo.Domain}/api/RoleMenuPerm/RoleMenuPerm/Insert?roleId={RoleId}&menuId={MenuId}", body);
+            return response;
         }
 
-        //public async Task<string> DeleteRoleMenuPermControllerAsync(string RoleId, string MenuId, string PermId)
-        //{
-        //    var body = new PermDto { permId = PermId };
-        //    var response = await _httpClient.DeleteAsync($"{HttpInfo.Domain}/api/RoleMenuPerm/?roleId={RoleId}&menuId={MenuId}", body);
-        //    return await response.Content.ReadAsStringAsync();
-        //}
+        public async Task<HttpResponseMessage> DeleteRoleMenuPermAsync(string RoleId, int MenuId, int PermId)
+        {
+            var body = new PermDto { permId = PermId };
+            var response = await _httpClient.DeleteAsync($"{HttpInfo.Domain}/api/RoleMenuPerm/RoleMenuPerm/Delete?roleId={RoleId}&menuId={MenuId}&permId={PermId}"); 
+            return response;
+        }
 
         private class PermDto
         {
-            public required string permId { get; set; }
+            public required int permId { get; set; }
         }
     }
 }

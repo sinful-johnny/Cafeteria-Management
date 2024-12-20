@@ -34,6 +34,7 @@ builder.Services.AddScoped<MenuResourceService>();
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<RoleMenuPermController>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<IAuthorizationHandler, ResourceRoleAuthorizationHandler>();
 
 await builder.Build().RunAsync();
