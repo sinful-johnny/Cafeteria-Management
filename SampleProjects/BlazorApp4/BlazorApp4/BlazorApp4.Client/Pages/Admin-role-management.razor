@@ -1,7 +1,11 @@
 ﻿@page "/admin/role/management"
 @using Class
 @using System.Text.Json
+@using Class.Controller
 @using Class.MockData
+@inject MenuService MenuService; 
+@inject RoleService RoleService;
+@inject RoleMenuPermController RoleMenuPermController;
 
 <div class="admin-page">
     <!-- Sidebar -->
@@ -47,8 +51,9 @@
                             <td>@menu.MenuName</td>
                             @foreach (var role in Roles)
                             {
+                                var data = ViewData.FirstOrDefault(d => d.Menu.Id == menu.Id && d.Role.Id == role.Id);
                                 <td>
-                                    <div class="custom-select">
+                                    @* <div class="custom-select">
                                         <select @onchange="(e) => UpdatePermission(role, menu, e.Value)">
                                             @foreach (var perm in Perms)
                                             {
@@ -58,7 +63,27 @@
                                                 </option>
                                             }
                                         </select>
-                                    </div>
+                                    </div> *@
+                                    @if(data != null){
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="data.ToggleDropdown">
+                                                Edit Perms
+                                            </button>
+                                            <div class="dropdown-menu @(data.isOpen ? "show" : "")">
+                                                @foreach (var perm in Perms)
+                                                {
+                                                    var dataPerm = data.Perms.FirstOrDefault(p => p.Perm.Id == perm.Id);
+
+                                                    <div class="dropdown-item">
+                                                        @if(dataPerm != null){
+                                                            <input type="checkbox" @bind="dataPerm.IsSelected" id="@dataPerm?.Perm.Id" />
+                                                        }
+                                                        <span>@dataPerm?.Perm.PermName</span>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
                                 </td>
                             }
                         </tr>
@@ -83,39 +108,127 @@
     //                FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
     //};
 
-    public required List<Role> Roles { get; set; }
-    public required List<Menu> Menus { get; set; }
+    public required List<Role> Roles { get; set; } = new List<Role>();
+    public required List<Menu> Menus { get; set; } = new List<Menu>();
     public required List<Perm> Perms { get; set; }
 
-    public List<RoleMenuPerm>? RoleMenuPerms { get; set; }
+    //public List<RoleMenuPerm>? RoleMenuPerms { get; set; }
+
+    public required List<DecoratedMenuPerm> ViewData { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
-        Roles = MockGenerator.GenerateMockRoles();
-        Menus = MockGenerator.GenerateMockMenus();
+        string RoleJson = await RoleService.GetRolesAsync();
+        if(RoleJson != null){
+            var rolesObject = JsonSerializer.Deserialize<List<Role>>(RoleJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(rolesObject != null){
+                Roles = rolesObject;
+            }else{
+                Roles = new List<Role>();
+            }
+        }
+
+        string MenuJson = await MenuService.GetMenusAsync();
+        if (MenuJson != null){
+            var menusObject = JsonSerializer.Deserialize<List<Menu>>(MenuJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(menusObject != null){
+                Menus = menusObject;
+            }else{
+                Menus = new List<Menu>();
+            }
+        }
+
+        //Console.WriteLine(JsonSerializer.Serialize(Roles, new JsonSerializerOptions { WriteIndented = true }));
+        //Console.WriteLine(JsonSerializer.Serialize(Menus, new JsonSerializerOptions { WriteIndented = true }));
+
+        //Menus = MockGenerator.GenerateMockMenus();
+        List<RoleMenuPerm> RoleMenuPerms = new List<RoleMenuPerm>();
+        string RoleMenuPermJson = await RoleMenuPermController.GetRoleMenuPermControllerAsync();
+        if (MenuJson != null)
+        {
+            var RoleMenuPermObject = JsonSerializer.Deserialize<List<RoleMenuPerm>>(RoleMenuPermJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (RoleMenuPermObject != null)
+            {
+                RoleMenuPerms = RoleMenuPermObject;
+            }
+        }
+        //Console.WriteLine(RoleMenuPermJson);
+        Console.WriteLine(JsonSerializer.Serialize(RoleMenuPerms, new JsonSerializerOptions { WriteIndented = true }));
+
         Perms = MockGenerator.GenerateMockPerms();
 
-        RoleMenuPerms = MockGenerator.GenerateMockRoleMenuPerms(Roles,Menus,Perms);
+        //List<RoleMenuPerm>? RoleMenuPerms = MockGenerator.GenerateMockRoleMenuPerms(Roles, Menus, Perms);
+
+        //List<RoleMenuPerm>? RoleMenuPerms = 
+
+        ViewData = new List<DecoratedMenuPerm>();
+
+        foreach(var role in Roles){
+            foreach(var menu in Menus){
+
+                var decoratedPerm = new List<DecoratedPerm>();
+                foreach(var perm in Perms){
+                    decoratedPerm.Add(new DecoratedPerm
+                        {
+                            Perm = perm,
+                            IsSelected = RoleMenuPerms.Any(
+                                rmp => rmp.Menu.Id == menu.Id && 
+                                rmp.Role.Id == role.Id && 
+                                (rmp.Perms != null && rmp.Perms.Any(p => p.Id == perm.Id))
+                            )
+                        });
+                }
+                ViewData.Add( new DecoratedMenuPerm{
+                    Menu = menu,
+                    Role = role,
+                    Perms = decoratedPerm
+                } );
+            }
+        }
+
+        //Console.WriteLine(JsonSerializer.Serialize(ViewData, new JsonSerializerOptions { WriteIndented = true }));
 
         await base.OnInitializedAsync();
     }
 
     private void UpdatePermission(Role role, Menu menu, object? value)
     {
-        var property = RoleMenuPerms?.FirstOrDefault(rmp => rmp.Menu.Id == menu.Id && rmp.Role.Id == role.Id);
+        var property = ViewData?.FirstOrDefault(rmp => rmp.Menu.Id == menu.Id && rmp.Role.Id == role.Id);
         if (property != null && value != null)
         {
             int permId;
             var res = int.TryParse((string)value,out permId);
-            if(res){
-                property.Perm = Perms?.FirstOrDefault(p => p.Id == permId);
-                // Console.WriteLine(JsonSerializer.Serialize(property, new JsonSerializerOptions
-                //     {
-                //         PropertyNameCaseInsensitive = true
-                //     }));
+            // if(res){
+            //     property.Perm = Perms?.FirstOrDefault(p => p.Id == permId);
+            //     Console.WriteLine(JsonSerializer.Serialize(property, new JsonSerializerOptions
+            //         {
+            //             PropertyNameCaseInsensitive = true
+            //         }));
 
-                //make API call
-            }
+            //     //make API call
+            // }
+        }
+    }
+
+    public class DecoratedPerm{
+        public required Perm Perm { get; set; }
+        public bool IsSelected { get; set; }
+    }
+
+    public class DecoratedMenuPerm {
+        public required Menu Menu { get; set; }
+        public required Role Role { get; set; }
+        public required List<DecoratedPerm> Perms { get; set; }
+        public bool isOpen { get; set; } = false;
+
+        public void ToggleDropdown()
+        {
+            isOpen = !isOpen;
+            Console.WriteLine(JsonSerializer.Serialize(this, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    WriteIndented = true
+                }));
         }
     }
 }

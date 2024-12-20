@@ -1,3 +1,4 @@
+
 using Class.Auth;
 using Class.Controller;
 using Class.Services;
@@ -30,6 +31,9 @@ builder.Services.AddScoped<TableTypesService>();
 builder.Services.AddScoped<FoodTypesService>();
 builder.Services.AddScoped<TableService>();
 builder.Services.AddScoped<MenuResourceService>();
+builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<RoleMenuPermController>();
 builder.Services.AddSingleton<IAuthorizationHandler, ResourceRoleAuthorizationHandler>();
 
 await builder.Build().RunAsync();

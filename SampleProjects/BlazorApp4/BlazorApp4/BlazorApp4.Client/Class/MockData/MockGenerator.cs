@@ -10,12 +10,12 @@ namespace Class.MockData
         {
             return new List<Role>
             {
-                new Role { Id = 1, RoleName = "Admin"},
-                new Role { Id = 2, RoleName = "Manager"},
-                new Role { Id = 3, RoleName = "Staff"   },
-                new Role { Id = 4, RoleName = "Customer"},
-                new Role { Id = 5, RoleName = "Guest"   },
-                new Role { Id = 6, RoleName = "Support" }
+                new Role { Id = "1", RoleName = "Admin"},
+                new Role { Id = "2", RoleName = "Manager"},
+                new Role { Id = "3", RoleName = "Staff"   },
+                new Role { Id = "4", RoleName = "Customer"},
+                new Role { Id = "5", RoleName = "Guest"   },
+                new Role { Id = "6", RoleName = "Support" }
             };
         }
 
@@ -55,7 +55,7 @@ namespace Class.MockData
                     {
                         Role = role,
                         Menu = menu,
-                        Perm = perm
+                        Perms = new List<Perm>() { perm }
                     });
                 }
             }

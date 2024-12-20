@@ -1,3 +1,4 @@
+
 using BlazorApp4.Components;
 using BlazorApp4.Components.Account;
 using BlazorApp4.Data;
@@ -23,6 +24,9 @@ builder.Services.AddScoped<TableTypesService>();
 builder.Services.AddScoped<FoodTypesService>();
 builder.Services.AddScoped<TableService>();
 builder.Services.AddScoped<MenuResourceService>();
+builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<RoleMenuPermController>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
