@@ -1,0 +1,90 @@
+﻿@page "/admin/role/userManage"
+@using Class
+@using Class.Controller
+@using Class.MockData
+@using System.Text.Json
+@inject UserService UserService;
+@inject RoleService RoleService;
+
+<div class="admin-page">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin</h3>
+        </div>
+        <ul>
+            <li><a href="/admin">User</a></li>
+            <li class="selected"><a href="/admin/role">Role</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="header">
+            <div class="header-content">
+                <label>Role/All</label>
+                <a href="/Account/Login" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <div class="role-toggle">
+            <h3>Select a Role to Edit:</h3>
+            <div>
+                @foreach (var role in Roles)
+                {
+                    <label>
+                        <input type="radio" name="roleGroup" @bind="role.Selected" @onclick="() => OnRoleSelected(role)" />
+                        @role.Role.RoleName
+                    </label>
+                }
+            </div>
+        </div>
+
+        <!-- Table -->
+        <!-- WIP -->
+    </div>
+</div>
+
+@code {
+    private List<UserData> Users { get; set; } = new();
+    private List<UserData> FilteredUsers { get; set; } = new();
+    public required List<RoleWithDecoration> Roles { get; set; } = new();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        //List<Role> mockRoles = MockGenerator.GenerateMockRoles();
+        string roleResponse = await RoleService.GetRolesAsync();
+        if(roleResponse != null){
+            var roleList = JsonSerializer.Deserialize<List<Role>>(roleResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if(roleList != null){
+                Roles = roleList.Select(r => new RoleWithDecoration { Role = r, Selected = false }).ToList();
+            }
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    public class RoleWithDecoration{
+        public required Role Role { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    private void OnRoleSelected(RoleWithDecoration selectedRole)
+    {
+        // Clear previous selections
+        foreach (var role in Roles)
+        {
+            role.Selected = false;
+        }
+
+        // Mark the current role as selected
+        selectedRole.Selected = true;
+
+        // Filter users based on the selected role
+        FilteredUsers = Users.Where(user => user.Roles != null && user.Roles.Any(r => r.Id == selectedRole.Role.Id)).ToList();
+    }
+}
+
+
