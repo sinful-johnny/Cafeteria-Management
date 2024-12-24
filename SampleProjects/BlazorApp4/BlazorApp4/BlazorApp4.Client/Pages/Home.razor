@@ -78,7 +78,7 @@
 		</div>
 	</Authorized>
 	<NotAuthorized>
-		<h3>Access denied!</h3>
+		<h3>@JsonSerializer.Serialize(menuResource)</h3>
 	</NotAuthorized>
 </AuthorizeView>
 
@@ -133,7 +133,6 @@
 	// {
 	// 	selectedPage = page;
 	// }
-
 	private string? tableResponse; 
 	private async Task FetchTables() { 
 		tableResponse = await TableTypeService.GetTablesAsync();
@@ -158,42 +157,86 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await FetchResource();
-		if (menuResourceResponse != null){
-			menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
-			//Console.WriteLine(JsonSerializer.Serialize(menuResource));
+		try{
+			await FetchResource();
+			if (menuResourceResponse != null)
+			{
+				menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
+				//Console.WriteLine(JsonSerializer.Serialize(menuResource));
+			}
+
+			
+			
+			
+		}catch(Exception e){
+
 		}
 
-		tableListItemsService = new TableListItemsService();
-		foodListItemsService = new FoodListItemService();
-
-		await FetchTables();
-		if (tableResponse != null && tableListItemsService != null)
+		try{
+			await FetchTables();
+			tableListItemsService = new TableListItemsService();
+			if (tableResponse != null && tableListItemsService != null)
+			{
+				tableListItemsService.SetItemsFromJson(tableResponse);
+			}
+		}
+		catch (Exception e)
 		{
-			tableListItemsService.SetItemsFromJson(tableResponse);
+
 		}
 
-		await FetchFood();
-		if(foodResponse != null && foodListItemsService != null){
-			foodListItemsService.SetItemsFromJson(foodResponse);
-			//Console.WriteLine(foodListItemsService.ToString());
+		try{
+			await FetchFood();
+			foodListItemsService = new FoodListItemService();
+			if (foodResponse != null && foodListItemsService != null)
+			{
+				foodListItemsService.SetItemsFromJson(foodResponse);
+				//Console.WriteLine(foodListItemsService.ToString());
+			}
+		}
+		catch (Exception e)
+		{
+
 		}
 
-		await FetchCanvas();
-		if (canvasResponse != null){
-			var canvasDto = JsonSerializer.Deserialize<List<TABLE_FOODsDto>>(canvasResponse, new JsonSerializerOptions
+		try{
+			await FetchCanvas();
+			if (canvasResponse != null)
+			{
+				var canvasDto = JsonSerializer.Deserialize<List<TABLE_FOODsDto>>(canvasResponse, new JsonSerializerOptions
+					{
+						PropertyNameCaseInsensitive = true
+					});
+				if (canvasDto != null)
 				{
-					PropertyNameCaseInsensitive = true
-				});
-			if(canvasDto != null){
-				//Console.WriteLine($"Dto: {JsonSerializer.Serialize(canvasDto)}");
-				rectangles = TablesToDtoConverter.ConvertToITable(canvasDto);
-				// Console.WriteLine($"Rectangles: {JsonSerializer.Serialize(rectangles)}");
-			}
-			if(rectangles == null){
-				rectangles = new List<ITable>();
+					//Console.WriteLine($"Dto: {JsonSerializer.Serialize(canvasDto)}");
+					rectangles = TablesToDtoConverter.ConvertToITable(canvasDto);
+					// Console.WriteLine($"Rectangles: {JsonSerializer.Serialize(rectangles)}");
+				}
+				if (rectangles == null)
+				{
+					rectangles = new List<ITable>();
+				}
 			}
 		}
+		catch (Exception e)
+		{
+
+		}
+		
+
+
+		
+		
+
+		
+
+
+		
+
+
+		
+		
 
 		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync(); 
 		user = authState.User;

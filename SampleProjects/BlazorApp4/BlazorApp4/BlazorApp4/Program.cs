@@ -18,6 +18,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
+//builder.Services.AddApiAuthorization();
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<TableTypesService>();
