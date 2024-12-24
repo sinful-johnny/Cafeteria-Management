@@ -28,7 +28,6 @@ namespace Class.Controller
 
         public async Task<HttpResponseMessage> DeleteRoleMenuPermAsync(string RoleId, int MenuId, int PermId)
         {
-            var body = new PermDto { permId = PermId };
             var response = await _httpClient.DeleteAsync($"{HttpInfo.Domain}/api/RoleMenuPerm/RoleMenuPerm/Delete?roleId={RoleId}&menuId={MenuId}&permId={PermId}"); 
             return response;
         }

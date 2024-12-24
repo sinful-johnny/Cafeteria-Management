@@ -146,7 +146,7 @@
                                 </td>
                                 <td>
                                     @* <div class="custom-select">
-                                        
+
                                     </div> *@
                                     <div class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleRoleDropdown(user))">
@@ -161,7 +161,8 @@
                                                 <div class="dropdown-item">
                                                     @if (dataRole != null)
                                                     {
-                                                        <input type="checkbox" @bind="dataRole.IsInRole" />
+                                                        <input type="checkbox" @bind="dataRole.IsInRole"
+                                                        @bind:after="@(() => UpdateUserRole(user.User.Id, dataRole.Role.Id, dataRole.IsInRole))" />
                                                     }
                                                     <span>@dataRole?.Role.RoleName</span>
                                                 </div>
@@ -360,7 +361,29 @@
     {
         ViewData = ViewData.Select(d => { d.isOpen = d.User.Id == User.User.Id ? User.isOpen : false; return d; }).ToList();
         User.isOpen = !User.isOpen;
-        Console.WriteLine(JsonSerializer.Serialize(User.isOpen, new JsonSerializerOptions { WriteIndented = true }));
+        //Console.WriteLine(JsonSerializer.Serialize(User.isOpen, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    public async Task UpdateUserRole(string userId, string roleId, bool isInRole){
+        HttpResponseMessage response;
+        try{
+            if (isInRole)
+            {
+                response = await UserService.AddRoleAsync(userId, roleId);
+            }
+            else
+            {
+                response = await UserService.RemoveRoleAsync(userId, roleId);
+            }
+
+            if(!response.IsSuccessStatusCode){
+                isInRole = !isInRole;
+            }
+            var message = response.Content.ReadAsStringAsync();
+            Console.WriteLine(message);
+        }catch(Exception e){
+            
+        }
     }
 
     public class UserDataWithDecoration{
