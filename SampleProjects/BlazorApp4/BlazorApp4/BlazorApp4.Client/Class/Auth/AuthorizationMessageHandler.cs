@@ -14,7 +14,6 @@ namespace Class.Auth
         private readonly IJSRuntime _jsRuntime;
         private readonly ILogger<AuthorizationMessageHandler> _logger;
         private readonly string _cookieName = "ApiAuth";
-        private readonly string _identityCookieName = ".AspNetCore.Identity.Application";
 
         public AuthorizationMessageHandler(IHttpContextAccessor httpContextAccessor, IJSRuntime jsRuntime, ILogger<AuthorizationMessageHandler> logger)
         {
@@ -58,7 +57,7 @@ namespace Class.Auth
                         _logger.LogInformation($"Exception: {e.ToString()}");
                     }
 
-                    await _jsRuntime.InvokeVoidAsync("location.replace", "/Account/Login");
+                    await _jsRuntime.InvokeVoidAsync("location.replace", "/Account/Logout");
                 }
 
                 _logger.LogInformation($"HTTPS response: {response.Content}");

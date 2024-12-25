@@ -1,210 +1,227 @@
 ﻿@page "/admin"
 @using Class
+@using Class.Auth
 @using Class.Controller
 @using System.Text.Json
 @using Class.Converter
 @inject UserService UserService;
 @inject RoleService RoleService;
 
-<div class="admin-page">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>Admin</h3>
-        </div>
-        <ul>
-            <li class="selected">
-                <a href="/admin">User</a>
-            </li>
-            <li><a href="/admin/role">Role</a></li>
-        </ul>
-    </div>
+@inject MenuResourceService MenuResourceService;
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header class="header">
-            <div class="header-content">
-                <label>User/All</label>
-                <a href="/Account/Login" class="logout-btn">Logout</a>
-            </div>
-        </header>
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
-        <div class="overflow-auto" style="height: 100%">
-            <!-- Filters, search and some buttons -->
-            <div class="upper-body-container">
-                <div class="filters">
-                    <div class="filter-dropdown">
-                        <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Role)">Role</button>
-                        @if (ShowRoleDropdown)
-                        {
-                            <ul class="dropdown-menu">
-                                <li @onclick='() => SelectFilter(FilterType.Role, "Admin")'>Admin</li>
-                                <li @onclick='() => SelectFilter(FilterType.Role, "Manager")'>Manager</li>
-                                <li @onclick='() => SelectFilter(FilterType.Role, "Staff")'>Staff</li>
-                                <li @onclick='() => SelectFilter(FilterType.Role, "Customer")'>Customer</li>
-                            </ul>
-                        }
-                    </div>
-
-
-                    <div class="filter-dropdown">
-                        <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.EmailVerified)">Email Verified</button>
-                        @if (ShowEmailDropdown)
-                        {
-                            <ul class="dropdown-menu">
-                                <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Verified")'>Verified</li>
-                                <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Unverified")'>Unverified</li>
-                            </ul>
-                        }
-                    </div>
-                    <div class="filter-dropdown">
-                        <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.PhoneVerified)">Phone Number Verified</button>
-                        @if (ShowPhoneDropdown)
-                        {
-                            <ul class="dropdown-menu">
-                                <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Verified")'>Verified</li>
-                                <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Unverified")'>Unverified</li>
-                            </ul>
-                        }
-                    </div>
-                    <div class="filter-dropdown">
-                        <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Lockout)">Lockout</button>
-                        @if (ShowLockoutDropdown)
-                        {
-                            <ul class="dropdown-menu">
-                                <li @onclick='() => SelectFilter(FilterType.Lockout, " Locked")'>Locked</li>
-                                <li @onclick='() => SelectFilter(FilterType.Lockout, " Unlocked")'>Unlocked</li>
-                            </ul>
-                        }
-                    </div>
+<AuthorizeView Policy="Read" Resource="menuResource">
+    <Authorized>
+        <div class="admin-page">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Admin</h3>
                 </div>
-                <div class="search-and-buttons">
-                    <input type="text" placeholder="Search" bind="@SearchQuery">
-                    <button style="border:none; outline:none; background-color:transparent;color:#441FCB">New</button>
-                    <button style="border:none; outline:none; background-color:transparent;color:#DF0728">Delete</button>
-                </div>
+                <ul>
+                    <li class="selected">
+                        <a href="/admin">User</a>
+                    </li>
+                    <li><a href="/admin/role">Role</a></li>
+                </ul>
             </div>
 
-            <!-- Active Filters -->
-            <div class="active-filters">
-                @foreach (var filter in ActiveFilters)
-                {
-                    @foreach (var value in filter.Value)
-                    {
-                        <span class="active-filter">
-                            @filter.Key - @value
-                            <button class="remove-filter" @onclick="() => RemoveFilter(filter.Key, value)">X</button>
-                        </span>
-                    }
-                }
-            </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <header class="header">
+                    <div class="header-content">
+                        <label>User/All</label>
+                        <a href="/Account/Login" class="logout-btn">Logout</a>
+                    </div>
+                </header>
 
-            <!-- Table -->
-            <div class="table-container">
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
-                            </th>
-                            @* <th>STT</th> *@
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Email Verified</th>
-                            <th>Phone Number</th>
-                            <th>Phone Verified</th>
-                            <th>Role</th>
-                            <th>Lockout</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in PaginatedUsers)
+                <div class="overflow-auto" style="height: 100%">
+                    <!-- Filters, search and some buttons -->
+                    <div class="upper-body-container">
+                        <div class="filters">
+                            <div class="filter-dropdown">
+                                <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Role)">Role</button>
+                                @if (ShowRoleDropdown)
+                                {
+                                    <ul class="dropdown-menu">
+                                        <li @onclick='() => SelectFilter(FilterType.Role, "Admin")'>Admin</li>
+                                        <li @onclick='() => SelectFilter(FilterType.Role, "Manager")'>Manager</li>
+                                        <li @onclick='() => SelectFilter(FilterType.Role, "Staff")'>Staff</li>
+                                        <li @onclick='() => SelectFilter(FilterType.Role, "Customer")'>Customer</li>
+                                    </ul>
+                                }
+                            </div>
+
+
+                            <div class="filter-dropdown">
+                                <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.EmailVerified)">Email Verified</button>
+                                @if (ShowEmailDropdown)
+                                {
+                                    <ul class="dropdown-menu">
+                                        <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Verified")'>Verified</li>
+                                        <li @onclick='() => SelectFilter(FilterType.EmailVerified, " Unverified")'>Unverified</li>
+                                    </ul>
+                                }
+                            </div>
+                            <div class="filter-dropdown">
+                                <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.PhoneVerified)">Phone Number Verified</button>
+                                @if (ShowPhoneDropdown)
+                                {
+                                    <ul class="dropdown-menu">
+                                        <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Verified")'>Verified</li>
+                                        <li @onclick='() => SelectFilter(FilterType.PhoneVerified, " Unverified")'>Unverified</li>
+                                    </ul>
+                                }
+                            </div>
+                            <div class="filter-dropdown">
+                                <button class="dropdown-label" @onclick="() => ToggleDropdown(FilterType.Lockout)">Lockout</button>
+                                @if (ShowLockoutDropdown)
+                                {
+                                    <ul class="dropdown-menu">
+                                        <li @onclick='() => SelectFilter(FilterType.Lockout, " Locked")'>Locked</li>
+                                        <li @onclick='() => SelectFilter(FilterType.Lockout, " Unlocked")'>Unlocked</li>
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                        <div class="search-and-buttons">
+                            <input type="text" placeholder="Search" bind="@SearchQuery">
+                            <button style="border:none; outline:none; background-color:transparent;color:#441FCB">New</button>
+                            <button style="border:none; outline:none; background-color:transparent;color:#DF0728">Delete</button>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters -->
+                    <div class="active-filters">
+                        @foreach (var filter in ActiveFilters)
                         {
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="checkbox-rounded" @bind="user.User.Selected" @onclick="() => ToggleRowSelection(user)" />
-                                </td>
-                                @* <td>@user.User.Id</td> *@
-                                <td>@user.User.Username</td>
-                                <td>@user.User.Email</td>
-                                <td>
-                                    <div class="custom-select">
-                                        <select @onchange="@(e => user.User.EmailVerified = e.Value.ToString() == "Verified")">
-                                            <option value="Verified" selected="@(user.User.EmailVerified)">Verified</option>
-                                            <option value="Unverified" selected="@(user.User.EmailVerified == false)">Unverified</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>@user.User.PhoneNumber</td>
-                                <td>
-                                    <div class="custom-select">
-                                        <select @onchange="@(e => user.User.PhoneVerified = e.Value.ToString() == "Verified")">
-                                            <option value="Verified" selected="@(user.User.PhoneVerified)">Verified</option>
-                                            <option value="Unverified" selected="@(user.User.PhoneVerified == false)">Unverified</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    @* <div class="custom-select">
+                            @foreach (var value in filter.Value)
+                            {
+                                <span class="active-filter">
+                                    @filter.Key - @value
+                                    <button class="remove-filter" @onclick="() => RemoveFilter(filter.Key, value)">X</button>
+                                </span>
+                            }
+                        }
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-container">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
+                                    </th>
+                                    @* <th>STT</th> *@
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Email Verified</th>
+                                    <th>Phone Number</th>
+                                    <th>Phone Verified</th>
+                                    <th>Role</th>
+                                    <th>Lockout</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in PaginatedUsers)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="checkbox-rounded" @bind="user.User.Selected" @onclick="() => ToggleRowSelection(user)" />
+                                        </td>
+                                        @* <td>@user.User.Id</td> *@
+                                        <td>@user.User.Username</td>
+                                        <td>@user.User.Email</td>
+                                        <td>
+                                            <div class="custom-select">
+                                                <select @onchange="@(e => user.User.EmailVerified = e.Value.ToString() == "Verified")">
+                                                    <option value="Verified" selected="@(user.User.EmailVerified)">Verified</option>
+                                                    <option value="Unverified" selected="@(user.User.EmailVerified == false)">Unverified</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>@user.User.PhoneNumber</td>
+                                        <td>
+                                            <div class="custom-select">
+                                                <select @onchange="@(e => user.User.PhoneVerified = e.Value.ToString() == "Verified")">
+                                                    <option value="Verified" selected="@(user.User.PhoneVerified)">Verified</option>
+                                                    <option value="Unverified" selected="@(user.User.PhoneVerified == false)">Unverified</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @* <div class="custom-select">
 
                                     </div> *@
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleRoleDropdown(user))">
-                                            Edit  Roles
-                                        </button>
-                                        <div class="dropdown-menu @(user.isOpen ? "show" : "")">
-                                            @foreach (var role in Roles)
-                                            {
-                                                var dataRole = user.Roles?.FirstOrDefault(p => p.Role.Id == role.Id);
-                                                //Console.WriteLine(JsonSerializer.Serialize(user.Roles, new JsonSerializerOptions { WriteIndented = true }));
-
-                                                <div class="dropdown-item">
-                                                    @if (dataRole != null)
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleRoleDropdown(user))">
+                                                    Edit  Roles
+                                                </button>
+                                                <div class="dropdown-menu @(user.isOpen ? "show" : "")">
+                                                    @foreach (var role in Roles)
                                                     {
-                                                        <input type="checkbox" @bind="dataRole.IsInRole"
-                                                        @bind:after="@(() => UpdateUserRole(user.User.Id, dataRole.Role.Id, dataRole.IsInRole))" />
-                                                    }
-                                                    <span>@dataRole?.Role.RoleName</span>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <label class="switch">
-                                        <input type="checkbox" checked="@user.User.Locked" @onchange="() => ToggleLockout(user.User)" />
-                                        <span class="slider @(user.User.Locked ? "locked" : "unlocked")"></span>
-                                    </label>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                                        var dataRole = user.Roles?.FirstOrDefault(p => p.Role.Id == role.Id);
+                                                        //Console.WriteLine(JsonSerializer.Serialize(user.Roles, new JsonSerializerOptions { WriteIndented = true }));
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <div class="item-per-page">
-                    <span>Rows per page:</span>
-                    <select @onchange="UpdateRowsPerPage">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                    </select>
-                </div>
-                <div class="choose-page">
-                    <span>@(TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) page(s)</span>
-                    <button @onclick="PreviousPage">&lt;</button>
-                    <span>@CurrentPage</span>
-                    <button @onclick="NextPage">&gt;</button>
-                    <span>@(CurrentPage < (TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) ? (CurrentPage + 1) : "")</span>
+                                                        <div class="dropdown-item">
+                                                            @if (dataRole != null)
+                                                            {
+                                                                <input type="checkbox" @bind="dataRole.IsInRole"
+                                                                       @bind:after="@(() => UpdateUserRole(user.User.Id, dataRole.Role.Id, dataRole.IsInRole))" />
+                                                            }
+                                                            <span>@dataRole?.Role.RoleName</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <label class="switch">
+                                                <input type="checkbox" checked="@user.User.Locked" @onchange="() => ToggleLockout(user.User)" />
+                                                <span class="slider @(user.User.Locked ? "locked" : "unlocked")"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="item-per-page">
+                            <span>Rows per page:</span>
+                            <select @onchange="UpdateRowsPerPage">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div class="choose-page">
+                            <span>@(TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) page(s)</span>
+                            <button @onclick="PreviousPage">&lt;</button>
+                            <span>@CurrentPage</span>
+                            <button @onclick="NextPage">&gt;</button>
+                            <span>@(CurrentPage < (TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) ? (CurrentPage + 1) : "")</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Access Denied</h3>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
+    private string MenuName = "Admin User Management";
+    public MenuResource? menuResource { get; set; }
+
     private enum FilterType { Role, EmailVerified, PhoneVerified, Lockout }
 
     private Dictionary<FilterType, List<string>> ActiveFilters { get; set; } = new();
@@ -226,8 +243,28 @@
 
     public List<UserDataWithDecoration> ViewData { get; set; } = new();
 
+    private string? menuResourceResponse;
+    private async Task FetchResource()
+    {
+        menuResourceResponse = await MenuResourceService.GetResourceAsync(MenuName);
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            await FetchResource();
+            if (menuResourceResponse != null)
+            {
+                menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
+                //Console.WriteLine(JsonSerializer.Serialize(menuResource));
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
         string userResponse = await UserService.GetUsersAsync();
         if(userResponse != null){
             var usersList = JsonSerializer.Deserialize<List<UserDto>>(userResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -261,7 +298,7 @@
             });
         }
 
-        Console.WriteLine(JsonSerializer.Serialize(ViewData, new JsonSerializerOptions { WriteIndented = true }));
+        //Console.WriteLine(JsonSerializer.Serialize(ViewData, new JsonSerializerOptions { WriteIndented = true }));
 
         await base.OnInitializedAsync();
     }

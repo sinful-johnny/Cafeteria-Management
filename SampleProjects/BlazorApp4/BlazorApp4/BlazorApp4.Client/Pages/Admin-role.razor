@@ -1,94 +1,111 @@
 ﻿@page "/admin/role"
 @using Class
+@using Class.Auth
 @using Class.Controller
+@using Class.Converter
 @using Class.MockData
 @using System.Text.Json
 @inject RoleService RoleService;
+@inject MenuResourceService MenuResourceService;
 
-<div class="admin-page">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>Admin</h3>
-        </div>
-        <ul>
-            <li><a href="/admin">User</a></li>
-            <li class="selected"><a href="/admin/role">Role</a></li>
-        </ul>
-    </div>
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header class="header">
-            <div class="header-content">
-                <label>Role/All</label>
-                <a href="/Account/Login" class="logout-btn">Logout</a>
+<AuthorizeView Policy="Read" Resource="menuResource">
+    <Authorized>
+        <div class="admin-page">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Admin</h3>
+                </div>
+                <ul>
+                    <li><a href="/admin">User</a></li>
+                    <li class="selected"><a href="/admin/role">Role</a></li>
+                </ul>
             </div>
-        </header>
 
-        <!-- Search -->
-        <div class="search-and-buttons">
-            <input type="text" placeholder="Search" bind="@SearchQuery">
-            <button style="border:none; outline:none; background-color:transparent;color:#441FCB">New</button>
-            <button style="border:none; outline:none; background-color:transparent;color:#DF0728">Delete</button>
-            <a style="border:none; outline:none; background-color:transparent;color:#441FCB;text-decoration:none;" href="/admin/role/management">Manage Access</a>
-        </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <header class="header">
+                    <div class="header-content">
+                        <label>Role/All</label>
+                        <a href="/Account/Login" class="logout-btn">Logout</a>
+                    </div>
+                </header>
 
-        <!-- Table -->
-        <div class="table-container">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
-                        </th>
+                <!-- Search -->
+                <div class="search-and-buttons">
+                    <input type="text" placeholder="Search" bind="@SearchQuery">
+                    <button style="border:none; outline:none; background-color:transparent;color:#441FCB">New</button>
+                    <button style="border:none; outline:none; background-color:transparent;color:#DF0728">Delete</button>
+                    <a style="border:none; outline:none; background-color:transparent;color:#441FCB;text-decoration:none;" href="/admin/role/management">Manage Access</a>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="checkbox-rounded" value="@selectAllChecked" @onchange="ToggleSelectAll" />
+                                </th>
                         @* <th>STT</th> *@
-                        <th>Role Name</th>
-                        <th>Users</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var role in PaginatedRoles)
-                    {
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="checkbox-rounded" @bind="role.Selected" @onclick="() => ToggleRowSelection(role)" />
-                            </td>
-                            @* <td>@role.Role.Id</td> *@
-                            <td>@role.Role.RoleName</td>
-                            <td>@role.Role.UserCount</td>
-                            <td>
-                                <a href="/admin/role/userManage" style="color:#441FCB; text-decoration:none;">Manager Users</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                                <th>Role Name</th>
+                                <th>Users</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var role in PaginatedRoles)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="checkbox-rounded" @bind="role.Selected" @onclick="() => ToggleRowSelection(role)" />
+                                    </td>
+                                    @* <td>@role.Role.Id</td> *@
+                                    <td>@role.Role.RoleName</td>
+                                    <td>@role.Role.UserCount</td>
+                                    <td>
+                                        <a href="/admin/role/userManage" style="color:#441FCB; text-decoration:none;">Manager Users</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            <div class="item-per-page">
-                <span>Rows per page:</span>
-                <select @onchange="UpdateRowsPerPage">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
-            <div class="choose-page">
-                <span>@(TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) page(s)</span>
-                <button @onclick="PreviousPage">&lt;</button>
-                <span>@CurrentPage</span>
-                <button @onclick="NextPage">&gt;</button>
-                <span>@(CurrentPage < (TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) ? (CurrentPage + 1) : "")</span>
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div class="item-per-page">
+                        <span>Rows per page:</span>
+                        <select @onchange="UpdateRowsPerPage">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="choose-page">
+                        <span>@(TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) page(s)</span>
+                        <button @onclick="PreviousPage">&lt;</button>
+                        <span>@CurrentPage</span>
+                        <button @onclick="NextPage">&gt;</button>
+                        <span>@(CurrentPage < (TotalRows % RowsPerPage != 0 ? (TotalRows / RowsPerPage + 1) : (TotalRows / RowsPerPage)) ? (CurrentPage + 1) : "")</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Access Denied</h3>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
+    private string MenuName = "Admin Role Management";
+    public MenuResource? menuResource { get; set; }
+
     private bool ShowRoleDropdown { get; set; }
     private bool ShowEmailDropdown { get; set; }
     private bool ShowPhoneDropdown { get; set; }
@@ -102,21 +119,28 @@
 
     public required List<RoleWithDecoration> Roles { get; set; } = new List<RoleWithDecoration>();
 
-    // private List<Role> Roles { get; set; } = new()
-    // {
-    //     new Role { Id = 1, RoleName = "Admin", Description = "Do shit", Users = 9, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write", 
-    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read,Write", RolePerm = "Read,Write" },
-    //     new Role { Id = 2, RoleName = "Customer", Description = "Do shit", Users = 5, TableTypePerm = "No", CanvasPerm = "No",
-    //                 FoodPerm = "No", OrderPerm = "Read", UserPerm = "No", RolePerm = "No" },
-    //     new Role { Id = 3, RoleName = "Staff", Description = "Do shit", Users = 3, TableTypePerm = "Read", CanvasPerm = "Read,Write",
-    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "No" },
-    //     new Role { Id = 4, RoleName = "Manager", Description = "Do shit", Users = 2, TableTypePerm = "Read,Write", CanvasPerm = "Read,Write",
-    //                 FoodPerm = "Read,Write", OrderPerm = "Read,Write", UserPerm = "Read", RolePerm = "Read" }
-    // };
+    private string? menuResourceResponse;
+    private async Task FetchResource()
+    {
+        menuResourceResponse = await MenuResourceService.GetResourceAsync(MenuName);
+    }
 
     protected async override Task OnInitializedAsync()
     {
-        //List<Role> mockRoles = MockGenerator.GenerateMockRoles();
+        try
+        {
+            await FetchResource();
+            if (menuResourceResponse != null)
+            {
+                menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
+                //Console.WriteLine(JsonSerializer.Serialize(menuResource));
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
         string roleResponse = await RoleService.GetRolesAsync();
         if(roleResponse != null){
             var roleList = JsonSerializer.Deserialize<List<Role>>(roleResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -164,21 +188,6 @@
     {
         if (CurrentPage * RowsPerPage < TotalRows) CurrentPage++;
     }
-
-    // public class Role
-    // {
-    //     public int Id { get; set; }
-    //     public string RoleName { get; set; }
-    //     public string Description { get; set; }
-    //     public int Users { get; set; }
-    //     public bool Selected { get; set; }
-    //     public string TableTypePerm { get; set; }
-    //     public string CanvasPerm { get; set; }
-    //     public string FoodPerm { get; set; }
-    //     public string OrderPerm { get; set; }
-    //     public string UserPerm { get; set; }
-    //     public string RolePerm { get; set; }
-    // }
 
     public class RoleWithDecoration{
         public required Role Role { get; set; }

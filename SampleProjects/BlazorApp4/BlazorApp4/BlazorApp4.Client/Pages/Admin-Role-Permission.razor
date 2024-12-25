@@ -1,98 +1,138 @@
 ﻿@page "/admin/role/management"
 @using Class
 @using System.Text.Json
+@using Class.Auth
 @using Class.Controller
+@using Class.Converter
 @using Class.MockData
 @inject MenuService MenuService; 
 @inject RoleService RoleService;
 @inject RoleMenuPermController RoleMenuPermController;
+@inject MenuResourceService MenuResourceService;
 
-<div class="admin-page">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>Admin</h3>
-        </div>
-        <ul>
-            <li><a href="/admin">User</a></li>
-            <li class="selected"><a href="/admin/role">Role</a></li>
-        </ul>
-    </div>
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header class="header">
-            <div class="header-content">
-                <label>Role/Role Management</label>
-                <a href="/Account/Login" class="logout-btn">Logout</a>
+<AuthorizeView Policy="ReadWrite" Resource="menuResource">
+    <Authorized>
+        <div class="admin-page">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Admin</h3>
+                </div>
+                <ul>
+                    <li><a href="/admin">User</a></li>
+                    <li class="selected"><a href="/admin/role">Role</a></li>
+                </ul>
             </div>
-        </header>
 
-        <!-- Search -->
-        <div class="search-and-buttons">
-            <a href="/admin/role" >Back</a>
-        </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <header class="header">
+                    <div class="header-content">
+                        <label>Role/Role Management</label>
+                        <a href="/Account/Login" class="logout-btn">Logout</a>
+                    </div>
+                </header>
 
-        <!-- Table -->
-        <div class="table-container">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        @foreach (var role in Roles){
-                            <th>@role.RoleName</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var menu in Menus)
-                    {
-                        <tr>
-                            <td>@menu.MenuName</td>
-                            @foreach (var role in Roles)
+                <!-- Search -->
+                <div class="search-and-buttons">
+                    <a href="/admin/role">Back</a>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                @foreach (var role in Roles)
+                                {
+                                    <th>@role.RoleName</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var menu in Menus)
                             {
-                                var data = ViewData.FirstOrDefault(d => d.Menu.Id == menu.Id && d.Role.Id == role.Id);
-                                <td>
-                                    @if(data != null){
-                                        <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleDropdown(data))">
-                                                Edit Perms
-                                            </button>
-                                            <div class="dropdown-menu @(data.isOpen ? "show" : "")">
-                                                @foreach (var perm in Perms)
-                                                {
-                                                    var dataPerm = data.Perms.FirstOrDefault(p => p.Perm.Id == perm.Id);
+                                <tr>
+                                    <td>@menu.MenuName</td>
+                                    @foreach (var role in Roles)
+                                    {
+                                        var data = ViewData.FirstOrDefault(d => d.Menu.Id == menu.Id && d.Role.Id == role.Id);
+                                        <td>
+                                            @if (data != null)
+                                            {
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="@(() => ToggleDropdown(data))">
+                                                        Edit Perms
+                                                    </button>
+                                                    <div class="dropdown-menu @(data.isOpen ? "show" : "")">
+                                                        @foreach (var perm in Perms)
+                                                        {
+                                                            var dataPerm = data.Perms.FirstOrDefault(p => p.Perm.Id == perm.Id);
 
-                                                    <div class="dropdown-item">
-                                                        @if(dataPerm != null){
-                                                            <input type="checkbox" @bind="dataPerm.IsSelected" id="@dataPerm?.Perm.Id"
-                                                            @bind:after="@(() => UpdatePermission(role, menu, dataPerm))" />
+                                                            <div class="dropdown-item">
+                                                                @if (dataPerm != null)
+                                                                {
+                                                                    <input type="checkbox" @bind="dataPerm.IsSelected" id="@dataPerm?.Perm.Id"
+                                                                           @bind:after="@(() => UpdatePermission(role, menu, dataPerm))" />
+                                                                }
+                                                                <span>@dataPerm?.Perm.PermName</span>
+                                                            </div>
                                                         }
-                                                        <span>@dataPerm?.Perm.PermName</span>
                                                     </div>
-                                                }
-                                            </div>
-                                        </div>
+                                                </div>
+                                            }
+                                        </td>
                                     }
-                                </td>
+                                </tr>
                             }
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Access Denied</h3>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
+    private string MenuName = "Admin Role Permission";
+    public MenuResource? menuResource { get; set; }
+
     public required List<Role> Roles { get; set; } = new List<Role>();
     public required List<Menu> Menus { get; set; } = new List<Menu>();
     public required List<Perm> Perms { get; set; }
 
     public required List<DecoratedMenuPerm> ViewData { get; set; }
 
+    private string? menuResourceResponse;
+    private async Task FetchResource()
+    {
+        menuResourceResponse = await MenuResourceService.GetResourceAsync(MenuName);
+    }
+
     protected async override Task OnInitializedAsync()
     {
+        try
+        {
+            await FetchResource();
+            if (menuResourceResponse != null)
+            {
+                menuResource = JsonToMenuResourceConverter.Convert(menuResourceResponse);
+                //Console.WriteLine(JsonSerializer.Serialize(menuResource));
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
         string RoleJson = await RoleService.GetRolesAsync();
         if(RoleJson != null){
             var rolesObject = JsonSerializer.Deserialize<List<Role>>(RoleJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
