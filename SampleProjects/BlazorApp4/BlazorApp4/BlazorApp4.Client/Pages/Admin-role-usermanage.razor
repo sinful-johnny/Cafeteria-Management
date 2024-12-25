@@ -3,7 +3,6 @@
 @using Class.Controller
 @using Class.MockData
 @using System.Text.Json
-@using Class.Converter
 @inject UserService UserService;
 @inject RoleService RoleService;
 
@@ -36,162 +35,55 @@
                 {
                     <label>
                         <input type="radio" name="roleGroup" @bind="role.Selected" @onclick="() => OnRoleSelected(role)" />
-                        @role.RoleName
+                        @role.Role.RoleName
                     </label>
                 }
             </div>
         </div>
 
         <!-- Table -->
-        <div class="user-role-management">
-            <!-- Left List (Users Without Role) -->
-            <div class="user-list">
-                <input type="text" @bind="SearchLeft" placeholder="Search" class="search-bar" />
-                <ul>
-                    @foreach (var user in Users)
-                    {
-                        <li>
-                            <input type="checkbox" @onclick="() => ToggleRowSelection(user)" />
-                            @user.FullName
-                        </li>
-                    }
-                </ul>
-            </div>
-
-            <!-- Action Buttons -->
-            <!-- NOT YET IMPLEMENTED -->
-            <div class="actions">
-                <button class="btn add" @onclick="AddUsers">Add</button>
-                <button class="btn delete" @onclick="RemoveUsers">Delete</button>
-            </div>
-
-            <!-- Right List (Users With Role) -->
-            <!-- NOT YET IMPLEMENTED -->
-            <div class="user-list">
-                <input type="text" @bind="SearchRight" placeholder="Search" class="search-bar" />
-                <ul>
-                    @foreach (var user in UsersWithoutRole)
-                    {
-                        <li>
-                            <input type="checkbox" @onclick="() => ToggleRowSelection(user)" />
-                            @user.FullName
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
+        <!-- WIP -->
     </div>
 </div>
 
 @code {
     private List<UserData> Users { get; set; } = new();
-    private List<UserData> UsersWithoutRole { get; set; } = new();
-    private List<Role> Roles { get; set; } = new();
-    //public required List<RoleWithDecoration> Roles { get; set; } = new();
-    public List<UserDataWithDecoration> ViewData { get; set; } = new();
+    private List<UserData> FilteredUsers { get; set; } = new();
+    public required List<RoleWithDecoration> Roles { get; set; } = new();
 
-
-    private string SearchLeft { get; set; } = string.Empty;
-    private string SearchRight { get; set; } = string.Empty;
-
-    private void ToggleRowSelection(UserDataWithDecoration user)
-    {
-        user.User.Selected = !user.User.Selected;
-    }
 
     protected async override Task OnInitializedAsync()
     {
-        string userResponse = await UserService.GetUsersAsync();
-        if (userResponse != null)
-        {
-            var usersList = JsonSerializer.Deserialize<List<UserDto>>(userResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            if (usersList != null)
-            {
-                Users = usersList.Select(u => u.ConvertToUserData()).ToList();
-            }
-        }
-
+        //List<Role> mockRoles = MockGenerator.GenerateMockRoles();
         string roleResponse = await RoleService.GetRolesAsync();
         if(roleResponse != null){
             var roleList = JsonSerializer.Deserialize<List<Role>>(roleResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if(roleList != null){
-                Roles = roleList;
+                Roles = roleList.Select(r => new RoleWithDecoration { Role = r, Selected = false }).ToList();
             }
         }
 
-        ViewData = new List<UserDataWithDecoration>();
-        foreach (var user in Users)
-        {
-            var RoleView = new List<RoleWithDecoration>();
-            foreach (var role in Roles)
-            {
-                RoleView.Add(new RoleWithDecoration
-                    {
-                        Role = role,
-                        IsInRole = user.Roles != null ? user.Roles.Any(r => r.Id == role.Id) : false
-                    });
-            }
-            ViewData.Add(new UserDataWithDecoration
-                {
-                    User = user,
-                    Roles = RoleView
-                });
-        }
         await base.OnInitializedAsync();
-    }
-
-    private void OnRoleSelected(RoleWithDecoration selectedRole)
-    {
-        foreach (var role in Roles)
-        {
-            role.Selected = false;
-        }
-
-        selectedRole.Selected = true;
-
-        // Filter users based on the selected role
-        UsersWithoutRole = Users.Where(user => user.Roles != null && user.Roles.Any(r => r.Id == selectedRole.Role.Id)).ToList();
-        Console.WriteLine(UsersWithoutRole);
     }
 
     public class RoleWithDecoration{
         public required Role Role { get; set; }
         public bool Selected { get; set; }
-        public bool IsInRole { get; set; }
     }
 
-    public async Task UpdateUserRole(string userId, string roleId, bool isInRole)
+    private void OnRoleSelected(RoleWithDecoration selectedRole)
     {
-        HttpResponseMessage response;
-        try
+        // Clear previous selections
+        foreach (var role in Roles)
         {
-            if (isInRole)
-            {
-                response = await UserService.AddRoleAsync(userId, roleId);
-            }
-            else
-            {
-                response = await UserService.RemoveRoleAsync(userId, roleId);
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                isInRole = !isInRole;
-            }
-            var message = response.Content.ReadAsStringAsync();
-            Console.WriteLine(message);
+            role.Selected = false;
         }
-        catch (Exception e)
-        {
 
-        }
-    }
+        // Mark the current role as selected
+        selectedRole.Selected = true;
 
-    public class UserDataWithDecoration
-    {
-        public required UserData User { get; set; }
-        public List<RoleWithDecoration>? Roles { get; set; }
-        public bool isOpen { get; set; } = false;
+        // Filter users based on the selected role
+        FilteredUsers = Users.Where(user => user.Roles != null && user.Roles.Any(r => r.Id == selectedRole.Role.Id)).ToList();
     }
 }
 
