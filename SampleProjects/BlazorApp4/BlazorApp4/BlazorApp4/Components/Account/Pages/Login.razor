@@ -1,14 +1,18 @@
 ﻿@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
+@using Class.Controller
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using BlazorApp4.Data
+@using System.Text.Json
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject ApiLoginService ApiLoginService
+@inject IHttpContextAccessor HttpContextAccessor
 
 <PageTitle>Log in</PageTitle>
 
@@ -76,12 +80,28 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
+    [Inject]
+    public IJSRuntime? JS { get; set; }
+
+    private bool _isRenderingCompleted;
+
     protected override async Task OnInitializedAsync()
     {
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        }
+    }
+
+    @inject IJSRuntime JSRuntime
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isRenderingCompleted = true;
+            //await JSRuntime.InvokeVoidAsync("console.log", "Page has loaded.");
         }
     }
 
@@ -93,6 +113,24 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
+
+            var response = await ApiLoginService.LoginAsync(Input.Email, Input.Password);
+            if(response.IsSuccessStatusCode){
+                var json = await response.Content.ReadAsStringAsync();
+                var content = JsonSerializer.Deserialize<TokenJson>(json);
+                if (content != null && content.token != null)
+                {
+                    var cookieOptions = new CookieOptions
+                        {
+                            Expires = DateTimeOffset.UtcNow.AddDays(1),
+                            HttpOnly = false, // or false if you need JavaScript access 
+                            Secure = true // Ensure cookie is only sent over HTTPS 
+                        };  
+                    HttpContextAccessor?.HttpContext?.Response.Cookies.Append("ApiAuth", content.token, cookieOptions);
+                    //await JS.InvokeVoidAsync("setCookie", "AuthApi", content.token, 3);
+                }
+            }
+
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)
@@ -124,5 +162,8 @@
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+    }
+    private class TokenJson {
+        public string? token { get; set; }
     }
 }

@@ -58,7 +58,7 @@ namespace Class.Auth
                         _logger.LogInformation($"Exception: {e.ToString()}");
                     }
 
-                    //await _jsRuntime.InvokeVoidAsync("location.replace", "/Account/Login");
+                    await _jsRuntime.InvokeVoidAsync("location.replace", "/Account/Login");
                 }
 
                 _logger.LogInformation($"HTTPS response: {response.Content}");
